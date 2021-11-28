@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row mt-5">
       <div class="col-12">
-        <h1>Liste des documents publiques</h1>
+        <h1>Liste des documents en interne</h1>
       </div>
       <div class="col-12">
         <strong>Categories:</strong>

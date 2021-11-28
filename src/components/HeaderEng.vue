@@ -27,6 +27,9 @@
           <b-list-group-item v-b-toggle.sidebar-7>{{
             menu7
           }}</b-list-group-item>
+                    <b-list-group-item v-b-toggle.sidebar-9>{{
+            menu9
+          }}</b-list-group-item>
         </b-list-group>
       </b-sidebar>
       <b-sidebar
@@ -139,6 +142,23 @@
         <b-list-group class="bg-light">
           <b-list-group-item
             v-for="(item, index) in sub8"
+            :key="index"
+            href="#"
+          >
+            <router-link :to="item.router">{{ item.title }}</router-link>
+          </b-list-group-item>
+        </b-list-group>
+      </b-sidebar>
+              <b-sidebar
+        class="sidebar text-dark bg-dark"
+        id="sidebar-9"
+        :title="menu8"
+        shadow
+        text-variant="dark"
+      >
+        <b-list-group class="bg-light">
+          <b-list-group-item
+            v-for="(item, index) in sub9"
             :key="index"
             href="#"
           >
@@ -1121,6 +1141,107 @@
             </ul>
           </li>
 
+               <!-- Juridiques -->
+          <li class="nav-item dropdown">
+            <a
+              id="dropdownMenu1"
+              href="#"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              class="nav-link dropdown-toggle"
+              >Legal Affairs</a
+            >
+            <ul aria-labelledby="dropdownMenu1" class="dropdown-menu ">
+              <li>
+                <router-link
+                  :to="{
+                    path: '/Legal/laws',
+                    query: { id: '6035f30ea713263cf8a98c51' },
+                  }"
+                  ><a href="#" class="dropdown-item">Laws </a></router-link
+                >
+              </li>
+              <li>
+                <router-link
+                  :to="{
+                    path: '/Legal/Decrees',
+                    query: { id: '6035f317a713263cf8a98c52' },
+                  }"
+                  ><a href="#" class="dropdown-item">Decrees </a></router-link
+                >
+              </li>
+              <li>
+                <router-link
+                  :to="{
+                    path: '/Legal/orders',
+                    query: { id: '6035f32ca713263cf8a98c53' },
+                  }"
+                  ><a href="#" class="dropdown-item">Orders </a></router-link
+                >
+              </li>
+              <li>
+                <router-link
+                  :to="{
+                    path: '/Legal/regulations',
+                    query: { id: '6035f337a713263cf8a98c54' },
+                  }"
+                  ><a href="#" class="dropdown-item"
+                    >Regulations
+                  </a></router-link
+                >
+              </li>
+
+              <li>
+                <router-link
+                  :to="{
+                    path: '/Juridiques/Procédures',
+                    query: { id: '6035f350a713263cf8a98c57' },
+                  }"
+                  ><a href="#" class="dropdown-item"
+                    >Procédures
+                  </a></router-link
+                >
+              </li>
+
+              <li>
+                <router-link
+                  :to="{
+                    path: '/Legal/directives',
+                    query: { id: '6035f35da713263cf8a98c59' },
+                  }"
+                  ><a href="#" class="dropdown-item"
+                    >Directives
+                  </a></router-link
+                >
+              </li>
+              <li>
+                <router-link
+                  :to="{
+                    path: '/Legal/circulars',
+                    query: { id: '6035f362a713263cf8a98c5a' },
+                  }"
+                  ><a href="#" class="dropdown-item"
+                    >Circulars
+                  </a></router-link
+                >
+              </li>
+              <li>
+                <router-link
+                  :to="{
+                    path: '/Legal/policies',
+                    query: { id: '6035f347a713263cf8a98c56' },
+                  }"
+                  ><a href="#" class="dropdown-item"
+                    >Policies
+                  </a></router-link
+                >
+              </li>
+
+              <!-- End Level two -->
+            </ul>
+          </li>
+
           <!-- e-services -->
           <li class="nav-item dropdown">
             <a
@@ -1149,6 +1270,36 @@
               </li>
             </ul>
           </li>
+
+
+               <!-- aip -->
+          <li class="nav-item dropdown">
+            <a
+              id="dropdownMenu1"
+              href="#"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              class="nav-link dropdown-toggle"
+              >A.I.P.</a
+            >
+            <ul aria-labelledby="dropdownMenu1" class="dropdown-menu ">
+              <li>
+                <router-link :to="{
+                    path: '/aip',
+                    query: { id: '61a3bf992a5e4d2a901c8f40' },
+                  }"
+                  ><a href="#" class="dropdown-item"
+                    >Publications d'Information Aéronautique
+                  </a></router-link
+                >
+              </li>
+             
+            </ul>
+          </li>
+
+
+
           <li class="nav-item nav-link gestion " v-show="user.isAdmin">
             <router-link
               to="/gestionMedia"
@@ -1199,6 +1350,7 @@ export default {
       menu6: "Inspection",
       menu7: "e-Services",
       menu8: "Legal affairs",
+      menu9: "A.I.P.",
 
       sub2: [
         {
@@ -1343,6 +1495,13 @@ export default {
           title: "Policies",
           router: "/Juridiques/Politiques?id=6035f347a713263cf8a98c56",
         },
+      ],
+            sub9: [
+        {
+          title: "Aeronautical Informations Publications",
+          router: "/aip?id=61a3bf992a5e4d2a901c8f40",
+        },
+       
       ],
     };
   },

@@ -27,6 +27,9 @@
           <b-list-group-item v-b-toggle.sidebar-7>{{
             menu7
           }}</b-list-group-item>
+           <b-list-group-item v-b-toggle.sidebar-9>{{
+            menu9
+          }}</b-list-group-item>
         </b-list-group>
       </b-sidebar>
       <b-sidebar
@@ -140,6 +143,23 @@
         <b-list-group class="bg-light">
           <b-list-group-item
             v-for="(item, index) in sub8"
+            :key="index"
+            href="#"
+          >
+            <router-link :to="item.router">{{ item.title }}</router-link>
+          </b-list-group-item>
+        </b-list-group>
+      </b-sidebar>
+            <b-sidebar
+        class="sidebar text-dark bg-dark"
+        id="sidebar-9"
+        :title="menu8"
+        shadow
+        text-variant="dark"
+      >
+        <b-list-group class="bg-light">
+          <b-list-group-item
+            v-for="(item, index) in sub9"
             :key="index"
             href="#"
           >
@@ -1279,6 +1299,38 @@
               </li>
             </ul>
           </li>
+
+               <!-- aip -->
+          <li class="nav-item dropdown">
+            <a
+              id="dropdownMenu1"
+              href="#"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              class="nav-link dropdown-toggle"
+              >A.I.P.</a
+            >
+            <ul aria-labelledby="dropdownMenu1" class="dropdown-menu ">
+              <li>
+                <router-link :to="{
+                    path: '/aip',
+                    query: { id: '61a3bf992a5e4d2a901c8f40' },
+                  }"
+                  ><a href="#" class="dropdown-item"
+                    >Publications d'Information Aéronautique
+                  </a></router-link
+                >
+              </li>
+             
+            </ul>
+          </li>
+
+
+
+
+                    <!-- gestion -->
+
           <li class="nav-item nav-link gestion " v-show="user.isAdmin">
             <router-link
               to="/gestionMedia"
@@ -1328,6 +1380,7 @@ export default {
       menu8: "Affaires juridiques",
       menu6: "Inspection",
       menu7: "e-Services",
+      menu9: "A.I.P.",
       sub2: [
         {
           title: "Presentation",
@@ -1477,6 +1530,13 @@ export default {
           title: "Demande d'autorisation de vol",
           router: "/Demande autorisation",
         },
+      ],
+      sub9: [
+        {
+          title: "Publications d'Information Aéronautique",
+          router: "/aip?id=61a3bf992a5e4d2a901c8f40",
+        },
+       
       ],
     };
   },

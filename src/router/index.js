@@ -27,7 +27,7 @@ import Docs from "../pages/gestion/GestionDocuments.vue";
 import Media from "../pages/gestion/GestionMedia.vue";
 import DocIntern from "../pages/gestion/DocumentInternView.vue";
 import Contact from "../pages/Contact.vue";
-import Securite from "../pages/Header/securité.vue";
+// import Securite from "../pages/Header/securité.vue";
 import JurLoi from "../pages/Juridiques/Lois.vue";
 import JurDecre from "../pages/Juridiques/Decres.vue";
 import JurArre from "../pages/Juridiques/Arretes.vue";
@@ -42,6 +42,7 @@ import AuditInspection from "../pages/inspection/audit_inspection.vue";
 import SubMenu from "../pages/SubMenu.vue";
 import Article from "../pages/Articles.vue";
 import StaffDetails from "../pages/gestion/StaffDetails.vue";
+import AIP from "../pages/aip/Publications d'Information Aéronautique.vue";
 import PageNotFound from '../pages/PageNotFound.vue';
 Vue.use(VueRouter);
 
@@ -116,10 +117,16 @@ const routes = [
       }
     },
   },
+  // {
+  //   path: "/securite/:id",
+  //   name: "Securité",
+  //   component: Securite,
+  // },
   {
-    path: "/securite/:id",
-    name: "Securité",
-    component: Securite,
+    path: "/aip",
+    name: "Publications d'Information Aéronautique",
+    alias: ["/aip"],
+    component: AIP,
   },
   {
     path: "/Formulaires/:id",
@@ -275,7 +282,7 @@ const routes = [
   },
   {
     path: "/Juridiques/Procédures",
-    alias: ["/Legal/Law/"],
+    alias: ["/Legal/procedures/"],
     component: JurProce,
   },
   {

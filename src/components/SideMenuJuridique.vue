@@ -116,16 +116,16 @@ export default {
   text-decoration-style: none;
   border-radius: 10%;
 
-  &:hover {
-    background-image: linear-gradient(
-      to right bottom,
-      rgb(4, 133, 184),
-      rgb(4, 184, 73)
-    );
-    color: transparent;
-    transition: all 0.3s;
-    font-size: 1.2rem;
-    color: white !important;
-  }
+  // &:hover {
+  //   background-image: linear-gradient(
+  //     to right bottom,
+  //     rgb(4, 133, 184),
+  //     rgb(4, 184, 73)
+  //   );
+  //   color: transparent;
+  //   transition: all 0.3s;
+  //   font-size: 1.2rem;
+  //   color: white !important;
+  // }
 }
 </style>
