@@ -19,8 +19,10 @@ import {
   faPhone,
   faMobile,
   faEnvelope,
-  faFax, faInbox
+  faFax, faInbox, faCalendar
 } from "@fortawesome/free-solid-svg-icons";
+
+
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import PortalVue from 'portal-vue'
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
@@ -34,9 +36,15 @@ Vue.use(VueMeta, {
   refreshOnceOnNavigation: true
 })
 
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+ 
+// import style
+import 'swiper/swiper.scss'
+ 
+Vue.use(VueAwesomeSwiper, /* { default options with global component } */)
 Vue.use(PortalVue)
 
-library.add(faUserSecret, faPhone, faMobile, faEnvelope, faFax, faInbox);
+library.add(faUserSecret, faPhone,faCalendar, faMobile, faEnvelope, faFax, faInbox);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.use(MdCard);

@@ -70,6 +70,8 @@ export default {
   &-img{
     width: 100%;
     cursor: pointer;
+    position: absolute;
+    @include centerElement;
   }
 
 }
@@ -84,6 +86,7 @@ export default {
   font-size: 13px;
   border-radius: 50px;
   z-index: 999;
+  
 }
 
 .single-blog-post .blog-post-content {
