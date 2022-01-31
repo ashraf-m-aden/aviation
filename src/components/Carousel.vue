@@ -9,9 +9,9 @@
           <div
             class="carousel_div"
             v-for="(banner, index) in banners"
-            :key="index"
+            :key="index" :style="{ backgroundImage: `url(${banner.url})` }"
           >
-            <img class="carousel_div_img" :src="banner.url" alt="" />
+            <!-- <img class="carousel_div_img" :src="banner.url" alt="" /> -->
 
             <div
               class="carousel_text pl-2"
@@ -119,6 +119,9 @@ export default {
   position: relative;
   &_div {
     position: relative;
+      background-size: cover;
+      background-position: center;
+
     height: 80vh;
     @include respond(big-desk) {
       height: 40vh;

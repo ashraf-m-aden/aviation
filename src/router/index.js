@@ -125,7 +125,6 @@ const routes = [
   {
     path: "/aip",
     name: "Publications d'Information Aéronautique",
-    alias: ["/aip"],
     component: AIP,
   },
   {

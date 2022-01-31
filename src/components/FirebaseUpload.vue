@@ -1,22 +1,36 @@
 <template>
-<div class="container">
+  <div class="container">
     <div class="row">
-        <div class="col-12">
-            <div class="d-flex flex-column">
-                {{ message }}:
-                <input v-show="!isBanner && !isNews" class="input" type="text" placeholder="Nom du document" v-model="document.name" readonly />
-                
-                
-                <div v-if="isBanner" class="d-flex flex-column">
-                    <label>Titre: </label><input class="input" type="text" v-model="banner.title" />
-                    <label>Description: </label><input class="input" type="text" v-model="banner.description" />
-                </div>
-                <div v-if="isNews" class="d-flex flex-column">
-                    <label>Titre: </label>
-                    <input class="input" type="text" v-model="news.title" />
-                    <label>Contenu: </label>
-                    <textarea rows="10" cols="100" class="border mb-5" type="text" v-model="news.content" />
-                    </div>
+      <div class="col-12">
+        <div class="d-flex flex-column">
+          {{ message }}:
+          <input
+            v-show="!isBanner && !isNews"
+            class="input"
+            type="text"
+            placeholder="Nom du document"
+            v-model="document.name"
+            readonly
+          />
+
+          <div v-if="isBanner" class="d-flex flex-column">
+            <label>Titre: </label
+            ><input class="input" type="text" v-model="banner.title" />
+            <label>Description: </label
+            ><input class="input" type="text" v-model="banner.description" />
+          </div>
+          <div v-if="isNews" class="d-flex flex-column">
+            <label>Titre: </label>
+            <input class="input" type="text" v-model="news.title" />
+            <label>Contenu: </label>
+            <textarea
+              rows="10"
+              cols="100"
+              class="border mb-5"
+              type="text"
+              v-model="news.content"
+            />
+          </div>
 
           <input
             type="file"
@@ -206,6 +220,7 @@ export default {
                     $("#inputContent").val("");
                     this.$store.dispatch("setDocuments");
                     this.$store.dispatch("setPublicDocuments");
+                    this.$emit("uploaded", [this.subOne, 1]);
                   })
                   .catch((error) => {
                     console.log(error);
@@ -270,6 +285,7 @@ export default {
                     $("#inputContent").val("");
                     this.$store.dispatch("setDocuments");
                     this.$store.dispatch("setPublicDocuments");
+                    this.$emit("uploaded", [this.subTwo, 2]);
                   })
                   .catch((error) => {
                     console.log(error);
@@ -339,7 +355,7 @@ export default {
                     this.document = {};
                     $("#inputContent").val("");
                     await this.$store.dispatch("setDocuments");
-                    await this.$store.dispatch("setPublicDocuments");
+                    this.$emit("uploaded", [this.subOne, 1]);
                   })
                   .catch((error) => {
                     console.log(error);
@@ -414,7 +430,8 @@ export default {
                     this.document = {};
                     $("#inputContent").val("");
                     await this.$store.dispatch("setDocuments");
-                    await this.$store.dispatch("setPublicDocuments");
+
+                    this.$emit("uploaded", [this.subTwo, 2]);
                   })
                   .catch((error) => {
                     console.log(error);

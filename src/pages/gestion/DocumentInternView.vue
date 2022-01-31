@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row mt-5">
       <div class="col-12">
-        <h1>Liste des documents publiques</h1>
+        <h1>Liste des documents en interne</h1>
       </div>
       <div class="col-12">
         <strong>Categories:</strong>
@@ -38,31 +38,50 @@
         </div>
       </div>
       <div class="col-12 col-md-8 mt-5" v-if="isSubOne">
-          <table class="table mb-5">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Fichier</th>
-                <th scope="col" class="w-50">Nom</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(doc, index) in subOneDoc" :key="index">
-                <th scope="row">{{ index + 1 }}</th>
-                <td>
-                  <a :href="doc.src" target="_blank">
-                    <img
-                      src="../../assets/pdf.png"
-                      class="img-fluid"
-                      width="30"
-                      alt=""
-                    />
-                  </a>
-                </td>
-                <td>{{ doc.name }}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class=" float-right">
+          <button
+            v-if="!actual"
+            class="btn small btn-group btn-outline-info"
+            @click="actualiser(subOne, 1)"
+          >
+            Actualiser
+          </button>
+          <button
+            v-if="actual"
+            class="btn disabled small btn-group btn-outline-info"
+          >
+            <md-progress-spinner
+              :md-diameter="30"
+              :md-stroke="3"
+              md-mode="indeterminate"
+            ></md-progress-spinner>
+          </button>
+        </div>
+        <table class="table mb-5" v-if="!actual">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Fichier</th>
+              <th scope="col" class="w-50">Nom</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(doc, index) in subOneDoc" :key="index">
+              <th scope="row">{{ index + 1 }}</th>
+              <td>
+                <a :href="doc.src" target="_blank">
+                  <img
+                    src="../../assets/pdf.png"
+                    class="img-fluid"
+                    width="30"
+                    alt=""
+                  />
+                </a>
+              </td>
+              <td>{{ doc.name }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="row">
@@ -86,7 +105,26 @@
           </div>
         </nav>
         <div class="" v-if="subTwo !== ''">
-          <table class="table mb-5">
+          <div class=" float-right">
+            <button
+              v-if="!actual2"
+              class="btn small btn-group btn-outline-info"
+              @click="actualiser(subTwo, 2)"
+            >
+              Actualiser
+            </button>
+            <button
+              v-if="actual2"
+              class="btn disabled small btn-group btn-outline-info"
+            >
+              <md-progress-spinner
+                :md-diameter="30"
+                :md-stroke="3"
+                md-mode="indeterminate"
+              ></md-progress-spinner>
+            </button>
+          </div>
+          <table class="table mb-5" v-if="!actual2">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -146,6 +184,8 @@ export default {
       subOne: "",
       subTwo: "",
       isSubOne: false,
+      actual: false,
+      actual2: false,
     };
   },
   methods: {
@@ -188,28 +228,42 @@ export default {
       } else {
         this.isSubOne = true;
       }
+      this.actual = false;
     },
     async getSubTwoName(item) {
       $(".subTwo").removeClass("active border-danger");
       $("#" + item._id).addClass("active border-danger");
       this.subTwo = item;
       this.subTwoDoc = [];
+      await this.$store.dispatch("setDocuments");
 
       await this.allDocuments.forEach((element) => {
         if (element.idParent === this.subTwo._id) {
           this.subTwoDoc.push(element);
         }
       });
+      this.actual2 = false;
     },
     async getSubOneDoc(item) {
       this.subOne = item;
       this.subOneDoc = [];
+      await this.$store.dispatch("setDocuments");
 
       await this.allDocuments.forEach((element) => {
         if (element.idParent === this.subOne._id) {
           this.subOneDoc.push(element);
         }
       });
+    },
+    async actualiser(item, number) {
+      await this.$store.dispatch("setDocuments");
+      if (number === 1) {
+        this.actual = true;
+        this.getSubCategoryTwo(item);
+      } else {
+        this.actual2 = true;
+        this.getSubTwoName(item);
+      }
     },
   },
   computed: {

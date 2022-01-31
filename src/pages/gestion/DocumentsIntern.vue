@@ -43,8 +43,28 @@
           :isPrivateDocument1="true"
           :category="category"
           :subOne="subOne"
+          @uploaded="uploaded"
         ></FirebaseUpload>
-        <table class="table">
+        <div class=" float-right">
+          <button
+            v-if="!actual && !loading"
+            class="btn small btn-group btn-outline-info"
+            @click="actualiser(subOne, 1)"
+          >
+            Actualiser
+          </button>
+          <button
+            v-if="actual"
+            class="btn disabled small btn-group btn-outline-info"
+          >
+            <md-progress-spinner
+              :md-diameter="30"
+              :md-stroke="3"
+              md-mode="indeterminate"
+            ></md-progress-spinner>
+          </button>
+        </div>
+        <table class="table" v-if="!actual && !loading">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -69,7 +89,7 @@
               <td>{{ doc.name }}</td>
               <td>
                 <button
-                  @click="deleteDocument(doc)"
+                  @click="deleteDocument(subOne, 1, doc)"
                   class="btn btn-group btn-outline-danger"
                 >
                   <md-icon>delete</md-icon>
@@ -78,6 +98,16 @@
             </tr>
           </tbody>
         </table>
+        <div class="loading" v-if="loading">
+          <p class="spinner">
+            Suppression
+            <b-spinner
+              variant="danger"
+              type="grow"
+              label="Spinning"
+            ></b-spinner>
+          </p>
+        </div>
       </div>
     </div>
     <div class="row">
@@ -100,16 +130,35 @@
             >
           </div>
         </nav>
-        <div class="" v-if="subTwo !== ''">
+        <div class="col-12" v-if="subTwo !== ''">
           <FirebaseUpload
             class=" mt-2 mb-5"
             :isPrivateDocument2="true"
             :category="category"
             :subOne="subOne"
             :subTwo="subTwo"
+            @uploaded="uploaded"
           ></FirebaseUpload>
-
-          <table class="table mb-5">
+          <div class=" float-right">
+            <button
+              v-if="!actual2 && !loading2"
+              class="btn small btn-group btn-outline-info"
+              @click="actualiser(subTwo, 2)"
+            >
+              Actualiser
+            </button>
+            <button
+              v-if="actual2 && !loading2"
+              class="btn disabled small btn-group btn-outline-info"
+            >
+              <md-progress-spinner
+                :md-diameter="30"
+                :md-stroke="3"
+                md-mode="indeterminate"
+              ></md-progress-spinner>
+            </button>
+          </div>
+          <table v-if="!actual2 && !loading2" class="table mb-5">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -134,7 +183,7 @@
                 <td>{{ doc.name }}</td>
                 <td>
                   <button
-                    @click="deleteDocument(doc)"
+                    @click="deleteDocument(subTwo, 2, doc)"
                     class="btn btn-group btn-outline-danger"
                   >
                     <md-icon>delete</md-icon>
@@ -143,6 +192,16 @@
               </tr>
             </tbody>
           </table>
+          <div class="loading" v-if="loading2">
+            <p class="spinner">
+              Suppression
+              <b-spinner
+                variant="danger"
+                type="grow"
+                label="Spinning"
+              ></b-spinner>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -184,6 +243,10 @@ export default {
       subOne: "",
       subTwo: "",
       isSubOne: false,
+      loading: false,
+      loading2: false,
+      actual: false,
+      actual2: false,
     };
   },
   methods: {
@@ -202,7 +265,7 @@ export default {
         }
       });
     },
-    getSubCategoryTwo(item) {
+    async getSubCategoryTwo(item) {
       $(".subOne")
         .removeClass("bg-info text-light")
         .addClass("text-dark");
@@ -211,7 +274,7 @@ export default {
         .removeClass("text-dark");
       this.subOne = item;
       this.subTwo = "";
-       this.subOneDoc= [];
+      this.subOneDoc = [];
       this.subCategoryTwo = [];
       this.allsubCategoryTwo.forEach((element) => {
         if (
@@ -221,7 +284,7 @@ export default {
           this.subCategoryTwo.push(element);
         }
       });
-      this.allDocuments.forEach((element) => {
+      await this.allDocuments.forEach((element) => {
         if (element.idParent === item._id) {
           this.subOneDoc.push(element);
         }
@@ -231,6 +294,7 @@ export default {
       } else {
         this.isSubOne = true;
       }
+      this.actual = false;
     },
     async getSubTwoName(item) {
       $(".subTwo").removeClass("active border-danger");
@@ -243,6 +307,7 @@ export default {
           this.subTwoDoc.push(element);
         }
       });
+      this.actual2 = false;
     },
     disableDocument(id) {
       this.$store.dispatch("disableOneDocument", id);
@@ -250,21 +315,45 @@ export default {
     enableDocument(id) {
       this.$store.dispatch("enableOneDocument", id);
     },
-    deleteDocument(item) {
+    deleteDocument(sub, number, item) {
+      if (number === 1) {
+        this.loading = true;
+      } else {
+        this.loading2 = true;
+      }
       // Create a reference to the file to delete
       var desertRef = firebase.storage().ref(item.ref);
 
       // Delete the file
       desertRef
         .delete()
-        .then(() => {
+        .then(async () => {
           // File deleted successfully
-          this.$store.dispatch("deleteOneDocument", item._id);
+          await this.$store.dispatch("deleteOneDocument", item._id);
+          await this.$store.dispatch("setDocuments");
+          await this.actualiser(sub, number);
+          this.loading = false;
+          this.loading2 = false;
         })
-        .catch(function () {
+        .catch(function() {
           // Uh-oh, an error occurred!
           console.log(item);
+          this.loading = false;
+          this.loading2 = false;
         });
+    },
+    uploaded(value) {
+      this.actualiser(value[0], value[1]);
+    },
+    async actualiser(item, number) {
+      await this.$store.dispatch("setDocuments");
+      if (number == 1) {
+        this.actual = true;
+        this.getSubCategoryTwo(item);
+      } else {
+        this.actual2 = true;
+        this.getSubTwoName(item);
+      }
     },
   },
   computed: {
@@ -289,3 +378,49 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+@import "../../sass/main.scss";
+.loading {
+  width: 100%;
+  height: 100%;
+  background: rgb(102, 146, 160);
+  z-index: 999;
+}
+.col-12 {
+  position: relative;
+}
+
+.actual {
+  width: 100%;
+  height: 100vh;
+  background: rgb(102, 146, 160);
+  z-index: 999;
+}
+.spinner {
+  @include centerElement;
+}
+
+.div-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .icon {
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.5);
+    }
+    font-size: 2rem;
+    &-down {
+      color: #ff1744;
+    }
+    &-up {
+      color: #009688;
+    }
+  }
+}
+.saveButton {
+  color: #009688;
+  font-size: 0.1rem;
+  float: right;
+}
+</style>
