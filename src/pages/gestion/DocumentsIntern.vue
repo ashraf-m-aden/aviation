@@ -346,12 +346,14 @@ export default {
       this.actualiser(value[0], value[1]);
     },
     async actualiser(item, number) {
-      await this.$store.dispatch("setDocuments");
       if (number == 1) {
         this.actual = true;
+        await this.$store.dispatch("setDocuments");
         this.getSubCategoryTwo(item);
       } else {
         this.actual2 = true;
+        await this.$store.dispatch("setDocuments");
+
         this.getSubTwoName(item);
       }
     },

@@ -91,7 +91,7 @@
               <td>{{ doc.name }}</td>
               <td>
                 <button
-                  @click="disableDocument(doc._id)"
+                  @click="disableDocument(subOne, 1,doc._id)"
                   class="btn btn-group btn-outline-warning"
                   :disabled="!doc.enabled"
                 >
@@ -100,7 +100,7 @@
               </td>
               <td>
                 <button
-                  @click="enableDocument(doc._id)"
+                    @click="enableDocument(subOne, 1, doc._id)"
                   class="btn btn-group btn-outline-success"
                   :disabled="doc.enabled"
                 >
@@ -109,7 +109,7 @@
               </td>
               <td>
                 <button
-                  @click="deleteDocument(doc)"
+                  @click="deleteDocument(subOne, 1, doc)"
                   class="btn btn-group btn-outline-danger"
                 >
                   <md-icon>delete</md-icon>
@@ -120,7 +120,6 @@
         </table>
         <div class="loading" v-if="loading">
           <p class="spinner">
-            Suppression
             <b-spinner
               variant="danger"
               type="grow"
@@ -205,7 +204,7 @@
                 <td>{{ doc.name }}</td>
                 <td>
                   <button
-                    @click="deleteDocument(subOne, 1, doc)"
+                    @click="disableDocument(subTwo, 2, doc._id)"
                     class="btn btn-group btn-outline-warning"
                     :disabled="!doc.enabled"
                   >
@@ -214,7 +213,7 @@
                 </td>
                 <td>
                   <button
-                    @click="enableDocument(doc._id)"
+                    @click="enableDocument(subTwo, 2, doc._id)"
                     class="btn btn-group btn-outline-success"
                     :disabled="doc.enabled"
                   >
@@ -234,7 +233,6 @@
           </table>
           <div class="loading" v-if="loading2">
             <p class="spinner">
-              Suppression
               <b-spinner
                 variant="danger"
                 type="grow"
@@ -357,13 +355,34 @@ export default {
         }
       });
     },
-    disableDocument(id) {
-      this.$store.dispatch("disableOneDocument", id);
+    async disableDocument(sub, number, id) {
+      if (number == 1) {
+        this.loading = true;
+      } else {
+        this.loading2 = true;
+      }
+      await this.$store.dispatch("disableOneDocument", id);
+      await this.actualiser(sub, number);
+      this.loading = false;
+      this.loading2 = false;
     },
-    enableDocument(id) {
-      this.$store.dispatch("enableOneDocument", id);
+    async enableDocument(sub, number, id) {
+      if (number == 1) {
+        this.loading = true;
+      } else {
+        this.loading2 = true;
+      }
+      await this.$store.dispatch("enableOneDocument", id);
+      await this.actualiser(sub, number);
+      this.loading = false;
+      this.loading2 = false;
     },
     deleteDocument(sub, number, item) {
+      if (number == 1) {
+        this.loading = true;
+      } else {
+        this.loading2 = true;
+      }
       // Create a reference to the file to delete
       var desertRef = firebase.storage().ref(item.ref);
 
@@ -389,13 +408,14 @@ export default {
       this.actualiser(value[0], value[1]);
     },
     async actualiser(item, number) {
-      console.log(number);
-      await this.$store.dispatch("setDocuments");
       if (number == 1) {
         this.actual = true;
+        await this.$store.dispatch("setDocuments");
         this.getSubCategoryTwo(item);
       } else {
         this.actual2 = true;
+        await this.$store.dispatch("setDocuments");
+
         this.getSubTwoName(item);
       }
     },
