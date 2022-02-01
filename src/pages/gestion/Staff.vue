@@ -8,9 +8,27 @@
       <label for="">Administrateur</label>
       <input type="checkbox" class="form-control" v-model="staff.isAdmin" />
 
-      <button class="btn btn-group btn-primary mt-5" @click="postUser">
+      <button
+        v-if="!loading"
+        class="btn btn-group btn-primary mt-5"
+        @click="postUser"
+      >
         Enregistrer
       </button>
+      <button
+        v-if="loading"
+        class="btn disabled small btn-group btn-outline-success"
+      >
+        <md-progress-spinner
+          :md-diameter="20"
+          :md-stroke="3"
+          md-mode="indeterminate"
+        ></md-progress-spinner>
+      </button>
+      <div class="alert alert-danger" v-if="alert" role="alert">
+        Une erreur est survenue. Notez que le mot de passe doit etre au minimum
+        de 7 lettres <br />
+      </div>
     </div>
     <div class="all">
       <div class="table" data-app>
@@ -97,6 +115,8 @@ export default {
       sortBy: "name",
       itemsPerPage: 6,
       itemsPerPageArray: [4, 8, 12],
+      alert: false,
+      loading: false,
     };
   },
   mounted() {
@@ -112,14 +132,23 @@ export default {
   },
   methods: {
     postUser() {
-      authS.postStaff(this.staff).then(() => {
-        this.$store.dispatch("getStaffs");
-        this.staff = {
-          pseudo: "",
-          password: "",
-          isAdmin: false,
-        };
-      });
+      this.alert = false;
+      this.loading = true;
+      authS
+        .postStaff(this.staff)
+        .then(() => {
+          this.$store.dispatch("getStaffs");
+          this.staff = {
+            pseudo: "",
+            password: "",
+            isAdmin: false,
+          };
+          this.loading = false;
+        })
+        .catch(() => {
+          this.alert = true;
+          this.loading = false;
+        });
     },
     goStaff(staff) {
       this.$router.push({ path: "/staff", query: { id: staff._id } });
@@ -137,6 +166,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "../../sass/main.scss";
+
 .staff {
   width: 100% !important;
   display: flex;
@@ -151,5 +182,8 @@ export default {
     cursor: pointer;
     margin-bottom: 2rem;
   }
+}
+.alert {
+  animation: moveInBottom 3s;
 }
 </style>
