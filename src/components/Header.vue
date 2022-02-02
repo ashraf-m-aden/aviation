@@ -1179,7 +1179,7 @@
               aria-haspopup="true"
               aria-expanded="false"
               class="nav-link dropdown-toggle"
-              >Affaires juridiques</a
+              >Administration et Affaires juridiques</a
             >
             <ul aria-labelledby="dropdownMenu1" class="dropdown-menu ">
               <li>
@@ -1377,7 +1377,7 @@ export default {
       menu3: "Publications",
       menu4: "Securité",
       menu5: "Sureté",
-      menu8: "Affaires juridiques",
+      menu8: "Administration et Affaires juridiques",
       menu6: "Inspection",
       menu7: "e-Services",
       menu9: "A.I.P.",

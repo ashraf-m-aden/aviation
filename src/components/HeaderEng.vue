@@ -1150,7 +1150,7 @@
               aria-haspopup="true"
               aria-expanded="false"
               class="nav-link dropdown-toggle"
-              >Legal Affairs</a
+              >Administration and Legal Affairs</a
             >
             <ul aria-labelledby="dropdownMenu1" class="dropdown-menu ">
               <li>
@@ -1349,7 +1349,7 @@ export default {
       menu5: "Safety",
       menu6: "Inspection",
       menu7: "e-Services",
-      menu8: "Legal affairs",
+      menu8: "Administration and Legal affairs",
       menu9: "A.I.P.",
 
       sub2: [

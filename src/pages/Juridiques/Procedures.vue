@@ -12,7 +12,7 @@
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <span>Affaires Juridiques</span>
+          <span>Administration et Affaires Juridiques</span>
           <span> / Procédures</span>
         </div>
         <div class="col-md-4 sideMenu">
