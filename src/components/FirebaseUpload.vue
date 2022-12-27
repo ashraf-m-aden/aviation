@@ -162,8 +162,6 @@ export default {
               .then(async (url) => {
                 this.document.src = url;
                 this.document.idParent = this.subOne._id;
-                this.document.enabled = true;
-                this.document.createdAt = new Date()
                 this.document.ref =
                   this.category.name +
                   "/" +
@@ -227,8 +225,6 @@ export default {
               .then(async (url) => {
                 this.document.src = url;
                 this.document.idParent = this.subTwo._id;
-                this.document.enabled = true;
-                this.document.createdAt = new Date()
                 this.document.ref =
                   this.category.name +
                   "/" +
@@ -264,9 +260,9 @@ export default {
       if (this.isPrivateDocument1) {
         let document = {
           name: this.document.name,
-          src: "", isIntern: true,
-          createdAt: new Date(),
+          src: "",
           ref: "",
+          isInter: true,
         };
         this.loading = true;
         this.errorButton = false;
@@ -299,8 +295,6 @@ export default {
               .then(async (url) => {
                 document.src = url;
                 document.isIntern = true;
-                document.createdAt = new Date();
-                document.enabled = true;
                 document.idParent = this.subOne._id;
                 document.ref =
                   "document internes/" +
@@ -340,9 +334,7 @@ export default {
           name: this.document.name,
           src: "",
           ref: "",
-          isIntern: true,
-          createdAt: new Date(),
-          enabled: true
+          isInter: true,
         };
         this.loading = true;
         this.errorButton = false;
@@ -377,7 +369,6 @@ export default {
               .then(async (url) => {
                 document.src = url;
                 document.isIntern = true;
-                document.createdAt = new Date();
                 document.idParent = this.subTwo._id;
                 document.ref =
                   "document internes/" +
