@@ -40,7 +40,9 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
  
 // import style
 import 'swiper/swiper.scss'
- 
+ import Vue2Editor from "vue2-editor";
+
+Vue.use(Vue2Editor);
 Vue.use(VueAwesomeSwiper, /* { default options with global component } */)
 Vue.use(PortalVue)
 

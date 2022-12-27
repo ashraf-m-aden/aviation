@@ -21,13 +21,7 @@
               <td scope="row"><img width="50" :src="news.url" /></td>
               <td><input type="text" :value="news.title" /></td>
               <td>
-                <textarea
-                  rows="10"
-                  cols="50"
-                  class="border mb-5"
-                  type="text"
-                  :value="news.content"
-                />
+                <textarea rows="10" cols="50" class="border mb-5" type="text" :value="news.content" />
               </td>
               <td>
                 <div class="div-icon">
@@ -40,10 +34,7 @@
                 </div>
               </td>
               <td>
-                <button
-                  @click="deleteArticles(news)"
-                  class="btn btn-group btn-outline-success"
-                >
+                <button @click="deleteArticles(news)" class="btn btn-group btn-outline-success">
                   <md-icon>delete</md-icon>
                 </button>
               </td>
@@ -94,7 +85,7 @@ export default {
           // File deleted successfully
           this.$store.dispatch("deleteOneNews", item._id);
         })
-        .catch(function() {
+        .catch(function () {
           // Uh-oh, an error occurred!
           console.log(item);
         });
@@ -119,15 +110,20 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+
   .icon {
     cursor: pointer;
+
     &:hover {
       transform: scale(1.5);
     }
+
     font-size: 2rem;
+
     &-down {
       color: #ff1744;
     }
+
     &-up {
       color: #009688;
     }
