@@ -77,7 +77,9 @@ export default {
         idParent: "",
         name: "",
         ref: "",
-        createdAt: new Date()
+        createdAt: new Date(),
+        enabled: true,
+        isIntern: false
       },
       banner: {
         title: "",
@@ -161,6 +163,7 @@ export default {
               .getDownloadURL()
               .then(async (url) => {
                 this.document.src = url;
+                this.document.createdAt = new Date();
                 this.document.idParent = this.subOne._id;
                 this.document.ref =
                   this.category.name +
@@ -224,6 +227,8 @@ export default {
               .getDownloadURL()
               .then(async (url) => {
                 this.document.src = url;
+                this.document.createdAt = new Date();
+
                 this.document.idParent = this.subTwo._id;
                 this.document.ref =
                   this.category.name +
@@ -262,7 +267,9 @@ export default {
           name: this.document.name,
           src: "",
           ref: "",
-          isInter: true,
+          isIntern: true,
+          createdAt: new Date(),
+
         };
         this.loading = true;
         this.errorButton = false;
@@ -295,6 +302,7 @@ export default {
               .then(async (url) => {
                 document.src = url;
                 document.isIntern = true;
+                document.enabled = true;
                 document.idParent = this.subOne._id;
                 document.ref =
                   "document internes/" +
@@ -334,7 +342,9 @@ export default {
           name: this.document.name,
           src: "",
           ref: "",
-          isInter: true,
+          isIntern: true,
+          createdAt: new Date(),
+
         };
         this.loading = true;
         this.errorButton = false;
@@ -369,6 +379,7 @@ export default {
               .then(async (url) => {
                 document.src = url;
                 document.isIntern = true;
+                document.enabled = true;
                 document.idParent = this.subTwo._id;
                 document.ref =
                   "document internes/" +

@@ -1,4 +1,6 @@
 import documentService from '../services/document.service'
+const moment = require('moment')
+
 export const state = () => ({
   documents: [],
   publicDocuments: []
@@ -21,31 +23,9 @@ export const mutations = {
 }
 export const actions = {
   setDocuments({ commit }) {
-      return documentService.getDocuments().then(async (documents) => {
-        await documents.data.sort((a, b) => {
-          if (a.name > b.name) {
-            return 1;
-          }
-          if (a.name < b.name) {
-            return -1;
-          }
-          return 0;
-        });
-        await documents.data.forEach((doc) => {
-          doc.createdAt =
-            new Date(doc.createdAt).getDate() +
-            "/" +
-            (new Date(doc.createdAt).getMonth() + 1) +
-            "/" +
-            new Date(doc.createdAt).getFullYear();
-        });
-        await commit('SET_DOCUMENTS', documents.data)
-      })
-  },
-  setPublicDocuments({ commit }) {
-
-    return documentService.getPublic().then(async (documents) => {
-      await documents.data.sort((a, b) => {
+    return documentService.getDocuments().then(async (querySnapshot) => {
+      const documents = querySnapshot.docs.map((doc) => doc.data());
+      await documents.sort((a, b) => {
         if (a.name > b.name) {
           return 1;
         }
@@ -54,15 +34,33 @@ export const actions = {
         }
         return 0;
       });
-      await documents.data.forEach((doc) => {
-        doc.createdAt =
-          new Date(doc.createdAt).getDate() +
-          "/" +
-          (new Date(doc.createdAt).getMonth() + 1) +
-          "/" +
-          new Date(doc.createdAt).getFullYear();
+      //    await documentService.saveToFirestore(documents.data);
+      await documents.forEach((doc) => {
+        doc.createdAt = (typeof (doc.createdAt) == "string") ? doc.createdAt : (doc.createdAt).toDate();
+        doc.createdAt = moment(String((doc.createdAt))).format('DD/MM/YYYY')
       });
-      await commit('SET_PUBLIC_DOCUMENTS', documents.data)
+      await commit('SET_DOCUMENTS', documents)
+    })
+  },
+  setPublicDocuments({ commit }) {
+
+    return documentService.getPublic().then(async (querySnapshot) => {
+      const documents = querySnapshot.docs.map((doc) => doc.data());
+      await documents.sort((a, b) => {
+        if (a.name > b.name) {
+          return 1;
+        }
+        if (a.name < b.name) {
+          return -1;
+        }
+        return 0;
+      });
+      await documents.forEach((doc) => {
+
+        doc.createdAt = (typeof (doc.createdAt) == "string") ? doc.createdAt : (doc.createdAt).toDate();
+        doc.createdAt = moment(String((doc.createdAt))).format('DD/MM/YYYY')
+      });
+      await commit('SET_PUBLIC_DOCUMENTS', documents)
     })
   },
   addDocument({ dispatch }, document) {
@@ -91,7 +89,7 @@ export const actions = {
   }
 }
 
-export default { 
+export default {
   actions,
   mutations,
   getters,
