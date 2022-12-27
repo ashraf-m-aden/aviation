@@ -77,7 +77,8 @@ export default {
         idParent: "",
         name: "",
         ref: "",
-        createdAt: new Date()
+        createdAt: new Date(),
+        enabled: true
       },
       banner: {
         title: "",
