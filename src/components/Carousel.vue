@@ -6,17 +6,11 @@
           &lang;
         </div>
         <VueSlickCarousel v-bind="settings" class="carousel" ref="carousel">
-          <div
-            class="carousel_div"
-            v-for="(banner, index) in banners"
-            :key="index" :style="{ backgroundImage: `url(${banner.url})` }"
-          >
+          <div class="carousel_div" v-for="(banner, index) in banners" :key="index"
+            :style="{ backgroundImage: `url(${banner.url})` }">
             <!-- <img class="carousel_div_img" :src="banner.url" alt="" /> -->
 
-            <div
-              class="carousel_text pl-2"
-              v-show="banner.title || banner.description"
-            >
+            <div class="carousel_text pl-2" v-show="banner.title || banner.description">
               <p class="carousel_text_title">{{ banner.title }}</p>
               <p class="carousel_text_desc">{{ banner.description }}</p>
             </div>
@@ -33,12 +27,7 @@
       </div>
     </div>
     <div v-else class="col-12">
-      <v-skeleton-loader
-        class="mx-auto skeleton"
-        max-height="500px"
-        max-width="1000px"
-        type="card"
-      ></v-skeleton-loader>
+      <v-skeleton-loader class="mx-auto skeleton" max-height="500px" max-width="1000px" type="card"></v-skeleton-loader>
     </div>
   </div>
 </template>
@@ -110,6 +99,7 @@ export default {
   border-radius: 50%;
   margin-top: -1.5rem;
   border: solid 1px white;
+
   .custom-dot_number {
     display: none;
   }
@@ -117,21 +107,26 @@ export default {
 
 .carousel {
   position: relative;
+
   &_div {
     position: relative;
-      background-size: cover;
-      background-position: center;
+    background-size: cover;
+    background-position: center;
 
     height: 80vh;
-    @include respond(big-desk) {
-      height: 40vh;
-    }
+
+    // @include respond(big-desk) {
+    //   height: 40vh;
+    // }
+
     @include respond(tablet-land) {
       height: 37vh;
     }
+
     @include respond(tablet) {
       height: 27vh;
     }
+
     &_img {
       width: 100%;
     }
@@ -147,10 +142,12 @@ export default {
     width: 100%;
     color: white;
     text-align: left;
+
     &_title {
       font-size: 1rem;
       margin-bottom: 0;
     }
+
     &_desc {
       font-size: 0.7rem;
       margin-top: 0;
@@ -166,6 +163,7 @@ export default {
 
     z-index: 1;
     color: white;
+
     @include respond(tablet) {
       display: none;
     }
