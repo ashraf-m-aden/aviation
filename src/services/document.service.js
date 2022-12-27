@@ -35,7 +35,7 @@ export default {
 
     },
     getPublic() {
-        return db.collection("documents").where("enabled", "==", true).get();
+        return db.collection("documents").where("enabled", "==", true).where("isIntern", "==", false).get();
     },
 
     ///////////////////////////////////////////////////////////////////////////////////
