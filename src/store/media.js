@@ -1,4 +1,5 @@
 import mediaService from '../services/media.service'
+const moment = require('moment')
 export const state = () => ({
   banner: [],
   news: [], // les news que l'on presente sur le dashboard
@@ -37,7 +38,7 @@ export const mutations = {
   },
   DOWN_BANNER(state, index) {
     let length = state.banner.length
-    if (index < (length-1)) {
+    if (index < (length - 1)) {
       let temp = state.banner[index]
       state.banner[index] = state.banner[index + 1]
       state.banner[index + 1] = temp
@@ -59,7 +60,7 @@ export const mutations = {
   },
   DOWN_NEWS(state, index) {
     let length = state.allNews.length
-    if (index < (length-1)) {
+    if (index < (length - 1)) {
       let temp = state.allNews[index]
       state.allNews[index] = state.allNews[index + 1]
       state.allNews[index + 1] = temp
@@ -72,8 +73,9 @@ export const mutations = {
 }
 export const actions = {
   getBanners({ commit }) {
-    mediaService.getBanner().then(async (response) => {
-      await response.data.sort((a, b) => {
+    mediaService.getBanner().then(async (querySnapshot) => {
+      const response = querySnapshot.docs.map((doc) => doc.data());
+      await response.sort((a, b) => {
         if (a.createdAt > b.createdAt) {
           return 1;
         }
@@ -82,12 +84,15 @@ export const actions = {
         }
         return 0;
       });
-      await commit('SET_BANNER', response.data)
+      // await mediaService.saveBannersToFirestore(response.data);
+      await commit('SET_BANNER', response)
     })
   },
   getNews({ commit }) {
-    mediaService.getNews().then(async (response) => {
-      await response.data.sort((a, b) => {
+    mediaService.getNews().then(async (querySnapshot) => {
+      const response = querySnapshot.docs.map((doc) => doc.data());
+
+      await response.sort((a, b) => {
         if (a.createdAt > b.createdAt) {
           return 1;
         }
@@ -96,10 +101,15 @@ export const actions = {
         }
         return 0;
       });
-      await response.data.forEach(element => {
-        element.createdAt = new Date(element.createdAt).getDate() + '/' + (new Date(element.createdAt).getMonth() + 1) + '/' + new Date(element.createdAt).getFullYear()
+      // await mediaService.saveNewsToFirestore(response.data);
+
+      await response.forEach(element => {
+        element.createdAt = (typeof (element.createdAt) == "string") ? element.createdAt : (element.createdAt).toDate();
+        element.createdAt = moment(String((element.createdAt))).format('DD/MM/YYYY')
+
       });
-      await commit('SET_NEWS', response.data)
+
+      await commit('SET_NEWS', response)
     })
   },
 
@@ -142,10 +152,10 @@ export const actions = {
     console.log('ok');
     commit('DOWN_NEWS', index)
   },
-  saveNewBanner({state}) {
+  saveNewBanner({ state }) {
     return mediaService.saveNewBanner(state.banner)
   },
-  saveNewNews({state}) {
+  saveNewNews({ state }) {
     return mediaService.saveNewNews(state.allNews)
   }
 }

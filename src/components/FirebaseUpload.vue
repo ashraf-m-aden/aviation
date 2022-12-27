@@ -77,18 +77,21 @@ export default {
         idParent: "",
         name: "",
         ref: "",
+        createdAt: new Date()
       },
       banner: {
         title: "",
         description: "",
         url: "",
-        ref: "",
+        ref: "", createdAt: new Date()
+
       },
       news: {
         title: "",
         url: "",
         ref: "",
-        content: "",
+        content: "", createdAt: new Date()
+
       },
       imageData: null,
       documentData: null,
