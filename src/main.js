@@ -22,6 +22,7 @@ import {
   faFax, faInbox, faCalendar
 } from "@fortawesome/free-solid-svg-icons";
 
+import 'swiper/swiper-bundle.css'
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import PortalVue from 'portal-vue'
@@ -35,18 +36,23 @@ Vue.use(VueMeta, {
   tagIDKeyName: 'vmid',
   refreshOnceOnNavigation: true
 })
-
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '../src/assets/css/font-awesome.min.css'
+import '../src/assets/css/material-design-iconic-font.min.css'
+import '../src/assets/css/ionicons.min.css'
+import '../src/assets/css/flaticon.min.css'
+import '../src/assets/css/animate.min.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
- 
+
 // import style
 import 'swiper/swiper.scss'
- import Vue2Editor from "vue2-editor";
+import Vue2Editor from "vue2-editor";
 
 Vue.use(Vue2Editor);
 Vue.use(VueAwesomeSwiper, /* { default options with global component } */)
 Vue.use(PortalVue)
 
-library.add(faUserSecret, faPhone,faCalendar, faMobile, faEnvelope, faFax, faInbox);
+library.add(faUserSecret, faPhone, faCalendar, faMobile, faEnvelope, faFax, faInbox);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.use(MdCard);
