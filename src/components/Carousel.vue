@@ -3,7 +3,7 @@
     <div v-if="banners.length > 0" class="col-12  ">
       <div class="carou mr-auto ml-auto">
         <div @click="prev" class="carousel_arrow carousel_arrow_prev ml-2">
-          &lang;
+          <i class="ion-ios-arrow-left"></i>
         </div>
         <VueSlickCarousel v-bind="settings" class="carousel" ref="carousel">
           <div class="carousel_div" v-for="(banner, index) in banners" :key="index"
@@ -20,9 +20,10 @@
               <span class="custom-dot_number">{{ page }}</span>
             </div>
           </template>
+
         </VueSlickCarousel>
         <div @click="next" class="carousel_arrow carousel_arrow_next mr-2">
-          &rang;
+          <i class="ion-ios-arrow-forward"></i>
         </div>
       </div>
     </div>

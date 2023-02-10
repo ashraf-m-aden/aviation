@@ -46,20 +46,22 @@ export const mutations = {
 }
 export const actions = {
   fetchCategory({ commit }) {
-    return CategoryS.getCategories().then(async (response) => {
-      const categoryMenu = response.data
+    return CategoryS.getCategories().then(async (querySnapshot) => {
+      const categoryMenu = querySnapshot.docs.map((doc) => doc.data());
       await commit('SET_Category', categoryMenu)
     });
   },
   fetchSubCategoryOne({ commit }) {
-    return CategoryS.getSubCategoryOne().then(async (response) => {
-      const categoryMenu = response.data
+    return CategoryS.getSubCategoryOne().then(async (querySnapshot) => {
+      const categoryMenu = querySnapshot.docs.map((doc) => doc.data());
+
       await commit('SET_SubCategoryOne', categoryMenu)
     });
   },
   fetchSubCategoryTwo({ commit }) {
-    return CategoryS.getSubCategoryTwo().then(async (response) => {
-      const categoryMenu = response.data
+    return CategoryS.getSubCategoryTwo().then(async (querySnapshot) => {
+      const categoryMenu = querySnapshot.docs.map((doc) => doc.data());
+
       await commit('SET_SubCategoryTwo', categoryMenu)
     });
   },
@@ -74,7 +76,7 @@ export const actions = {
   }
 }
 
-export default { 
+export default {
   actions,
   mutations,
   getters,
