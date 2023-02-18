@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-app-bar color="blue" app dark elevation="0">
+    <v-app-bar color="blue" class="bar" app dark elevation="0">
+      <img
+        id="box"
+        class="fly light"
+        src="https://images.vexels.com/media/users/3/145795/isolated/preview/05cd33059a006bf49006097af4ccba98-plane-in-flight-by-vexels.png"
+      />
+
       <template v-slot:prepend>
         <router-link to="/">
           <a class="navbar-brand img-fluid" href="#">
@@ -16,7 +22,36 @@
 
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer">
+    <v-navigation-drawer v-model="drawer" :temporary="temporary">
+      <v-list dense nav>
+        <v-list-item class="nav-item nav-link gestion" v-show="user.isAdmin">
+          <router-link
+            to="/gestionMedia"
+            class="nav-item text-primary font-weight-bolder"
+            >Gestion Media</router-link
+          >
+        </v-list-item>
+        <v-list-item class="nav-item nav-link" v-show="user.isAdmin">
+          <router-link
+            to="/gestionDocs"
+            class="nav-item text-primary font-weight-bolder"
+            >Gestion Documents</router-link
+          >
+        </v-list-item>
+        <v-list-item class="nav-item nav-link" v-show="user._id">
+          <router-link
+            to="/docIntern"
+            class="nav-item text-primary font-weight-bolder"
+            >Documents Internes</router-link
+          >
+        </v-list-item>
+        <v-list-item class="nav-item nav-link" v-show="user._id">
+          <button class="btn-group btn-outline-danger" @click="logout">
+            Sign out
+          </button>
+        </v-list-item>
+      </v-list>
+      <v-spacer></v-spacer>
       <v-list dense nav>
         <v-list-item v-for="(menu, index) in menuArray" :key="menu.title" link>
           <v-list-item-title v-if="index == 0">
@@ -28,6 +63,7 @@
           </v-list-item-title>
           <v-expansion-panels v-else>
             <v-expansion-panel
+              :value="value"
               :title="menu.title"
               expand-icon="mdi-plus"
               collapse-icon="mdi-minus"
@@ -65,7 +101,8 @@ export default {
   data() {
     return {
       drawer: true,
-
+      temporary: false,
+      value: false,
       sub: [false, false, false, false, false, false, false, false, false],
       menuArray: [
         {
@@ -263,6 +300,13 @@ export default {
       return this.$store.state.user.user;
     },
   },
+  watch: {
+    temporary(newTemporay) {
+      if (newTemporay == false) {
+        this.value == false;
+      }
+    },
+  },
   methods: {
     test(index) {
       for (let i = 0; i < this.sub.length; i++) {
@@ -436,5 +480,43 @@ export default {
 
 .sidebar {
   transition: all 2s;
+}
+@-webkit-keyframes fly {
+  0% {
+    top: 0%;
+    left: 0%;
+  }
+  75% {
+    top: 50%;
+    left: 50%;
+  }
+  100% {
+    top: 0%;
+    left: 100%;
+  }
+}
+
+@keyframes fly {
+  0% {
+    top: 0%;
+    left: 0%;
+  }
+  75% {
+    top: 50%;
+    left: 50%;
+  }
+  100% {
+    top: 0%;
+    left: 100%;
+  }
+}
+
+#box {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  -webkit-animation: fly 10s linear 10s infinite;
+  -moz-animation: fly 10s linear 10s infinite;
+  animation: fly 10s linear 10s infinite;
 }
 </style>
