@@ -24,35 +24,6 @@
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" :temporary="temporary">
       <v-list dense nav>
-        <v-list-item class="nav-item nav-link gestion" v-show="user.isAdmin">
-          <router-link
-            to="/gestionMedia"
-            class="nav-item text-primary font-weight-bolder"
-            >Gestion Media</router-link
-          >
-        </v-list-item>
-        <v-list-item class="nav-item nav-link" v-show="user.isAdmin">
-          <router-link
-            to="/gestionDocs"
-            class="nav-item text-primary font-weight-bolder"
-            >Gestion Documents</router-link
-          >
-        </v-list-item>
-        <v-list-item class="nav-item nav-link" v-show="user._id">
-          <router-link
-            to="/docIntern"
-            class="nav-item text-primary font-weight-bolder"
-            >Documents Internes</router-link
-          >
-        </v-list-item>
-        <v-list-item class="nav-item nav-link" v-show="user._id">
-          <button class="btn-group btn-outline-danger" @click="logout">
-            Sign out
-          </button>
-        </v-list-item>
-      </v-list>
-      <v-spacer></v-spacer>
-      <v-list dense nav>
         <v-list-item v-for="(menu, index) in menuArray" :key="menu.title" link>
           <v-list-item-title v-if="index == 0">
             <router-link to="/">
@@ -81,6 +52,36 @@
           </v-expansion-panels>
         </v-list-item>
       </v-list>
+      <v-spacer>
+        <v-list dense nav>
+          <v-list-item class="nav-item nav-link gestion" v-show="user.isAdmin">
+            <router-link
+              to="/gestionMedia"
+              class="nav-item text-primary font-weight-bolder"
+              >Gestion Media</router-link
+            >
+          </v-list-item>
+          <v-list-item class="nav-item nav-link" v-show="user.isAdmin">
+            <router-link
+              to="/gestionDocs"
+              class="nav-item text-primary font-weight-bolder"
+              >Gestion Documents</router-link
+            >
+          </v-list-item>
+          <v-list-item class="nav-item nav-link" v-show="user.id">
+            <router-link
+              to="/docIntern"
+              class="nav-item text-primary font-weight-bolder"
+              >Documents Internes</router-link
+            >
+          </v-list-item>
+          <v-list-item class="nav-item nav-link" v-show="user.id">
+            <button class="btn-group btn-outline-danger" @click="logout">
+              Sign out
+            </button>
+          </v-list-item>
+        </v-list>
+      </v-spacer>
     </v-navigation-drawer>
     <div class="row">
       <div class="col-12 social">

@@ -39,10 +39,11 @@ export const actions = {
     commit("SET_ID", user.uid);
   },
   async getUser({ commit }) {
-    return await authF.onAuthStateChanged(function (user) {
-      console.log(user);
+    return authF.onAuthStateChanged(async (user) => {
       if (user) {
-        commit("SET_USER", user);
+        const response = await auth.getUser(user.uid);
+        // console.log(response.data());
+        commit("SET_USER", response.data());
       } else {
         // No user is signed in.
         console.log("clear storage");

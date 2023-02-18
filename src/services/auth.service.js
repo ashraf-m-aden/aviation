@@ -1,5 +1,5 @@
 import EventEmitter from "events";
-import { auth } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 import firebase from "firebase/compat/app";
 
 class Auth extends EventEmitter {
@@ -11,16 +11,8 @@ class Auth extends EventEmitter {
   signIn(email, password) {
     return auth.signInWithEmailAndPassword(email, password);
   }
-  async getUser() {
-    return await auth.onAuthStateChanged(function (user) {
-      console.log(user);
-      if (user) {
-        return user;
-      } else {
-        // No user is signed in.
-        return null;
-      }
-    });
+  async getUser(id) {
+    return await db.collection("users").doc(id).get();
   }
   getAllUsers() {
     return auth.get("/allUsers");
@@ -37,11 +29,12 @@ class Auth extends EventEmitter {
         // this.tokenExpiry = new Date();
         // localStorage.setItem(loginExpiryKey, this.tokenExpiry);
         const user = {
+          id: authResult.user.uid,
           email: authResult.user.email,
           name: staff.name,
           isAdmin: user.isAdmin,
         };
-        await postApp.firestore().collection("users").doc(user.id).set(user); // cree dans la collection users un document qui a cet id users.id avk les donné "user"
+        await postApp.firestore().collection("users").doc(user.uid).set(user); // cree dans la collection users un document qui a cet id users.id avk les donné "user"
         await postApp.delete();
       });
   }
