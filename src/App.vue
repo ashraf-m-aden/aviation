@@ -69,7 +69,7 @@ export default {
     this.$store.dispatch("fetchCategory");
     this.$store.dispatch("fetchSubCategoryOne");
     this.$store.dispatch("fetchSubCategoryTwo");
-    // this.$store.dispatch("getUser");
+    this.$store.dispatch("getUser");
     //  $('html').css('overflow', 'hidden');
   },
 };

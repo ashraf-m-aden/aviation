@@ -1,5 +1,6 @@
 import UserService from "../services/auth.service";
 import auth from "../services/auth.service";
+import { auth as authF } from "../firebaseConfig";
 
 export const state = () => ({
   id: null,
@@ -33,19 +34,18 @@ export const mutations = {
   },
 };
 export const actions = {
-  login({ commit }, payload) {
-    commit("SET_USER", payload.user);
-    commit("SET_ID", payload.user._id);
-    commit("SET_TOKEN", payload.token);
+  login({ commit }, user) {
+    commit("SET_USER", user);
+    commit("SET_ID", user.uid);
   },
-  getUser({ commit }) {
-    const id = localStorage.getItem("id");
-    const token = localStorage.getItem("token");
-    return auth.getUser(token, id).then((data) => {
-      const user = data.data;
-      if (user._id) {
+  async getUser({ commit }) {
+    return await authF.onAuthStateChanged(function (user) {
+      console.log(user);
+      if (user) {
         commit("SET_USER", user);
       } else {
+        // No user is signed in.
+        console.log("clear storage");
         commit("SET_USER", {});
         localStorage.clear();
       }
@@ -79,8 +79,7 @@ export const actions = {
     });
   },
 };
-export default {   
-
+export default {
   getters,
   actions,
   mutations,

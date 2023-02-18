@@ -5,14 +5,14 @@
       <div class="form-group">
         <div class="form-group">
           <label class="form-check-label small font-italic font-weight-bold"
-            >Votre pseudo</label
+            >Votre addresse email</label
           >
           <input
-            id="pseudo"
-            v-model="pseudo"
+            id="email"
+            v-model="email"
             type="text"
             class="form-control"
-            placeholder="pseudo"
+            placeholder="email"
           />
         </div>
         <div class="form-group">
@@ -51,8 +51,7 @@
 
 <script>
 import authService from "../services/auth.service";
-export default {   
-
+export default {
   metaInfo() {
     // if no subcomponents specify a metaInfo.title, this title will be used
     return {
@@ -70,41 +69,28 @@ export default {
   },
   data() {
     return {
-      pseudo: "",
+      email: "",
       password: "",
       error: "",
       loading: false,
     };
   },
   methods: {
-    submit() {
+    async submit() {
       this.loading = true;
-      var pseudo = this.pseudo;
+      var email = this.email;
       var password = this.password;
-      return authService
-        .signIn({
-          pseudo,
-          password,
-        })
-        .then((data) => {
-          const result = {
-            user: data.data.user,
-            token: data.data.token,
-          };
-          this.$store.dispatch("login", result);
-          localStorage.setItem("token", data.data.token);
-          localStorage.setItem("id", data.data.user._id);
-          this.$router.push({
-            path: "/",
-          });
-        })
-        .catch((error) => {
-          this.loading = false;
-          this.error = error.response.data;
-          this.$router.push({
-            path: "/",
-          });
+      try {
+        const data = await authService.signIn(email, password);
+
+        this.$store.dispatch("login", data.user);
+        localStorage.setItem("id", data.user.uid);
+        this.$router.push({
+          path: "/",
         });
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
