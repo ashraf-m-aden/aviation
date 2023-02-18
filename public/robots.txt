@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /login
+Disallow: /gestionDocs
+Disallow: /gestionMedia
+Disallow: /Formulaires/
+Disallow: /Directives/
+Disallow: /Manuels/
+Disallow: /Procedures/
+Disallow: /Reglements/
+Disallow: /Guides/
+Disallow: /docIntern
+Disallow: /404
+Disallow: /Legislations
