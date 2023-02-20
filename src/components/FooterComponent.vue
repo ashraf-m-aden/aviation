@@ -43,7 +43,7 @@
         <a href="#" class="text-light"> Air Djibouti </a>
         <a href="#" class="text-light mb-5"> La nation </a>
 
-        <router-link to="/login" v-show="!user._id">
+        <router-link to="/login" v-show="!user.id">
           <a class="btn btn-group text-light small btn-secondary">Sign In</a>
         </router-link>
       </div>

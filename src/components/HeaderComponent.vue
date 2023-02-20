@@ -22,7 +22,7 @@
 
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" :temporary="temporary">
+    <v-navigation-drawer v-model="drawer" temporary>
       <v-list dense nav>
         <v-list-item v-for="(menu, index) in menuArray" :key="menu.title" link>
           <v-list-item-title v-if="index == 0">

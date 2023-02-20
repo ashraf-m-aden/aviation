@@ -3,7 +3,10 @@
     <div class="row loading" v-if="loading">
       <p class="spinner">
         Suppresion
-        <b-spinner variant="danger" type="grow" label="Spinning"></b-spinner>
+        <v-progress-circular
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
       </p>
     </div>
     <div class="row" v-else>
@@ -50,7 +53,7 @@
                   @click="deleteBanner(banner)"
                   class="btn btn-group btn-outline-success"
                 >
-                  <md-icon>delete</md-icon>
+                  <v-icon icon="md:delete"></v-icon>
                 </button>
               </td>
             </tr>
@@ -65,8 +68,7 @@
 <script>
 import FirebaseUpload from "../../components/FirebaseUpload.vue";
 import * as firebase from "../../firebaseConfig.js";
-export default {   
-
+export default {
   components: {
     FirebaseUpload,
   },

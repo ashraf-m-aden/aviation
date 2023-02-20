@@ -3,7 +3,7 @@ import "firebase/compat/storage";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 
-var config = {
+export var config = {
   apiKey: "AIzaSyAlw6UL5PLeW9uKMfLU9c15Mx2FjZQcD8Y",
   authDomain: "aviation-57c71.firebaseapp.com",
   projectId: "aviation-57c71",

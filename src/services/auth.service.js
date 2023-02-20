@@ -1,5 +1,5 @@
 import EventEmitter from "events";
-import { auth, db } from "../firebaseConfig";
+import { auth, db, config } from "../firebaseConfig";
 import firebase from "firebase/compat/app";
 
 class Auth extends EventEmitter {
@@ -14,16 +14,18 @@ class Auth extends EventEmitter {
   async getUser(id) {
     return await db.collection("users").doc(id).get();
   }
-  getAllUsers() {
-    return auth.get("/allUsers");
+  async getAllUsers() {
+    return await db.collection("users").get();
   }
   async logout() {
     await auth.signOut();
   }
-  postStaff(staff) {
-    const postApp = firebase.app("postApp");
+  async postStaff(staff) {
+    const postApp = firebase.initializeApp(config, "postApp");
     const postAppAuth = postApp.auth();
-    return postAppAuth
+    // const postAppDb = postApp.firestore();
+    const currentUser = auth.currentUser;
+    await postAppAuth
       .createUserWithEmailAndPassword(staff.email, staff.password)
       .then(async (authResult) => {
         // this.tokenExpiry = new Date();
@@ -32,11 +34,13 @@ class Auth extends EventEmitter {
           id: authResult.user.uid,
           email: authResult.user.email,
           name: staff.name,
-          isAdmin: user.isAdmin,
+          isAdmin: staff.isAdmin,
         };
-        await postApp.firestore().collection("users").doc(user.uid).set(user); // cree dans la collection users un document qui a cet id users.id avk les donné "user"
+        await db.collection("users").doc(user.uid).set(user); // cree dans la collection users un document qui a cet id users.id avk les donné "user"
+        await postAppAuth.signOut();
         await postApp.delete();
       });
+    auth.updateCurrentUser(currentUser);
   }
   modifyStaff(staff) {
     return auth.post("/modifyStaff/" + staff._id, {

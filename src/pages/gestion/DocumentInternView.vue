@@ -50,11 +50,10 @@
             v-if="actual"
             class="btn disabled small btn-group btn-outline-info"
           >
-            <md-progress-spinner
-              :md-diameter="30"
-              :md-stroke="3"
-              md-mode="indeterminate"
-            ></md-progress-spinner>
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
           </button>
         </div>
         <table class="table mb-5" v-if="!actual">
@@ -158,8 +157,7 @@
 <script>
 //import documentService from "../../services/document.service";
 import $ from "jquery";
-export default {   
-
+export default {
   metaInfo() {
     // if no subcomponents specify a metaInfo.title, this title will be used
     return {

@@ -57,11 +57,10 @@
             v-if="actual"
             class="btn disabled small btn-group btn-outline-info"
           >
-            <md-progress-spinner
-              :md-diameter="30"
-              :md-stroke="3"
-              md-mode="indeterminate"
-            ></md-progress-spinner>
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
           </button>
         </div>
         <table class="table" v-if="!actual && !loading">
@@ -92,7 +91,7 @@
                   @click="deleteDocument(subOne, 1, doc)"
                   class="btn btn-group btn-outline-danger"
                 >
-                  <md-icon>delete</md-icon>
+                  <v-icon icon="md:delete"></v-icon>
                 </button>
               </td>
             </tr>
@@ -101,11 +100,10 @@
         <div class="loading" v-if="loading">
           <p class="spinner">
             Suppression
-            <b-spinner
-              variant="danger"
-              type="grow"
-              label="Spinning"
-            ></b-spinner>
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
           </p>
         </div>
       </div>
@@ -186,7 +184,7 @@
                     @click="deleteDocument(subTwo, 2, doc)"
                     class="btn btn-group btn-outline-danger"
                   >
-                    <md-icon>delete</md-icon>
+                    <v-icon icon="md:delete"></v-icon>
                   </button>
                 </td>
               </tr>
@@ -195,11 +193,10 @@
           <div class="loading" v-if="loading2">
             <p class="spinner">
               Suppression
-              <b-spinner
-                variant="danger"
-                type="grow"
-                label="Spinning"
-              ></b-spinner>
+              <v-progress-circular
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
             </p>
           </div>
         </div>
@@ -214,8 +211,7 @@ import FirebaseUpload from "../../components/FirebaseUpload.vue";
 import $ from "jquery";
 import * as firebase from "../../firebaseConfig.js";
 
-export default {   
-
+export default {
   metaInfo() {
     // if no subcomponents specify a metaInfo.title, this title will be used
     return {

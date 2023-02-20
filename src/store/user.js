@@ -28,6 +28,7 @@ export const mutations = {
   },
   SET_USER(state, user) {
     state.user = user;
+    localStorage.setItem("email", user.email);
   },
   SET_STAFF(state, staff) {
     state.staff = staff;
@@ -42,19 +43,26 @@ export const actions = {
     return authF.onAuthStateChanged(async (user) => {
       if (user) {
         const response = await auth.getUser(user.uid);
-        // console.log(response.data());
+        if (response.data() == undefined) {
+          await auth.logout();
+          commit("SET_USER", []);
+          commit("SET_ID", null);
+          localStorage.clear();
+        }
+
         commit("SET_USER", response.data());
       } else {
         // No user is signed in.
-        console.log("clear storage");
         commit("SET_USER", {});
         localStorage.clear();
       }
     });
   },
   getStaffs({ commit }) {
-    return auth.getAllUsers().then(async (data) => {
-      await data.data.sort((a, b) => {
+    return auth.getAllUsers().then(async (querySnapshot) => {
+      let documents = querySnapshot.docs.map((doc) => doc.data()); // on fait ca pack qu'on recupere plein de doc dans querysnapshot
+
+      await documents.sort((a, b) => {
         if (a.pseudo > b.pseudo) {
           return 1;
         }
@@ -63,14 +71,14 @@ export const actions = {
         }
         return 0;
       });
-      const staff = data.data;
+      const staff = documents;
       commit("SET_STAFF", staff);
     });
   },
-  logout({ commit }) {
+  async logout({ commit }) {
+    await auth.logout();
     commit("SET_USER", []);
     commit("SET_ID", null);
-    commit("SET_TOKEN", null);
     localStorage.clear();
   },
 

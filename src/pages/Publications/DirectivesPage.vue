@@ -16,7 +16,7 @@
           <span> / {{ b2 }}</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <Menu :menu="menu"></Menu>
+          <SideMenuSub :menu="menu"></SideMenuSub>
         </div>
         <div class="col-12 col-md-8">
           <div class="m-5 p5 d-flex flex-column align-items-center">
@@ -52,67 +52,23 @@
             >
           </div>
 
-          <div class="table" data-app>
-            <v-container fluid>
-              <v-data-iterator
-                :items="sortedDocuments"
-                :items-per-page.sync="itemsPerPage"
-                :page="page"
-                :sort-by="sortBy.toLowerCase()"
-                :sort-desc="sortDesc"
-                hide-default-footer
-              >
-                <template v-slot:default="props">
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th scope="col">Titre</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(doc, index) in props.items" :key="index">
-                        <td>
-                          <li>
-                            <a :href="doc.src" target="_blank">{{
-                              doc.name
-                            }}</a>
-                          </li>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </template>
-                <template v-slot:footer>
-                  <div class="table-footer">
-                    <div>
-                      <span class="mr-4 grey--text">
-                        Page {{ page }} / {{ numberOfPages }}
-                      </span>
-                      <v-btn
-                        small
-                        fab
-                        dark
-                        color="#E6EE9C"
-                        class="mr-1"
-                        @click="formerPage"
-                      >
-                        <v-icon>mdi-chevron-left</v-icon>
-                      </v-btn>
-                      <v-btn
-                        small
-                        fab
-                        dark
-                        color="#E6EE9C"
-                        class="ml-1"
-                        @click="nextPage"
-                      >
-                        <v-icon>mdi-chevron-right</v-icon>
-                      </v-btn>
-                    </div>
-                  </div>
-                </template>
-              </v-data-iterator>
-            </v-container>
+          <div class="table">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Titre</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in sortedDocuments" :key="index">
+                  <td>
+                    <li>
+                      <a :href="item.src" target="_blank">{{ item.name }}</a>
+                    </li>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -121,11 +77,10 @@
 </template>
 
 <script>
-import Menu from "../../components/SideMenuSub.vue";
-export default {   
-
+import SideMenuSub from "../../components/SideMenuSub.vue";
+export default {
   components: {
-    Menu,
+    SideMenuSub,
   },
   metaInfo() {
     return {

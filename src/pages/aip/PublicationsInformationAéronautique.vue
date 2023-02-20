@@ -15,7 +15,7 @@
           <span>Publications d'Information Aéronautique</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <Menu :menu="menu"></Menu>
+          <SideMenuSub :menu="menu"></SideMenuSub>
         </div>
         <div class="col-12 col-md-8">
           <div class="m-5 p5 d-flex flex-column align-items-center">
@@ -50,69 +50,29 @@
               >{{ errorSearch }}</span
             >
           </div>
-
-          <div class="table" data-app>
-            <v-container fluid>
-              <v-data-iterator
-                :items="sortedDocuments"
-                :items-per-page.sync="itemsPerPage"
-                :page="page"
-                :sort-by="sortBy.toLowerCase()"
-                :sort-desc="sortDesc"
-                hide-default-footer
-              >
-                <template v-slot:default="props">
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th scope="col">Titre</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(doc, index) in props.items" :key="index">
-                        <td>
-                          <li>
-                            <a :href="doc.src" target="_blank">{{
-                              doc.name
-                            }}</a>
-                          </li>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </template>
-                <template v-slot:footer>
-                  <div class="table-footer">
-                    <div>
-                      <span class="mr-4 grey--text">
-                        Page {{ page }} / {{ numberOfPages }}
-                      </span>
-                      <v-btn
-                        small
-                        fab
-                        dark
-                        color="#E6EE9C"
-                        class="mr-1"
-                        @click="formerPage"
-                      >
-                        <v-icon>mdi-chevron-left</v-icon>
-                      </v-btn>
-                      <v-btn
-                        small
-                        fab
-                        dark
-                        color="#E6EE9C"
-                        class="ml-1"
-                        @click="nextPage"
-                      >
-                        <v-icon>mdi-chevron-right</v-icon>
-                      </v-btn>
-                    </div>
-                  </div>
-                </template>
-              </v-data-iterator>
-            </v-container>
-          </div>
+          <v-table>
+            <thead>
+              <tr>
+                <th class="text-left">#</th>
+                <th class="text-left" colspan="2">Nom</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in sortedDocuments" :key="item.id">
+                <td>
+                  {{ index + 1 }}
+                </td>
+                <td>{{ item.name }}</td>
+                <td>
+                  <a :href="item.src" target="_blank"
+                    ><v-icon size="large" color="blue-darken-2">
+                      mdi-file-document-outline
+                    </v-icon></a
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
         </div>
       </div>
     </div>
@@ -120,9 +80,8 @@
 </template>
 
 <script>
-import Menu from "../../components/SideMenuSub.vue";
-export default {   
-
+import SideMenuSub from "../../components/SideMenuSub.vue";
+export default {
   metaInfo() {
     return {
       title() {
@@ -138,7 +97,7 @@ export default {
     };
   },
   components: {
-    Menu,
+    SideMenuSub,
   },
   data() {
     return {
@@ -152,6 +111,9 @@ export default {
       sortBy: "name",
       itemsPerPage: 6,
       itemsPerPageArray: [4, 8, 12],
+      total: 2,
+      thead: ["Nom"],
+      tbody: ["name"],
     };
   },
   computed: {
@@ -220,6 +182,9 @@ export default {
     },
     updateItemsPerPage(number) {
       this.itemsPerPage = number;
+    },
+    show(url) {
+      console.log(url);
     },
   },
   mounted() {

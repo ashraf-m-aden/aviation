@@ -59,11 +59,10 @@
             v-if="loading && !errorButton"
             class="btn disabled small btn-group btn-outline-success"
           >
-            <!-- <md-progress-spinner
-              :md-diameter="30"
-              :md-stroke="3"
-              md-mode="indeterminate"
-            ></md-progress-spinner> -->
+            <!--    <v-progress-circular
+          indeterminate
+          color="primary"
+        ></v-progress-circular> -->
           </button>
         </div>
 

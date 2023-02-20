@@ -1,4 +1,4 @@
-import * as store from "../store/index";
+import store from "../store/index";
 import Dashboard from "../pages/DashboardPage.vue";
 import Presentation from "../pages/A propos de nous/PresentationPage.vue";
 import Organisation from "../pages/A propos de nous/OrganisationPage.vue";
@@ -60,7 +60,7 @@ const routes = [
     name: "Login",
     component: Login,
     beforeEnter: (to, from, next) => {
-      if (to.name === "Login" && localStorage.getItem("token")) {
+      if (to.name === "Login" && store.state.user.user.id) {
         next({ alias: ["/"], name: "Dashboard" });
       } else {
         next();

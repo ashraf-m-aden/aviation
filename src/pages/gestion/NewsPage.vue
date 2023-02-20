@@ -44,7 +44,7 @@
                   @click="deleteArticles(news)"
                   class="btn btn-group btn-outline-success"
                 >
-                  <md-icon>delete</md-icon>
+                  <v-icon icon="md:delete"></v-icon>
                 </button>
               </td>
             </tr>
@@ -60,8 +60,7 @@
 import FirebaseUpload from "../../components/FirebaseUpload.vue";
 import * as firebase from "../../firebaseConfig.js";
 
-export default {   
-
+export default {
   components: {
     FirebaseUpload,
   },

@@ -5,29 +5,30 @@
  */
 
 // Components
-import App from './App.vue'
+import App from "./App.vue";
 
 // Composables
-import { createApp } from 'vue'
-
+import { createApp } from "vue";
+import BalmUI from "balm-ui"; // Official Google Material Components
+import BalmUIPlus from "balm-ui-plus"; // BalmJS Team Material Components
+import "balm-ui-css";
 // Plugins
-import { registerPlugins } from '@/plugins'
+import { registerPlugins } from "@/plugins";
 
-const app = createApp(App)
-
-registerPlugins(app)
-
-
+const app = createApp(App);
+app.use(BalmUI);
+app.use(BalmUIPlus);
+registerPlugins(app);
 
 /////////////////////////////////
 
 // import "./registerServiceWorker.js";
 import store from "./store/index";
-import Vue3Material from 'vue3-material';
-import router from './router/index'
+import Vue3Material from "vue3-material";
+import router from "./router/index";
 
-app.use(store)
-app.use(router)
+app.use(store);
+app.use(router);
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faUserSecret,
@@ -42,7 +43,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 // import Meta from "vue-meta";
 
-
 // app.use(Meta, {
 //   keyName: "metaInfo",
 //   attribute: "data-vue-meta",
@@ -53,7 +53,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 import Vue2Editor from "vue2-editor";
 app.use(Vue2Editor);
-app.use(Vue3Material)
+app.use(Vue3Material);
 library.add(
   faUserSecret,
   faPhone,
@@ -63,7 +63,7 @@ library.add(
   faFax,
   faInbox
 );
-import "./firebaseConfig"
+import "./firebaseConfig";
 app.component("font-awesome-icon", FontAwesomeIcon);
 // app.use(MdCard);
 // app.use(MdContent);
@@ -72,6 +72,4 @@ app.component("font-awesome-icon", FontAwesomeIcon);
 // app.use(MdIcon);
 // app.use(MdProgress);
 
-
-
-app.mount('#app')
+app.mount("#app");

@@ -1,8 +1,10 @@
 <template>
   <div class="staff">
     <div class="new">
-      <label for="">Pseudo</label>
-      <input type="text" class="form-control" v-model="staff.pseudo" />
+      <label for="">Nom</label>
+      <input type="text" class="form-control" v-model="staff.name" />
+      <label for="">Email</label>
+      <input type="text" class="form-control" v-model="staff.email" />
       <label for="">Mot de passe</label>
       <input type="text" class="form-control" v-model="staff.password" />
       <label for="">Administrateur</label>
@@ -19,11 +21,10 @@
         v-if="loading"
         class="btn disabled small btn-group btn-outline-success"
       >
-        <md-progress-spinner
-          :md-diameter="20"
-          :md-stroke="3"
-          md-mode="indeterminate"
-        ></md-progress-spinner>
+        <v-progress-circular
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
       </button>
       <div class="alert alert-danger" v-if="alert" role="alert">
         Une erreur est survenue. Notez que le mot de passe doit etre au minimum
@@ -33,64 +34,61 @@
     <div class="all">
       <div class="table" data-app>
         <v-container fluid>
-          <v-data-iterator
+          <!-- <v-data-iterator
             :items="staffs"
-            :items-per-page.sync="itemsPerPage"
+            v-model:items-per-page="itemsPerPage"
             :page="page"
             hide-default-footer
-          >
-            <template v-slot:default="props">
-              <table class="table table-striped">
-                <thead class="table-dark">
-                  <tr>
-                    <th scope="col">Pseudo</th>
-                    <th scope="col">Admin</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(staf, index) in props.items"
-                    :key="index"
-                    class="staff-details"
-                    @click="goStaff(staf)"
-                  >
-                    <td>{{ staf.pseudo }}</td>
-                    <td v-if="staf.isAdmin">Oui</td>
-                    <td v-if="!staf.isAdmin">Non</td>
-                  </tr>
-                </tbody>
-              </table>
-            </template>
-            <template v-slot:footer>
-              <div class="table-footer">
-                <div>
-                  <span class="mr-4 grey--text">
-                    Page {{ page }} / {{ numberOfPages }}
-                  </span>
-                  <v-btn
-                    small
-                    fab
-                    dark
-                    color="#E6EE9C"
-                    class="mr-1"
-                    @click="formerPage"
-                  >
-                    <v-icon>mdi-chevron-left</v-icon>
-                  </v-btn>
-                  <v-btn
-                    small
-                    fab
-                    dark
-                    color="#E6EE9C"
-                    class="ml-1"
-                    @click="nextPage"
-                  >
-                    <v-icon>mdi-chevron-right</v-icon>
-                  </v-btn>
-                </div>
+          > -->
+          <table class="table table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Admin</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(staf, index) in staffs"
+                :key="index"
+                class="staff-details"
+                @click="goStaff(staf)"
+              >
+                <td>{{ staf.name }}</td>
+                <td v-if="staf.isAdmin">Oui</td>
+                <td v-if="!staf.isAdmin">Non</td>
+              </tr>
+            </tbody>
+          </table>
+          <template v-slot:footer>
+            <div class="table-footer">
+              <div>
+                <span class="mr-4 grey--text">
+                  Page {{ page }} / {{ numberOfPages }}
+                </span>
+                <v-btn
+                  small
+                  fab
+                  dark
+                  color="#E6EE9C"
+                  class="mr-1"
+                  @click="formerPage"
+                >
+                  <v-icon>mdi-chevron-left</v-icon>
+                </v-btn>
+                <v-btn
+                  small
+                  fab
+                  dark
+                  color="#E6EE9C"
+                  class="ml-1"
+                  @click="nextPage"
+                >
+                  <v-icon>mdi-chevron-right</v-icon>
+                </v-btn>
               </div>
-            </template>
-          </v-data-iterator>
+            </div>
+          </template>
         </v-container>
       </div>
     </div>
@@ -99,12 +97,12 @@
 
 <script>
 import authS from "../../services/auth.service";
-export default {   
-
+export default {
   data() {
     return {
       staff: {
-        pseudo: "",
+        email: "",
+        name: "",
         password: "",
         isAdmin: false,
       },
