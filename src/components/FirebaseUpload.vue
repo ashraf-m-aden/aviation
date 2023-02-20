@@ -24,7 +24,7 @@
             <input class="input" type="text" v-model="news.title" />
             <label>Contenu: </label>
             <!-- <textarea rows="10" cols="100" class="border mb-5" type="text" v-model="news.content" /> -->
-            <vue-editor v-model="news.content" />
+            <quill-editor theme="snow" v-model="news.content"></quill-editor>
           </div>
 
           <input
@@ -59,10 +59,10 @@
             v-if="loading && !errorButton"
             class="btn disabled small btn-group btn-outline-success"
           >
-            <!--    <v-progress-circular
-          indeterminate
-          color="primary"
-        ></v-progress-circular> -->
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
           </button>
         </div>
 
@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import * as firebase from "../firebaseConfig.js";
+import { storage } from "../firebaseConfig.js";
 import $ from "jquery";
 export default {
   name: "FirebaseUpload",
@@ -175,8 +175,7 @@ export default {
       if (this.isPublicDocumentS1) {
         this.loading = true;
         this.errorButton = false;
-        const storageRef = firebase
-          .storage()
+        const storageRef = storage
           .ref(
             this.category.name +
               "/" +
@@ -237,8 +236,7 @@ export default {
       if (this.isPublicDocumentS2) {
         this.loading = true;
         this.errorButton = false;
-        const storageRef = firebase
-          .storage()
+        const storageRef = storage
           .ref(
             this.category.name +
               "/" +
@@ -311,8 +309,7 @@ export default {
         };
         this.loading = true;
         this.errorButton = false;
-        const storageRef = firebase
-          .storage()
+        const storageRef = storage
           .ref(
             "document internes/" +
               this.category.name +
@@ -385,8 +382,7 @@ export default {
         };
         this.loading = true;
         this.errorButton = false;
-        const storageRef = firebase
-          .storage()
+        const storageRef = storage
           .ref(
             "document internes/" +
               this.category.name +
@@ -456,8 +452,7 @@ export default {
       if (this.isBanner) {
         this.loading = true;
         this.errorButton = false;
-        const storageRef = firebase
-          .storage()
+        const storageRef = storage
           .ref("banners/" + this.banner.title + "." + this.extension)
           .put(this.imageData);
         storageRef.on(
@@ -500,8 +495,7 @@ export default {
       if (this.isNews) {
         this.loading = true;
         this.errorButton = false;
-        const storageRef = firebase
-          .storage()
+        const storageRef = storage
           .ref("news/" + this.news.title + "." + this.extension)
           .put(this.imageData);
         storageRef.on(

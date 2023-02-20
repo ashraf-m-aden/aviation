@@ -247,7 +247,7 @@
 //import documentService from "../../services/document.service";
 import FirebaseUpload from "../../components/FirebaseUpload.vue";
 import $ from "jquery";
-import * as firebase from "../../firebaseConfig.js";
+import { storage } from "../../firebaseConfig.js";
 export default {
   metaInfo() {
     // if no subcomponents specify a metaInfo.title, this title will be used
@@ -379,7 +379,7 @@ export default {
         this.loading2 = true;
       }
       // Create a reference to the file to delete
-      var desertRef = firebase.storage().ref(item.ref);
+      var desertRef = storage.ref(item.ref);
 
       // Delete the file
       desertRef

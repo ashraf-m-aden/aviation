@@ -58,7 +58,7 @@
 
 <script>
 import FirebaseUpload from "../../components/FirebaseUpload.vue";
-import * as firebase from "../../firebaseConfig.js";
+import { storage } from "../../firebaseConfig.js";
 
 export default {
   components: {
@@ -83,7 +83,7 @@ export default {
     },
     deleteArticles(item) {
       // Create a reference to the file to delete
-      var desertRef = firebase.storage().ref(item.ref);
+      var desertRef = storage.ref(item.ref);
 
       // Delete the file
       desertRef

@@ -53,13 +53,13 @@
                   @click="deleteBanner(banner)"
                   class="btn btn-group btn-outline-success"
                 >
-                  <v-icon icon="md:delete"></v-icon>
+                  <v-icon icon="mdi:delete"></v-icon>
                 </button>
               </td>
             </tr>
           </tbody>
         </table>
-        <v-btn small class="saveButton" @click="save"> Enregistrer </v-btn>
+        <v-btn class="saveButton" @click="save"> Enregistrer </v-btn>
       </div>
     </div>
   </div>
@@ -67,7 +67,7 @@
 
 <script>
 import FirebaseUpload from "../../components/FirebaseUpload.vue";
-import * as firebase from "../../firebaseConfig.js";
+import { storage } from "../../firebaseConfig.js";
 export default {
   components: {
     FirebaseUpload,
@@ -88,7 +88,7 @@ export default {
     deleteBanner(item) {
       this.loading = true;
       // Create a reference to the file to delete
-      var desertRef = firebase.storage().ref(item.ref);
+      var desertRef = storage.ref(item.ref);
       try {
         // Delete the file
         desertRef.delete();

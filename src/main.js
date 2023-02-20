@@ -9,17 +9,14 @@ import App from "./App.vue";
 
 // Composables
 import { createApp } from "vue";
-import BalmUI from "balm-ui"; // Official Google Material Components
-import BalmUIPlus from "balm-ui-plus"; // BalmJS Team Material Components
-import "balm-ui-css";
 // Plugins
 import { registerPlugins } from "@/plugins";
-
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
 const app = createApp(App);
-app.use(BalmUI);
-app.use(BalmUIPlus);
-registerPlugins(app);
 
+registerPlugins(app);
+app.component("QuillEditor", QuillEditor);
 /////////////////////////////////
 
 // import "./registerServiceWorker.js";
