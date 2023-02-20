@@ -68,7 +68,6 @@
 // // optional style for arrows & dots
 // import "vue-slick-carousel/dist/vue-slick-carousel-theme.css";
 export default {
-
   components: {
     // VueSlickCarousel,
   },
