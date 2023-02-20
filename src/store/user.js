@@ -1,7 +1,7 @@
 import UserService from "../services/auth.service";
 import auth from "../services/auth.service";
 import { auth as authF } from "../firebaseConfig";
-
+import router from "@/router";
 export const state = () => ({
   id: null,
   token: null,
@@ -42,6 +42,9 @@ export const actions = {
   async getUser({ commit }) {
     return authF.onAuthStateChanged(async (user) => {
       if (user) {
+        if (router.currentRoute.value.fullPath == "/login") {
+          router.back();
+        }
         const response = await auth.getUser(user.uid);
         if (response.data() == undefined) {
           await auth.logout();

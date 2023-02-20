@@ -91,7 +91,9 @@
                   @click="deleteDocument(subOne, 1, doc)"
                   class="btn btn-group btn-outline-danger"
                 >
-                  <v-icon icon="md:delete"></v-icon>
+                  <v-icon size="small" color="red-darken-2">
+                    mdi-delete
+                  </v-icon>
                 </button>
               </td>
             </tr>
@@ -184,7 +186,9 @@
                     @click="deleteDocument(subTwo, 2, doc)"
                     class="btn btn-group btn-outline-danger"
                   >
-                    <v-icon icon="md:delete"></v-icon>
+                    <v-icon size="small" color="red-darken-2">
+                      mdi-delete
+                    </v-icon>
                   </button>
                 </td>
               </tr>

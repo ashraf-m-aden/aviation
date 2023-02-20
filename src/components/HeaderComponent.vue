@@ -332,7 +332,7 @@ export default {
         .catch(() => {
           this.$store.dispatch("logout");
 
-          if (this.$router.history.current.path !== "/") {
+          if (this.$router.currentRoute.value.fullPath !== "/") {
             this.$router.push("/");
           }
         });

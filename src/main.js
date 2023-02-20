@@ -68,5 +68,4 @@ app.component("font-awesome-icon", FontAwesomeIcon);
 // app.use(MdButton);
 // app.use(MdIcon);
 // app.use(MdProgress);
-
-app.mount("#app");
+router.isReady().then(() => app.mount("#app"));

@@ -51,9 +51,11 @@
               <td>
                 <button
                   @click="deleteBanner(banner)"
-                  class="btn btn-group btn-outline-success"
+                  class="btn btn-group btn-outline-danger"
                 >
-                  <v-icon icon="mdi:delete"></v-icon>
+                  <v-icon size="small" color="red-darken-2">
+                    mdi-delete
+                  </v-icon>
                 </button>
               </td>
             </tr>
