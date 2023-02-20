@@ -5,14 +5,20 @@
         <h1>Gestion des documents</h1>
       </div>
       <div class="col-12">
-        <md-tabs>
-          <md-tab id="tab-Intern" md-label="Documents publiques">
+        <v-tabs v-model="tab" bg-color="primary">
+          <v-tab value="Documents publiques">Documents publiques</v-tab>
+          <v-tab value="Documents en internes">Documents en internes</v-tab>
+        </v-tabs>
+
+        <v-window v-model="tab">
+          <v-window-item value="Documents publiques">
             <Public></Public>
-          </md-tab>
-          <md-tab id="tab-Public" md-label="Documents en internes">
+          </v-window-item>
+
+          <v-window-item value="Documents en internes">
             <Intern></Intern>
-          </md-tab>
-        </md-tabs>
+          </v-window-item>
+        </v-window>
       </div>
     </div>
   </div>
@@ -21,8 +27,12 @@
 <script>
 import Intern from "../gestion/DocumentsIntern.vue";
 import Public from "../gestion/DocumentsPublic.vue";
-export default {   
-
+export default {
+  data() {
+    return {
+      tab: null,
+    };
+  },
   computed: {
     isAdmin() {
       return this.$store.state.user.user.isAdmin;

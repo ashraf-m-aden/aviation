@@ -6,15 +6,15 @@
       </div>
       <div class="col-12">
         <strong>Categories:</strong>
-        <b-form-radio-group id="radio-group-1" name="radio-options">
-          <b-form-radio
+        <v-radio-group inline>
+          <v-radio
             @change="getSubCategoryOne(category)"
             v-for="(category, index) in categories"
             :key="index"
+            :label="category.name"
             :value="category._id"
-            >{{ category.name }}</b-form-radio
-          >
-        </b-form-radio-group>
+          ></v-radio>
+        </v-radio-group>
       </div>
     </div>
     <div class="row mt-5">
@@ -94,7 +94,9 @@
                   class="btn btn-group btn-outline-warning"
                   :disabled="!doc.enabled"
                 >
-                  <v-icon icon="md:eye_off"></v-icon>
+                  <v-icon size="small" color="yellow-darken-2">
+                    mdi-eye-off-outline</v-icon
+                  >
                 </button>
               </td>
               <td>
@@ -103,7 +105,9 @@
                   class="btn btn-group btn-outline-success"
                   :disabled="doc.enabled"
                 >
-                  <v-icon icon="md:eye"></v-icon>
+                  <v-icon size="small" color="green-darken-2">
+                    mdi-eye-outline</v-icon
+                  >
                 </button>
               </td>
               <td>
@@ -170,11 +174,10 @@
               v-if="actual2 && !loading2"
               class="btn disabled small btn-group btn-outline-info"
             >
-              <md-progress-spinner
-                :md-diameter="30"
-                :md-stroke="3"
-                md-mode="indeterminate"
-              ></md-progress-spinner>
+              <v-progress-circular
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
             </button>
           </div>
           <table class="table mb-5" v-if="!actual2 && !loading2">

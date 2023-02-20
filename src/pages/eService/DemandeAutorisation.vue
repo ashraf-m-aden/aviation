@@ -16,13 +16,19 @@
           <span> / {{ b2 }}</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <Menu :menu="menu"></Menu>
+          <SideMenu :menu="menu"></SideMenu>
         </div>
         <div class="col-12 col-md-8">
-          <md-tabs>
-            <md-tab id="tab-Intern" md-label="OVF"> </md-tab>
-            <md-tab id="tab-Public" md-label="Landing"> </md-tab>
-          </md-tabs>
+          <v-tabs v-model="tab" bg-color="primary">
+            <v-tab value="OVF">OVF</v-tab>
+            <v-tab value="Landing">Landing</v-tab>
+          </v-tabs>
+
+          <v-window v-model="tab">
+            <v-window-item value="OVF"> </v-window-item>
+
+            <v-window-item value="Landing"> </v-window-item>
+          </v-window>
         </div>
       </div>
     </div>
@@ -30,11 +36,10 @@
 </template>
 
 <script>
-import Menu from "../../components/SideMenu.vue";
-export default {   
-
+import SideMenu from "../../components/SideMenu.vue";
+export default {
   components: {
-    Menu,
+    SideMenu,
   },
   metaInfo: {
     // if no subcomponents specify a metaInfo.title, this title will be used
@@ -60,6 +65,7 @@ export default {
       itemsPerPage: 6,
       itemsPerPageArray: [4, 8, 12],
       apropo: true,
+      tab: null,
     };
   },
   computed: {

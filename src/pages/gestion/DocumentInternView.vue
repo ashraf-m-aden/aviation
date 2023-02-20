@@ -116,11 +116,10 @@
               v-if="actual2"
               class="btn disabled small btn-group btn-outline-info"
             >
-              <md-progress-spinner
-                :md-diameter="30"
-                :md-stroke="3"
-                md-mode="indeterminate"
-              ></md-progress-spinner>
+              <v-progress-circular
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
             </button>
           </div>
           <table class="table mb-5" v-if="!actual2">

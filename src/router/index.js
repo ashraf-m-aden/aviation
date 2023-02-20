@@ -96,7 +96,7 @@ const routes = [
     name: "DocIntern",
     component: DocIntern,
     beforeEnter: (to, from, next) => {
-      if (to.name === "DocIntern" && !store.state.user.user._id) {
+      if (to.name === "DocIntern" && !store.state.user.user.id) {
         next({ alias: ["/"], name: "Login" });
       } else {
         next();

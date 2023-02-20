@@ -6,15 +6,16 @@
       </div>
       <div class="col-12">
         <strong>Categories:</strong>
-        <b-form-radio-group id="radio-group-1" name="radio-options">
-          <b-form-radio
+
+        <v-radio-group inline>
+          <v-radio
             @change="getSubCategoryOne(category)"
             v-for="(category, index) in categories"
             :key="index"
+            :label="category.name"
             :value="category._id"
-            >{{ category.name }}</b-form-radio
-          >
-        </b-form-radio-group>
+          ></v-radio>
+        </v-radio-group>
       </div>
     </div>
     <div class="row mt-5">
@@ -151,11 +152,10 @@
               v-if="actual2 && !loading2"
               class="btn disabled small btn-group btn-outline-info"
             >
-              <md-progress-spinner
-                :md-diameter="30"
-                :md-stroke="3"
-                md-mode="indeterminate"
-              ></md-progress-spinner>
+              <v-progress-circular
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
             </button>
           </div>
           <table v-if="!actual2 && !loading2" class="table mb-5">

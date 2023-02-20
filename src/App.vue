@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <v-app class="app" app>
+    <v-app class="app mt-5" app>
       <HeaderComp class="header" v-if="lang == 'french'"></HeaderComp>
       <HeaderEng class="header" v-else></HeaderEng>
       <router-view />
