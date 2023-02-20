@@ -1,8 +1,7 @@
-import EventEmitter from "events";
 import { auth, db, config } from "../firebaseConfig";
 import firebase from "firebase/compat/app";
 
-class Auth extends EventEmitter {
+class Auth {
   // authToken = null;
   // userProfile = null;
   // tokenExpiry = null;
