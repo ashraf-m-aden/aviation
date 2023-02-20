@@ -17,7 +17,7 @@
           <span> / {{ b2 }}</span>
         </div>
         <div class="col-md-4 sideMenu border">
-          <Menu :menu="menu" :apropo="false"></Menu>
+          <SideMenuSub :menu="menu" :apropo="false"></SideMenuSub>
         </div>
         <div class="col">
           <div class="row">
@@ -48,7 +48,7 @@
                   <img
                     v-show="b1 !== 'Securité' && b1 !== 'Sureté'"
                     class="card-img-top"
-                    src="../assets/safety and security.png"
+                    src="../assets/safety_and_security.png"
                     alt=""
                   />
                   <div class="card-body">
@@ -65,11 +65,10 @@
 </template>
 
 <script>
-import Menu from "../components/SideMenuSub.vue";
-export default {   
-
+import SideMenuSub from "../components/SideMenuSub.vue";
+export default {
   components: {
-    Menu,
+    SideMenuSub,
   },
   metaInfo() {
     const description = this.subOne.description;

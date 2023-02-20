@@ -6,15 +6,16 @@
       </div>
       <div class="col-12">
         <strong>Categories:</strong>
-        <b-form-radio-group id="radio-group-1" name="radio-options">
-          <b-form-radio
+
+        <v-radio-group inline>
+          <v-radio
             @change="getSubCategoryOne(category)"
             v-for="(category, index) in categories"
             :key="index"
+            :label="category.name"
             :value="category._id"
-            >{{ category.name }}</b-form-radio
-          >
-        </b-form-radio-group>
+          ></v-radio>
+        </v-radio-group>
       </div>
     </div>
     <div class="row mt-5">
