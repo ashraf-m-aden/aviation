@@ -10,7 +10,12 @@
             class="carousel_div"
             v-for="(banner, index) in banners"
             :key="index"
-            :style="{ backgroundImage: `url(${banner.url})` }"
+            :style="{
+              backgroundImage: `url(${banner.url})`,
+              'background-position': 'center',
+              'background-size': 'cover',
+              'background-repeat': 'no-repeat',
+            }"
           >
             <!-- <img class="carousel_div_img" :src="banner.url" alt="" /> -->
 

@@ -38,15 +38,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-// import Meta from "vue-meta";
-
-// app.use(Meta, {
-//   keyName: "metaInfo",
-//   attribute: "data-vue-meta",
-//   ssrAttribute: "data-vue-meta-server-rendered",
-//   tagIDKeyName: "vmid",
-//   refreshOnceOnNavigation: true,
-// });
+import { createMetaManager } from "vue-meta";
+app.use(createMetaManager());
 
 import Vue2Editor from "vue2-editor";
 app.use(Vue2Editor);
