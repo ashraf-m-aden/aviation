@@ -1,5 +1,16 @@
 <template>
   <div class="col-12">
+    <div class="carousel">
+      <div class="carousel-box">
+        <div
+          v-for="(item, index) in partenaires"
+          :key="index"
+          class="image"
+          :style="{ 'background-image': 'url(' + item.src + ')' }"
+        ></div>
+      </div>
+    </div>
+
     <!-- <VueSlickCarousel v-bind="settings" class="carousel" ref="carousel">
       <div class="carousel-box">
         <img
@@ -63,10 +74,13 @@
 </template>
 
 <script>
-// import VueSlickCarousel from "vue-slick-carousel";
-// import "vue-slick-carousel/dist/vue-slick-carousel.css";
-// // optional style for arrows & dots
-// import "vue-slick-carousel/dist/vue-slick-carousel-theme.css";
+import airport from "../assets/airport.jpg";
+import ethiopian from "../assets/ethiopian.png";
+import emirat from "../assets/emirates.png";
+import qatar from "../assets/qatar.png";
+import turkish from "../assets/turkish-airlines-logo.jpg";
+import france from "../assets/air france.png";
+import djibouti from "../assets/air djibouti.png";
 export default {
   components: {
     // VueSlickCarousel,
@@ -87,6 +101,15 @@ export default {
       },
       windowWidth: window.innerHeight,
       txt: "",
+      partenaires: [
+        { src: airport },
+        { src: djibouti },
+        { src: turkish },
+        { src: emirat },
+        { src: qatar },
+        { src: ethiopian },
+        { src: france },
+      ],
     };
   },
   watch: {
@@ -162,21 +185,17 @@ export default {
 }
 
 .carousel {
-  height: 30vh;
   width: 100%;
-
+  margin: 5rem 0 5rem 0;
   &-box {
-    position: relative;
-    height: 25vh;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
     .image {
       width: 150px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      margin: 0 auto;
-      @include centerElement;
-
+      height: 6rem;
+      background-size: contain;
+      background-position: center;
       @include respond(phone) {
         height: 6rem;
       }

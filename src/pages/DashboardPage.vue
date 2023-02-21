@@ -1,7 +1,7 @@
 <template>
   <div>
     <Carousel></Carousel>
-    <!-- <Partenaire></Partenaire> -->
+    <Partenaire></Partenaire>
 
     <div class="row mb-5">
       <div class="col-12 col-md-9 news">
@@ -50,7 +50,7 @@
 import MAP from "../components/MapComponent.vue";
 import Carousel from "../components/CarouselComponent.vue";
 import News from "../components/NewsComponent.vue";
-// import Partenaire from "../components/PartenaireComponent.vue";
+import Partenaire from "../components/PartenaireComponent.vue";
 export default {
   metaInfo: {
     // if no subcomponents specify a metaInfo.title, this title will be used
@@ -71,7 +71,7 @@ export default {
   components: {
     MAP,
     Carousel,
-    // Partenaire,
+    Partenaire,
     News,
   },
 };
