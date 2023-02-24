@@ -19,8 +19,8 @@ import ethiopian from "../assets/ethiopian.png";
 import emirat from "../assets/emirates.png";
 import qatar from "../assets/qatar.png";
 import turkish from "../assets/turkish-airlines-logo.jpg";
-import france from "../assets/air france.png";
-import djibouti from "../assets/air djibouti.png";
+import france from "../assets/air-france.png";
+import djibouti from "../assets/air-djibouti.png";
 export default {
   data() {
     return {
