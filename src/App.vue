@@ -1,10 +1,9 @@
 <template>
   <div class="container-fluid">
     <v-app class="app mt-5" app>
-      <HeaderComp class="header" v-if="lang == 'french'"></HeaderComp>
-      <HeaderEng class="header" v-else></HeaderEng>
-      <router-view />
-
+      <HeaderComp class="header"></HeaderComp>
+      <!-- <HeaderEng class="header" v-else></HeaderEng> -->
+      <v-main> <router-view /> </v-main>
       <FooterComp class="mt-5" v-if="lang == 'french'"></FooterComp>
       <FooterEng class="mt-5" v-else></FooterEng>
     </v-app>
@@ -12,7 +11,7 @@
 </template>
 <script>
 import HeaderComp from "./components/HeaderComponent.vue";
-import HeaderEng from "./components/HeaderEng.vue";
+// import HeaderEng from "./components/HeaderEng.vue";
 import FooterComp from "./components/FooterComponent.vue";
 import FooterEng from "./components/FooterEng.vue";
 export default {
@@ -52,7 +51,7 @@ export default {
   },
   components: {
     HeaderComp,
-    HeaderEng,
+    // HeaderEng,
     FooterComp,
     FooterEng,
   },

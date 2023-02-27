@@ -1,89 +1,97 @@
 <template>
-  <div>
-    <v-app-bar color="blue" class="bar" app dark elevation="0">
-      <img
-        id="box"
-        class="fly light"
-        src="https://images.vexels.com/media/users/3/145795/isolated/preview/05cd33059a006bf49006097af4ccba98-plane-in-flight-by-vexels.png"
-      />
+  <div class="row">
+    <div class="col-12">
+      <v-app-bar color="blue" class="bar" app dark elevation="0">
+        <img
+          id="box"
+          class="fly light"
+          src="https://images.vexels.com/media/users/3/145795/isolated/preview/05cd33059a006bf49006097af4ccba98-plane-in-flight-by-vexels.png"
+        />
 
-      <template v-slot:prepend>
-        <router-link to="/">
-          <a class="navbar-brand img-fluid" href="#">
-            <img src="../assets/casa.png" alt="logo" class="logo-menu" />
-          </a>
-        </router-link>
-      </template>
-      <v-spacer></v-spacer>
-      <v-app-bar-title
-        >Autorité de l'aviation civile de Djibouti</v-app-bar-title
-      >
-      <v-spacer></v-spacer>
+        <template v-slot:prepend>
+          <router-link to="/">
+            <a class="navbar-brand img-fluid" href="#">
+              <img src="../assets/casa.png" alt="logo" class="logo-menu" />
+            </a>
+          </router-link>
+        </template>
+        <v-spacer></v-spacer>
+        <v-app-bar-title
+          >Autorité de l'aviation civile de Djibouti</v-app-bar-title
+        >
+        <v-spacer></v-spacer>
 
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-    </v-app-bar>
-    <v-navigation-drawer v-model="drawer" temporary>
-      <v-list dense nav>
-        <v-list-item v-for="(menu, index) in menuArray" :key="menu.title" link>
-          <v-list-item-title v-if="index == 0">
-            <router-link to="/">
-              <a class="navbar-brand img-fluid" href="#">
-                <img src="../assets/casa.png" alt="logo" class="logo" />
-              </a>
-            </router-link>
-          </v-list-item-title>
-          <v-expansion-panels v-else>
-            <v-expansion-panel
-              :value="value"
-              :title="menu.title"
-              expand-icon="mdi-plus"
-              collapse-icon="mdi-minus"
-            >
-              <v-expansion-panel-text>
-                <v-list>
-                  <v-list-item v-for="(subtitle, i) in menu.sub" :key="i">
-                    <router-link :to="subtitle.router">{{
-                      subtitle.title
-                    }}</router-link>
-                  </v-list-item>
-                </v-list>
-              </v-expansion-panel-text>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-list-item>
-      </v-list>
-      <v-spacer>
+        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      </v-app-bar>
+      <v-navigation-drawer v-model="drawer" temporary>
         <v-list dense nav>
-          <v-list-item class="nav-item nav-link gestion" v-show="user.isAdmin">
-            <router-link
-              to="/gestionMedia"
-              class="nav-item text-primary font-weight-bolder"
-              >Gestion Media</router-link
-            >
-          </v-list-item>
-          <v-list-item class="nav-item nav-link" v-show="user.isAdmin">
-            <router-link
-              to="/gestionDocs"
-              class="nav-item text-primary font-weight-bolder"
-              >Gestion Documents</router-link
-            >
-          </v-list-item>
-          <v-list-item class="nav-item nav-link" v-show="user.id">
-            <router-link
-              to="/docIntern"
-              class="nav-item text-primary font-weight-bolder"
-              >Documents Internes</router-link
-            >
-          </v-list-item>
-          <v-list-item class="nav-item nav-link" v-show="user.id">
-            <button class="btn-group btn-outline-danger" @click="logout">
-              Sign out
-            </button>
+          <v-list-item
+            v-for="(menu, index) in menuArray"
+            :key="menu.title"
+            link
+          >
+            <v-list-item-title v-if="index == 0">
+              <router-link to="/">
+                <a class="navbar-brand img-fluid" href="#">
+                  <img src="../assets/casa.png" alt="logo" class="logo" />
+                </a>
+              </router-link>
+            </v-list-item-title>
+            <v-expansion-panels v-else>
+              <v-expansion-panel
+                :value="value"
+                :title="menu.title"
+                expand-icon="mdi-plus"
+                collapse-icon="mdi-minus"
+              >
+                <v-expansion-panel-text>
+                  <v-list>
+                    <v-list-item v-for="(subtitle, i) in menu.sub" :key="i">
+                      <router-link :to="subtitle.router">{{
+                        subtitle.title
+                      }}</router-link>
+                    </v-list-item>
+                  </v-list>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </v-expansion-panels>
           </v-list-item>
         </v-list>
-      </v-spacer>
-    </v-navigation-drawer>
-    <div class="row">
+        <v-spacer>
+          <v-list dense nav>
+            <v-list-item
+              class="nav-item nav-link gestion"
+              v-show="user.isAdmin"
+            >
+              <router-link
+                to="/gestionMedia"
+                class="nav-item text-primary font-weight-bolder"
+                >Gestion Media</router-link
+              >
+            </v-list-item>
+            <v-list-item class="nav-item nav-link" v-show="user.isAdmin">
+              <router-link
+                to="/gestionDocs"
+                class="nav-item text-primary font-weight-bolder"
+                >Gestion Documents</router-link
+              >
+            </v-list-item>
+            <v-list-item class="nav-item nav-link" v-show="user.id">
+              <router-link
+                to="/docIntern"
+                class="nav-item text-primary font-weight-bolder"
+                >Documents Internes</router-link
+              >
+            </v-list-item>
+            <v-list-item class="nav-item nav-link" v-show="user.id">
+              <button class="btn-group btn-outline-danger" @click="logout">
+                Sign out
+              </button>
+            </v-list-item>
+          </v-list>
+        </v-spacer>
+      </v-navigation-drawer>
+      <!-- <div class="row">
       <div class="col-12 social">
         <a class="social_language" @click="switchLang('french')">Francais</a>/
         <a class="social_language" @click="switchLang('eng')">English</a>
@@ -92,6 +100,7 @@
 
     <div class="row">
       <div class="socialBottom bg-success"></div>
+    </div> -->
     </div>
   </div>
 </template>

@@ -1,17 +1,21 @@
 <template>
   <div class="row">
-    <div style="height: 600px; width: 800px">
-      <l-map ref="map" v-model:zoom="zoom" :center="[11.5532, 43.1503]">
-        <l-tile-layer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          layer-type="base"
-          name="OpenStreetMap"
-        ></l-tile-layer>
-        <l-marker :lat-lng="[11.553, 43.1501]">
-          <l-icon :icon-url="iconUrl" :icon-size="iconSize" />
-          <l-popup> Autorité de l'Aviation Civile de Djibouti </l-popup>
-        </l-marker>
-      </l-map>
+    <div class="col-12">
+      <div class="map-container">
+        <div class="map">
+          <l-map ref="map" v-model:zoom="zoom" :center="[11.5532, 43.1503]">
+            <l-tile-layer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              layer-type="base"
+              name="OpenStreetMap"
+            ></l-tile-layer>
+            <l-marker :lat-lng="[11.553, 43.1501]">
+              <l-icon :icon-url="iconUrl" :icon-size="iconSize" />
+              <l-popup> Autorité de l'Aviation Civile de Djibouti </l-popup>
+            </l-marker>
+          </l-map>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -71,25 +75,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../sass/main.scss";
 .map-container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  bottom: 0;
+  margin-top: 2rem;
+  width: 500px;
+  height: 300px;
+  @include respond(phone) {
+    width: 300px;
+    height: 300px;
+  }
 }
 .map {
-  max-width: 1000px;
-  margin: 0 auto;
-  height: 500px;
-}
-
-@media (min-width: 500px) and (max-width: 769px) {
-  .map {
-    max-width: 1000px;
-    margin: 0 auto;
-    height: 500px;
-  }
+  width: 100%;
+  height: 100%;
 }
 
 .map-frame {
