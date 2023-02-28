@@ -76,21 +76,21 @@
                   >
                 </li>
                 <li>
-                  <router-link to="/Mot du directeur"
+                  <router-link to="/Mot-du-directeur"
                     ><a href="#" class="dropdown-item"
                       >Mot du directeur
                     </a></router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/Politique de Formation"
+                  <router-link to="/Politique-de-Formation"
                     ><a href="#" class="dropdown-item"
                       >Politique de formation
                     </a></router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/Politique de Supervision"
+                  <router-link to="/Politique-de-Supervision"
                     ><a href="#" class="dropdown-item"
                       >Politique de supervision
                     </a></router-link
@@ -149,7 +149,7 @@
                   <ul aria-labelledby="dropdownMenu2" class="dropdown-menu">
                     <li>
                       <router-link
-                        to="/Textes reglementaires/Reglementation aeronautique de Djibouti"
+                        to="/Textes-reglementaires/Reglementation aeronautique de Djibouti"
                       >
                         <a tabindex="-1" href="#" class="dropdown-item"
                           >Réglementation aéronautique de Djibouti</a
@@ -157,14 +157,14 @@
                       >
                     </li>
                     <li>
-                      <router-link to="/Textes reglementaires/Arretes">
+                      <router-link to="/Textes-reglementaires/Arretes">
                         <a tabindex="-1" href="#" class="dropdown-item"
                           >Arrêtés</a
                         ></router-link
                       >
                     </li>
                     <li>
-                      <router-link to="/Textes reglementaires/Decrets"
+                      <router-link to="/Textes-reglementaires/Decrets"
                         ><a href="#" class="dropdown-item"
                           >Décrets</a
                         ></router-link
@@ -1050,7 +1050,7 @@
               >
               <ul aria-labelledby="dropdownMenu1" class="dropdown-menu">
                 <li>
-                  <router-link to="/Audit et Inspection"
+                  <router-link to="/Audit-et-Inspection"
                     ><a href="#" class="dropdown-item"
                       >Audit et Inspection
                     </a></router-link
@@ -1174,14 +1174,14 @@
               >
               <ul aria-labelledby="dropdownMenu1" class="dropdown-menu">
                 <li>
-                  <router-link to="/Formulaire de compte rendu"
+                  <router-link to="/Formulaire-de-compte-rendu"
                     ><a href="#" class="dropdown-item"
                       >Formulaire de compte rendu
                     </a></router-link
                   >
                 </li>
                 <li>
-                  <router-link to="/Demande d'autorisation de vol"
+                  <router-link to="/Demande-d'autorisation-de-vol"
                     ><a href="#" class="dropdown-item"
                       >Demande d'autorisation de vol
                     </a></router-link
@@ -1281,7 +1281,7 @@ export default {
             },
             {
               title: "Mot du directeur",
-              router: "/Mot du directeur",
+              router: "/Mot-du-directeur",
             },
             {
               title: "Organisation",
@@ -1289,11 +1289,11 @@ export default {
             },
             {
               title: "Politique de supervision",
-              router: "/Politique de Supervision",
+              router: "/Politique-de-Supervision",
             },
             {
               title: "Politique de formation",
-              router: "/Politique de Formation",
+              router: "/Politique-de-Formation",
             },
           ],
         },
@@ -1394,7 +1394,7 @@ export default {
           sub: [
             {
               title: "Audit et Inspection",
-              router: "/Audit et Inspection",
+              router: "/Audit-et-Inspection",
             },
           ],
         },
@@ -1403,7 +1403,7 @@ export default {
           sub: [
             {
               title: "Formulaire de compte rendu",
-              router: "/Formulaire de compte rendu",
+              router: "/Formulaire-de-compte-rendu",
             },
             {
               title: "Demande d'autorisation de vol",

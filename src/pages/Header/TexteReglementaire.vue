@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12 col-md-4">
         <router-link
-          to="/Textes reglementaires/Reglementation aeronautique de Djibouti"
+          to="/Textes-reglementaires/Reglementation aeronautique de Djibouti"
         >
           <div class="card text-left">
             <img class="card-img-top" src="../../assets/safety.png" alt="" />
@@ -16,7 +16,7 @@
         </router-link>
       </div>
       <div class="col-12 col-md-4">
-        <router-link to="/Textes reglementaires/Arretes">
+        <router-link to="/Textes-reglementaires/Arretes">
           <div class="card text-left">
             <img class="card-img-top" src="../../assets/safety.png" alt="" />
             <div class="card-body">
@@ -26,7 +26,7 @@
         </router-link>
       </div>
       <div class="col-12 col-md-4">
-        <router-link to="/Textes reglementaires/Decrets">
+        <router-link to="/Textes-reglementaires/Decrets">
           <div class="card text-left">
             <img class="card-img-top" src="../../assets/safety.png" alt="" />
             <div class="card-body">

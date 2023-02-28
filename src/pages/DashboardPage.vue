@@ -34,7 +34,7 @@
               >
             </li>
             <li class="list-group-item">
-              <router-link class="router" to="/Demande d'autorisation de vol">
+              <router-link class="router" to="/Demande-d'autorisation-de-vol">
                 Demande d'autorisation de vol</router-link
               >
             </li>

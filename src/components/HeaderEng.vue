@@ -285,7 +285,7 @@
                 <ul aria-labelledby="dropdownMenu2" class="dropdown-menu">
                   <li>
                     <router-link
-                      to="/Textes reglementaires/Djibouti aeronautical regulations"
+                      to="/Textes-reglementaires/Djibouti aeronautical regulations"
                     >
                       <a tabindex="-1" href="#" class="dropdown-item"
                         >Djibouti aeronautical regulations</a
@@ -293,14 +293,14 @@
                     >
                   </li>
                   <li>
-                    <router-link to="/Textes reglementaires/Arretes">
+                    <router-link to="/Textes-reglementaires/Arretes">
                       <a tabindex="-1" href="#" class="dropdown-item"
                         >Orders</a
                       ></router-link
                     >
                   </li>
                   <li>
-                    <router-link to="/Textes reglementaires/Decrets"
+                    <router-link to="/Textes-reglementaires/Decrets"
                       ><a href="#" class="dropdown-item"
                         >Decrees</a
                       ></router-link
@@ -1131,7 +1131,7 @@
             >
             <ul aria-labelledby="dropdownMenu1" class="dropdown-menu">
               <li>
-                <router-link to="/Audit et Inspection"
+                <router-link to="/Audit-et-Inspection"
                   ><a href="#" class="dropdown-item"
                     >Audit and Inspection
                   </a></router-link
@@ -1331,8 +1331,7 @@
 <script>
 import auth from "../services/auth.service";
 
-export default {   
-
+export default {
   data() {
     return {
       menu: "Menu",
@@ -1375,7 +1374,7 @@ export default {
         },
         {
           title: "Regulations",
-          router: "/Textes reglementaires?id=5f53707658ac040039a1a6c0",
+          router: "/Textes-reglementaires?id=5f53707658ac040039a1a6c0",
         },
         {
           title: "Directives",
@@ -1443,7 +1442,7 @@ export default {
       sub6: [
         {
           title: "Audit et Inspection",
-          router: "/Audit et Inspection",
+          router: "/Audit-et-Inspection",
         },
       ],
       sub7: [

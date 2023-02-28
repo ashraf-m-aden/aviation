@@ -25,7 +25,7 @@
 
     <ul class="list-group text-left" v-else>
       <li class="list-group-item">
-        <router-link :to="{ path: '/Mot du directeur' }" class="path">
+        <router-link :to="{ path: '/Mot-du-directeur' }" class="path">
           Mot du directeur</router-link
         >
       </li>
@@ -40,12 +40,12 @@
         >
       </li>
       <li class="list-group-item">
-        <router-link :to="{ path: '/Politique de Formation' }" class="path">
+        <router-link :to="{ path: '/Politique-de-Formation' }" class="path">
           Politique de formation</router-link
         >
       </li>
       <li class="list-group-item">
-        <router-link :to="{ path: '/Politique de Supervision' }" class="path">
+        <router-link :to="{ path: '/Politique-de-Supervision' }" class="path">
           Politique de supervision</router-link
         >
       </li>
@@ -54,8 +54,7 @@
 </template>
 
 <script>
-export default {   
-
+export default {
   data() {
     return {};
   },

@@ -29,7 +29,7 @@
                                 </a></router-link>
                         </li>
                         <li>
-                            <router-link to="/Mot du directeur"><a href="#" class="dropdown-item">Mot du directeur
+                            <router-link to="/Mot-du-directeur"><a href="#" class="dropdown-item">Mot du directeur
                                 </a></router-link>
                         </li>
                         <li>
@@ -67,7 +67,7 @@
                             <a id="dropdownMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Texte reglementaires</a>
                             <ul aria-labelledby="dropdownMenu2" class="dropdown-menu border-0 shadow">
                                 <li>
-                                    <router-link to="/Textes reglementaires/Reglementation aeronautique de Djibouti">
+                                    <router-link to="/Textes-reglementaires/Reglementation aeronautique de Djibouti">
                                         <a tabindex="-1" href="#" class="dropdown-item">Réglementation aéronautique de Djibouti</a></router-link>
                                 </li>
                             </ul>
@@ -76,11 +76,11 @@
                             <a id="dropdownMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true" class="dropdown-item nav-item dropdown-toggle">Accords</a>
                             <ul aria-labelledby="dropdownMenu2" class="dropdown-menu border-0 shadow">
                                 <li>
-                                    <router-link to="/Accords/Accords internationaux">
+                                    <router-link to="/Accords/Accords-internationaux">
                                         <a tabindex="-1" href="#" class="dropdown-item">Accords internationaux</a></router-link>
                                 </li>
                                 <li>
-                                    <router-link to="/Accords/Accords bilateraux">
+                                    <router-link to="/Accords/Accords-bilateraux">
                                         <a href="#" class="dropdown-item">Accords bilaterales</a></router-link>
                                 </li>
                             </ul>

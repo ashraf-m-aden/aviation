@@ -128,7 +128,7 @@ export default {
             },
             {
               title: "Mot du directeur",
-              router: "/Mot du directeur",
+              router: "/Mot-du-directeur",
             },
             {
               title: "Organisation",
@@ -136,11 +136,11 @@ export default {
             },
             {
               title: "Politique de supervision",
-              router: "/Politique de Supervision",
+              router: "/Politique-de-Supervision",
             },
             {
               title: "Politique de formation",
-              router: "/Politique de Formation",
+              router: "/Politique-de-Formation",
             },
           ],
         },
@@ -238,7 +238,7 @@ export default {
           sub: [
             {
               title: "Audit et Inspection",
-              router: "/Audit et Inspection",
+              router: "/Audit-et-Inspection",
             },
           ],
         },
@@ -247,7 +247,7 @@ export default {
           sub: [
             {
               title: "Formulaire de compte rendu",
-              router: "/Formulaire de compte rendu",
+              router: "/Formulaire-de-compte-rendu",
             },
             {
               title: "Demande d'autorisation de vol",
