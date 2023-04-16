@@ -10,7 +10,7 @@
   </div>
 </template>
 <script>
-import HeaderComp from "./components/HeaderComponent.vue";
+import HeaderComp from "./components/NewHeader.vue";
 // import HeaderEng from "./components/HeaderEng.vue";
 import FooterComp from "./components/FooterComponent.vue";
 import FooterEng from "./components/FooterEng.vue";

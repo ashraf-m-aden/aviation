@@ -1,0 +1,366 @@
+<template>
+  <div>
+    <ul class="navbar-nav mr-auto navbar">
+      <li>
+        <router-link to="/">
+          <a class="navbar-brand img-fluid" href="#">
+            <img src="../assets/casa.png" alt="logo" class="logo" />
+          </a>
+        </router-link>
+      </li>
+      <li v-for="menu in menuArray" :key="menu.title" class="nav-item dropdown">
+        <a
+          id="dropdownMenu1"
+          href="#"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          class="nav-link dropdown-toggle"
+        >
+          {{ menu.title }}
+        </a>
+        <ul aria-labelledby="dropdownMenu1" class="dropdown-menu">
+          <li v-for="(subtitle, i) in menu.sub" :key="i" class="dropdown-item">
+            <router-link :to="subtitle.router">
+              <a href="#" class="dropdown-item">{{
+                subtitle.title
+              }}</a></router-link
+            >
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <ul v-show="user.id" class="navbar logged">
+      <li class="nav-item nav-link gestion" v-show="user.isAdmin">
+        <router-link
+          to="/gestionMedia"
+          class="nav-item text-primary font-weight-bolder"
+          >Gestion Media</router-link
+        >
+      </li>
+      <li class="nav-item nav-link" v-show="user.isAdmin">
+        <router-link
+          to="/gestionDocs"
+          class="nav-item text-primary font-weight-bolder"
+          >Gestion Documents</router-link
+        >
+      </li>
+      <li class="nav-item nav-link" v-show="user.id">
+        <router-link
+          to="/docIntern"
+          class="nav-item text-primary font-weight-bolder"
+          >Documents Internes</router-link
+        >
+      </li>
+      <li class="nav-item nav-link" v-show="user.id">
+        <button class="btn-group btn-outline-danger" @click="logout">
+          Sign out
+        </button>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+import auth from "../services/auth.service";
+export default {
+  data() {
+    return {
+      sub: [false, false, false, false, false, false, false, false],
+      menuArray: [
+        {
+          title: "A propos de nous",
+          sub: [
+            {
+              title: "Presentation",
+              router: "/Presentation",
+            },
+            {
+              title: "Mot du directeur",
+              router: "/Mot-du-directeur",
+            },
+            {
+              title: "Organisation",
+              router: "/Organisation",
+            },
+            {
+              title: "Politique de supervision",
+              router: "/Politique-de-Supervision",
+            },
+            {
+              title: "Politique de formation",
+              router: "/Politique-de-Formation",
+            },
+          ],
+        },
+        {
+          title: "Publications",
+          sub: [
+            {
+              title: "Legislations",
+              router: "/Categorie/Legislations?id=5f53706c838ed6002be47d36",
+            },
+            {
+              title: "Textes reglementaires",
+              router:
+                "/Categorie/Textes reglementaires?id=5f53707658ac040039a1a6c0",
+            },
+            {
+              title: "Directives",
+              router: "/Directives",
+            },
+            {
+              title: "Circulaires",
+              router: "/Circulaires",
+            },
+            {
+              title: "Decisions",
+              router: "/Decisions",
+            },
+          ],
+        },
+        {
+          title: "Securité",
+          sub: [
+            {
+              title: "Navigabilité",
+              router: "/Categorie/Navigabilité?id=5f3aa3413c2c433e946dcca6",
+            },
+            {
+              title: "Exploitation technique des aeronefs",
+              router:
+                "/Categorie/Exploitation technique des aéronefs?id=5f3aa7e234512340cc2b8253",
+            },
+            {
+              title: "License du personel",
+              router:
+                "/Categorie/License du personel?id=5f3aa7f034512340cc2b8254",
+            },
+            {
+              title: "Aérodrome et infrastructures aéroportuaires",
+              router:
+                "/Categorie/Aérodrome et infrastructures aéroportuaires?id=5f3aa7fe34512340cc2b8255",
+            },
+            {
+              title:
+                "Service de l'information aéronautique et de la cartographie",
+              router:
+                "/Categorie/Service de l'information aéronautique et de la cartographie?id=5f3aa80a34512340cc2b8256",
+            },
+            {
+              title: "Communication, navigation et surveillance",
+              router:
+                "/Categorie/Communication, navigation et surveillance?id=5f535bbc1dc9dc44eceead5c",
+            },
+            {
+              title: "Gestion de l'espace aérien",
+              router:
+                "/Categorie/Gestion de l'espace aérien?id=5f535bcd1dc9dc44eceead5d",
+            },
+            {
+              title: "Service metéorologique",
+              router:
+                "/Categorie/Service metéorologique?id=5f535bd91dc9dc44eceead5e",
+            },
+            {
+              title: "Recherches et sauvetages",
+              router:
+                "/Categorie/Recherches et sauvetages?id=5f57966756cc341290c683d2",
+            },
+          ],
+        },
+        {
+          title: "Sureté",
+          sub: [
+            {
+              title: "Sureté",
+              router: "/Categorie/Sureté?id=5f535d6433d82b0034f95ee8",
+            },
+            {
+              title: "Facilitation",
+              router: "/Categorie/Facilitation?id=5f535d69c0161b0045e05444",
+            },
+          ],
+        },
+        {
+          title: "Inspection",
+          sub: [
+            {
+              title: "Audit et Inspection",
+              router: "/Audit-et-Inspection",
+            },
+          ],
+        },
+        {
+          title: "e-Services",
+          sub: [
+            {
+              title: "Formulaire de compte rendu",
+              router: "/Formulaire-de-compte-rendu",
+            },
+            {
+              title: "Demande d'autorisation de vol",
+              router: "/Demande autorisation",
+            },
+          ],
+        },
+        {
+          title: "Administration et Affaires juridiques",
+
+          sub: [
+            {
+              title: "Lois",
+              router: "/Juridiques/Lois?id=6035f30ea713263cf8a98c51",
+            },
+            {
+              title: "Décrets",
+              router: "/Juridiques/Décrets?id=6035f317a713263cf8a98c52",
+            },
+            {
+              title: "Arrêtés",
+              router: "/Juridiques/Arrêtés?id=6035f32ca713263cf8a98c53",
+            },
+            {
+              title: "Règlements",
+              router: "/Juridiques/Règlements?id=6035f337a713263cf8a98c54",
+            },
+            {
+              title: "Procédures",
+              router: "/Juridiques/Procédures?id=6035f350a713263cf8a98c57",
+            },
+            {
+              title: "Directives",
+              router: "/Juridiques/Directives?id=6035f35da713263cf8a98c59",
+            },
+            {
+              title: "Circulaires",
+              router: "/Juridiques/Circulaires?id=6035f362a713263cf8a98c5a",
+            },
+            {
+              title: "Politiques",
+              router: "/Juridiques/Politiques?id=6035f347a713263cf8a98c56",
+            },
+          ],
+        },
+        {
+          title: "A.I.P.",
+          sub: [
+            {
+              title: "Publications d'Information Aéronautique",
+              router: "/aip?id=61a3bf992a5e4d2a901c8f40",
+            },
+          ],
+        },
+      ],
+    };
+  },
+  computed: {
+    user() {
+      return this.$store.state.user.user;
+    },
+  },
+  watch: {
+    temporary(newTemporay) {
+      if (newTemporay == false) {
+        this.value == false;
+      }
+    },
+  },
+  methods: {
+    test(index) {
+      for (let i = 0; i < this.sub.length; i++) {
+        if (index !== i) {
+          this.sub[index] = false;
+        } else {
+          this.sub[index] = true;
+        }
+      }
+      console.log(this.sub);
+    },
+    logout() {
+      auth
+        .logout()
+        .then(() => {
+          this.$store.dispatch("logout");
+
+          if (this.$router.history.current.path !== "/") {
+            this.$router.push("/");
+          }
+        })
+        .catch(() => {
+          this.$store.dispatch("logout");
+
+          if (this.$router.currentRoute.value.fullPath !== "/") {
+            this.$router.push("/");
+          }
+        });
+    },
+    goTo(id, name) {
+      this.$router.push({ path: "/Categorie/" + name, query: { id } });
+    },
+    switchLang(lang) {
+      this.$store.dispatch("setLang", lang);
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+@import "../sass/main.scss";
+.navbar {
+  display: flex;
+  flex-direction: row;
+  border: solid 1px black;
+}
+
+.logo {
+  width: 10rem;
+}
+.dropdown {
+  color: black;
+  &:hover > .dropdown-menu {
+    display: block; // c'st lui qui le truc hoverable
+  }
+  &:last-child > .dropdown-menu {
+    border: solid 1px black;
+    margin-left: -320px;
+    @include respond(tablet-land) {
+    }
+  }
+}
+.dropdown-menu {
+  position: absolute;
+}
+
+.nav-item > a:after {
+  // c'est  pour la fleche du nav
+  //    display: block;
+  content: "";
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  // border-style: solid;
+  // border-width: 5px 0 5px 5px;
+  // margin-top: 5px;
+  // margin-right: -10px;
+}
+
+.dropdown-item {
+  list-style: none;
+  font-size: 1.6;
+  color: black;
+  text-decoration: none;
+
+  &:link,
+  &:visited,
+  &:active {
+    color: black;
+    text-decoration: none;
+  }
+
+  &:hover {
+    text-transform: uppercase;
+    color: black;
+  }
+}
+</style>
