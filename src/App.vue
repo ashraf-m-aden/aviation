@@ -1,19 +1,19 @@
 <template>
-  <div class="container-fluid">
-    <v-app class="app mt-5" app>
-      <HeaderComp class="header"></HeaderComp>
-      <!-- <HeaderEng class="header" v-else></HeaderEng> -->
-      <v-main> <router-view /> </v-main>
-      <FooterComp class="mt-5" v-if="lang == 'french'"></FooterComp>
-      <FooterEng class="mt-5" v-else></FooterEng>
-    </v-app>
+  <div class="container-fluid app">
+    <div class="row">
+      <div class="col-12">
+        <HeaderComp class="header"></HeaderComp>
+        <!-- <HeaderEng class="header" v-else></HeaderEng> -->
+        <router-view />
+        <FooterComp class="mt-5"></FooterComp>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import HeaderComp from "./components/HeaderComponent.vue";
+import HeaderComp from "./components/NewHeader.vue";
 // import HeaderEng from "./components/HeaderEng.vue";
 import FooterComp from "./components/FooterComponent.vue";
-import FooterEng from "./components/FooterEng.vue";
 export default {
   metaInfo: {
     // if no subcomponents specify a metaInfo.title, this title will be used
@@ -53,7 +53,6 @@ export default {
     HeaderComp,
     // HeaderEng,
     FooterComp,
-    FooterEng,
   },
   computed: {
     lang() {
