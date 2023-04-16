@@ -7,20 +7,36 @@ class Auth {
   // tokenExpiry = null;
   // const isloggedIn = "isLoggedIn";
 
-  signIn(email, password) {
-    return auth.signInWithEmailAndPassword(email, password);
+  async signIn(email, password) {
+    const user = await db.collection('users').where('email','==',email).get();
+
+      let documents = user.docs.map((doc) => doc.data());
+
+    if (documents[0].enabled) {
+      return auth.signInWithEmailAndPassword(email, password);
+    }
+    else {
+      throw new Error("Utilisateur inexistant")
+    }
   }
   async getUser(id) {
     return await db.collection("users").doc(id).get();
   }
   async getAllUsers() {
-    return await db.collection("users").get();
+    return await db.collection("users").where("enabled","==",true).get();
   }
   async logout() {
     await auth.signOut();
   }
   async postStaff(staff) {
-    const postApp = firebase.initializeApp(config, "postApp");
+    const user = await db.collection('users').where('email','==',staff.email).get();
+
+      let documents = user.docs.map((doc) => doc.data());
+
+    if (documents.length > 0) {
+      throw new Error('Email existe deja');
+    } else {
+      const postApp = firebase.initializeApp(config, "postApp");
     const postAppAuth = postApp.auth();
     // const postAppDb = postApp.firestore();
     const currentUser = auth.currentUser;
@@ -34,22 +50,24 @@ class Auth {
           email: authResult.user.email,
           name: staff.name,
           isAdmin: staff.isAdmin,
+          enabled: true
         };
-        await db.collection("users").doc(user.uid).set(user); // cree dans la collection users un document qui a cet id users.id avk les donné "user"
+        await db.collection("users").doc(user.id).set(user); // cree dans la collection users un document qui a cet id users.id avk les donné "user"
         await postAppAuth.signOut();
         await postApp.delete();
       });
     auth.updateCurrentUser(currentUser);
+    }
   }
-  modifyStaff(staff) {
-    return auth.post("/modifyStaff/" + staff._id, {
-      params: staff,
-    });
+  async modifyStaff(staff) {
+    console.log(staff);
+    return await db.collection("users").doc(staff.id).update(staff);
+
   }
-  deleteStaff(staff) {
-    return auth.post("/deleteStaff/" + staff._id, {
-      params: staff,
-    });
+  async deleteStaff(id) {
+    console.log(id);
+    return await db.collection("users").doc(id).update("enabled", false);
+
   }
 }
 

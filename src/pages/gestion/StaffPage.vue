@@ -27,7 +27,8 @@
         ></v-progress-circular>
       </button>
       <div class="alert alert-danger" v-if="alert" role="alert">
-        Une erreur est survenue. Notez que le mot de passe doit etre au minimum
+        {{ errorMessage }}
+        Une erreur est survenue. Notez aussi que le mot de passe doit etre au minimum
         de 7 lettres <br />
       </div>
     </div>
@@ -43,8 +44,8 @@
           <table class="table table-striped">
             <thead class="table-dark">
               <tr>
-                <th scope="col">Pseudo</th>
-                <th scope="col">Admin</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Est Admin</th>
               </tr>
             </thead>
             <tbody>
@@ -105,6 +106,7 @@ export default {
         name: "",
         password: "",
         isAdmin: false,
+        enabled: true
       },
       sortDesc: false,
       page: 1,
@@ -113,6 +115,7 @@ export default {
       itemsPerPageArray: [4, 8, 12],
       alert: false,
       loading: false,
+      errorMessage: ""
     };
   },
   mounted() {
@@ -141,13 +144,14 @@ export default {
           };
           this.loading = false;
         })
-        .catch(() => {
+        .catch((error) => {
           this.alert = true;
           this.loading = false;
+          this.errorMessage = error
         });
     },
     goStaff(staff) {
-      this.$router.push({ path: "/staff", query: { id: staff._id } });
+      this.$router.push({ path: "/staff", query: { id: staff.id } });
     },
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1;

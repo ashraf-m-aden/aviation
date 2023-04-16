@@ -83,9 +83,12 @@ const routes = [
     path: "/gestionDocs",
     name: "Docs",
     component: Docs,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: async (to, from, next) => {
       if (to.name === "Docs" && !store.state.user.user.isAdmin) {
-        next({ alias: ["/"], name: "Login" });
+        await store.dispatch('getUser');
+        if (!store.state.user.user.id) {
+          next('/');
+        } else { next()}
       } else {
         next();
       }
@@ -95,9 +98,12 @@ const routes = [
     path: "/docIntern",
     name: "DocIntern",
     component: DocIntern,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: async (to, from, next) =>  {
       if (to.name === "DocIntern" && !store.state.user.user.id) {
-        next({ alias: ["/"], name: "Login" });
+        await store.dispatch('getUser');
+        if (!store.state.user.user.id) {
+          next('/');
+        } else { next()}
       } else {
         next();
       }
@@ -107,9 +113,12 @@ const routes = [
     path: "/gestionMedia",
     name: "Media",
     component: Media,
-    beforeEnter: (to, from, next) => {
+    beforeEnter:async (to, from, next) => {
       if (to.name === "Media" && !store.state.user.user.isAdmin) {
-        next({ alias: ["/"], name: "Login" });
+        await store.dispatch('getUser');
+        if (!store.state.user.user.isAdmin) {
+          next('/');
+        } else { next()}
       } else {
         next();
       }
@@ -307,6 +316,7 @@ const routes = [
   { path: "/:pathMatch(.*)*", name: "Error", component: PageNotFound },
 ];
 
+
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
@@ -317,5 +327,10 @@ const router = createRouter({
     return { top: 0 };
   },
 });
-
+// router.beforeEach((to, next)=>{
+//   const user = store.state.user.user;
+//   if (user.id && to.path == "/login") {
+//     next('/');
+//   }
+// })
 export default router;

@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 list">
       <v-app-bar color="blue" class="bar" app dark elevation="0">
         <img
           id="box"
@@ -23,73 +23,75 @@
 
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       </v-app-bar>
-      <v-navigation-drawer v-model="drawer" temporary>
-        <v-list dense nav>
-          <v-list-item
-            v-for="(menu, index) in menuArray"
-            :key="menu.title"
-            link
-          >
-            <v-list-item-title v-if="index == 0">
-              <router-link to="/">
-                <a class="navbar-brand img-fluid" href="#">
-                  <img src="../assets/casa.png" alt="logo" class="logo" />
-                </a>
-              </router-link>
-            </v-list-item-title>
-            <v-expansion-panels v-else>
-              <v-expansion-panel
-                :value="value"
-                :title="menu.title"
-                expand-icon="mdi-plus"
-                collapse-icon="mdi-minus"
-              >
-                <v-expansion-panel-text>
-                  <v-list>
-                    <v-list-item v-for="(subtitle, i) in menu.sub" :key="i">
-                      <router-link :to="subtitle.router">{{
-                        subtitle.title
-                      }}</router-link>
-                    </v-list-item>
-                  </v-list>
-                </v-expansion-panel-text>
-              </v-expansion-panel>
-            </v-expansion-panels>
-          </v-list-item>
-        </v-list>
-        <v-spacer>
-          <v-list dense nav>
+      <v-navigation-drawer v-model="drawer" temporary class="list">
+        <div class="list">
+          <v-list dense nav class="list">
             <v-list-item
-              class="nav-item nav-link gestion"
-              v-show="user.isAdmin"
+              v-for="(menu, index) in menuArray"
+              :key="menu.title"
+              link
             >
-              <router-link
-                to="/gestionMedia"
-                class="nav-item text-primary font-weight-bolder"
-                >Gestion Media</router-link
-              >
-            </v-list-item>
-            <v-list-item class="nav-item nav-link" v-show="user.isAdmin">
-              <router-link
-                to="/gestionDocs"
-                class="nav-item text-primary font-weight-bolder"
-                >Gestion Documents</router-link
-              >
-            </v-list-item>
-            <v-list-item class="nav-item nav-link" v-show="user.id">
-              <router-link
-                to="/docIntern"
-                class="nav-item text-primary font-weight-bolder"
-                >Documents Internes</router-link
-              >
-            </v-list-item>
-            <v-list-item class="nav-item nav-link" v-show="user.id">
-              <button class="btn-group btn-outline-danger" @click="logout">
-                Sign out
-              </button>
+              <v-list-item-title v-if="index == 0">
+                <router-link to="/">
+                  <a class="navbar-brand img-fluid" href="#">
+                    <img src="../assets/casa.png" alt="logo" class="logo" />
+                  </a>
+                </router-link>
+              </v-list-item-title>
+              <v-expansion-panels v-else>
+                <v-expansion-panel
+                  :value="value"
+                  :title="menu.title"
+                  expand-icon="mdi-menu-down"
+                  collapse-icon="mdi-menu-up"
+                >
+                  <v-expansion-panel-text>
+                    <v-list>
+                      <v-list-item v-for="(subtitle, i) in menu.sub" :key="i">
+                        <router-link :to="subtitle.router">{{
+                          subtitle.title
+                        }}</router-link>
+                      </v-list-item>
+                    </v-list>
+                  </v-expansion-panel-text>
+                </v-expansion-panel>
+              </v-expansion-panels>
             </v-list-item>
           </v-list>
-        </v-spacer>
+          <v-spacer>
+            <v-list dense nav>
+              <v-list-item
+                class="nav-item nav-link gestion"
+                v-show="user.isAdmin"
+              >
+                <router-link
+                  to="/gestionMedia"
+                  class="nav-item text-primary font-weight-bolder"
+                  >Gestion Media</router-link
+                >
+              </v-list-item>
+              <v-list-item class="nav-item nav-link" v-show="user.isAdmin">
+                <router-link
+                  to="/gestionDocs"
+                  class="nav-item text-primary font-weight-bolder"
+                  >Gestion Documents</router-link
+                >
+              </v-list-item>
+              <v-list-item class="nav-item nav-link" v-show="user.id">
+                <router-link
+                  to="/docIntern"
+                  class="nav-item text-primary font-weight-bolder"
+                  >Documents Internes</router-link
+                >
+              </v-list-item>
+              <v-list-item class="nav-item nav-link" v-show="user.id">
+                <button class="btn-group btn-outline-danger" @click="logout">
+                  Sign out
+                </button>
+              </v-list-item>
+            </v-list>
+          </v-spacer>
+        </div>
       </v-navigation-drawer>
       <!-- <div class="row">
       <div class="col-12 social">
@@ -358,6 +360,18 @@ export default {
 
 <style lang="scss" scoped>
 @import "../sass/main.scss";
+
+.list {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scrollbar-color: red;
+  scrollbar-face-color: aqua;
+  border: solid 1px yellow;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
 .btn {
   width: 2rem;
   height: 2rem;

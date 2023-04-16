@@ -36,14 +36,12 @@
             Connection
           </button>
           <button class="btn btn-group btn-outline-success" v-if="loading">
-            <div class="spinner-border" role="status">
-              <span class="sr-only small">Loading...</span>
-            </div>
+              Loading...
           </button>
         </div>
       </div>
-      <span class="text-danger bg-white rounded-pill text-center">{{
-        error
+      <span class="text-danger bg-white rounded-pill text-center" v-if="error">{{
+        errorMessage
       }}</span>
     </div>
   </div>
@@ -71,13 +69,15 @@ export default {
     return {
       email: "",
       password: "",
-      error: "",
+      errorMessage: "",
+      error: false,
       loading: false,
     };
   },
   methods: {
     async submit() {
       this.loading = true;
+      this.error = false;
       var email = this.email;
       var password = this.password;
       try {
@@ -89,6 +89,9 @@ export default {
           path: "/",
         });
       } catch (error) {
+        this.loading = false;
+        this.error = true
+        this.errorMessage= error
         console.log(error);
       }
     },
