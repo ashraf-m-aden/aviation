@@ -73,6 +73,9 @@ export default {
 };
 </script>
 <style lang="scss">
+.container {
+  background-color: white;
+}
 /* Hide scrollbar for Chrome, Safari and Opera */
 .container-fluid::-webkit-scrollbar {
   display: none;

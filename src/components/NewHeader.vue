@@ -68,7 +68,7 @@
         </div>
       </div>
     </nav>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg logged">
       <div class="collapse navbar-collapse logged" id="navbarSupportedContent">
         <ul v-show="user.id" class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item nav-link gestion" v-show="user.isAdmin">
@@ -93,7 +93,7 @@
             >
           </li>
           <li class="nav-item nav-link" v-show="user.id">
-            <button class="btn-group btn-outline-danger" @click="logout">
+            <button class="btn-group btn btn-danger" @click="logout">
               Sign out
             </button>
           </li>
@@ -357,11 +357,11 @@ export default {
   width: 40%;
 }
 .nav-wrapper {
-  background: linear-gradient(
-    90deg,
-    rgba(0, 212, 255, 1) 40%,
-    rgba(25, 0, 255, 0.4430147058823529) 89%
-  );
+  border-bottom: solid 2px #1dd2dd;
+  border-bottom-left-radius: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
 }
 
 .logo {
@@ -379,7 +379,11 @@ export default {
   }
 }
 .nav-item {
-  color: white;
+  color: radial-gradient(
+    circle,
+    rgba(8, 0, 255, 0.5130427170868348) 40%,
+    rgba(0, 241, 255, 0.4430147058823529) 89%
+  );
   text-transform: uppercase;
 }
 .nav-item > a:after {
@@ -389,7 +393,11 @@ export default {
   width: 0;
   height: 0;
   border-color: transparent;
-  color: white;
+  color: radial-gradient(
+    circle,
+    rgba(8, 0, 255, 0.5130427170868348) 40%,
+    rgba(0, 241, 255, 0.4430147058823529) 89%
+  );
   // border-style: solid;
   // border-width: 5px 0 5px 5px;
   // margin-top: 5px;
@@ -399,7 +407,7 @@ export default {
 .dropdown-item {
   list-style: none;
   font-size: 1.6;
-  color: black;
+  color: rgba(0, 241, 255, 0.4430147058823529);
   text-decoration: none;
 
   &:link,
