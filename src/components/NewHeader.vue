@@ -1,63 +1,105 @@
 <template>
-  <div>
-    <ul class="navbar-nav mr-auto navbar">
-      <li>
+  <div class="nav-wrapper pb-5">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
         <router-link to="/">
           <a class="navbar-brand img-fluid" href="#">
             <img src="../assets/casa.png" alt="logo" class="logo" />
           </a>
         </router-link>
-      </li>
-      <li v-for="menu in menuArray" :key="menu.title" class="nav-item dropdown">
-        <a
-          id="dropdownMenu1"
-          href="#"
-          data-toggle="dropdown"
-          aria-haspopup="true"
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
           aria-expanded="false"
-          class="nav-link dropdown-toggle"
+          aria-label="Toggle navigation"
         >
-          {{ menu.title }}
-        </a>
-        <ul aria-labelledby="dropdownMenu1" class="dropdown-menu">
-          <li v-for="(subtitle, i) in menu.sub" :key="i" class="dropdown-item">
-            <router-link :to="subtitle.router">
-              <a href="#" class="dropdown-item">{{
-                subtitle.title
-              }}</a></router-link
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-justify"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
+            />
+          </svg>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li
+              class="nav-item dropdown"
+              v-for="menu in menuArray"
+              :key="menu.title"
+            >
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {{ menu.title }}
+              </a>
+              <ul
+                class="dropdown-menu"
+                v-for="(subtitle, i) in menu.sub"
+                :key="i"
+              >
+                <li
+                  v-for="(subtitle, i) in menu.sub"
+                  :key="i"
+                  class="dropdown-item"
+                >
+                  <router-link :to="subtitle.router">
+                    <a href="#" class="dropdown-item">{{
+                      subtitle.title
+                    }}</a></router-link
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="collapse navbar-collapse logged" id="navbarSupportedContent">
+        <ul v-show="user.id" class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item nav-link gestion" v-show="user.isAdmin">
+            <router-link
+              to="/gestionMedia"
+              class="nav-item text-primary font-weight-bolder"
+              >Gestion Media</router-link
             >
           </li>
+          <li class="nav-item nav-link" v-show="user.isAdmin">
+            <router-link
+              to="/gestionDocs"
+              class="nav-item text-primary font-weight-bolder"
+              >Gestion Documents</router-link
+            >
+          </li>
+          <li class="nav-item nav-link" v-show="user.id">
+            <router-link
+              to="/docIntern"
+              class="nav-item text-primary font-weight-bolder"
+              >Documents Internes</router-link
+            >
+          </li>
+          <li class="nav-item nav-link" v-show="user.id">
+            <button class="btn-group btn-outline-danger" @click="logout">
+              Sign out
+            </button>
+          </li>
         </ul>
-      </li>
-    </ul>
-    <ul v-show="user.id" class="navbar logged">
-      <li class="nav-item nav-link gestion" v-show="user.isAdmin">
-        <router-link
-          to="/gestionMedia"
-          class="nav-item text-primary font-weight-bolder"
-          >Gestion Media</router-link
-        >
-      </li>
-      <li class="nav-item nav-link" v-show="user.isAdmin">
-        <router-link
-          to="/gestionDocs"
-          class="nav-item text-primary font-weight-bolder"
-          >Gestion Documents</router-link
-        >
-      </li>
-      <li class="nav-item nav-link" v-show="user.id">
-        <router-link
-          to="/docIntern"
-          class="nav-item text-primary font-weight-bolder"
-          >Documents Internes</router-link
-        >
-      </li>
-      <li class="nav-item nav-link" v-show="user.id">
-        <button class="btn-group btn-outline-danger" @click="logout">
-          Sign out
-        </button>
-      </li>
-    </ul>
+      </div>
+    </nav>
   </div>
 </template>
 
@@ -308,9 +350,18 @@ export default {
 <style lang="scss" scoped>
 @import "../sass/main.scss";
 .navbar {
-  display: flex;
-  flex-direction: row;
-  border: solid 1px black;
+  width: 100%;
+  padding: 0;
+}
+.logged {
+  width: 40%;
+}
+.nav-wrapper {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 212, 255, 1) 40%,
+    rgba(25, 0, 255, 0.4430147058823529) 89%
+  );
 }
 
 .logo {
@@ -318,20 +369,19 @@ export default {
 }
 .dropdown {
   color: black;
-  &:hover > .dropdown-menu {
-    display: block; // c'st lui qui le truc hoverable
+  .dropdown-menu {
+    border: solid 2px rgb(0, 212, 255);
   }
   &:last-child > .dropdown-menu {
-    border: solid 1px black;
     margin-left: -320px;
     @include respond(tablet-land) {
     }
   }
 }
-.dropdown-menu {
-  position: absolute;
+.nav-item {
+  color: white;
+  text-transform: uppercase;
 }
-
 .nav-item > a:after {
   // c'est  pour la fleche du nav
   //    display: block;
@@ -339,6 +389,7 @@ export default {
   width: 0;
   height: 0;
   border-color: transparent;
+  color: white;
   // border-style: solid;
   // border-width: 5px 0 5px 5px;
   // margin-top: 5px;
