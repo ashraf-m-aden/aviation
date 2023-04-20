@@ -16,12 +16,10 @@
           <span> / Politique de formation</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <Menu :apropo="apropo"></Menu>
+          <MenuCompnent :apropo="apropo"></MenuCompnent>
         </div>
         <div class="col-12 col-md-8 justify">
-          <h1 class="h3 title">
-            POLITIQUE ET ENGAGEMENT DU DIRECTEUR GENERAL EN MATIERE DE FORMATION
-          </h1>
+          <h1 class="h3 title">POLITIQUE ET ENGAGEMENT DU DIRECTEUR GENERAL</h1>
 
           <p>
             Notre capacité de supervision de la sécurité et de la sureté ne peut
@@ -104,11 +102,10 @@
 </template>
 
 <script>
-import Menu from "../../components/SideMenuSub.vue";
-export default {   
-
+import MenuCompnent from "../../components/SideMenuSub.vue";
+export default {
   components: {
-    Menu,
+    MenuCompnent,
   },
   metaInfo() {
     return {

@@ -366,7 +366,11 @@ export default {
     },
     categories() {
       let categories = this.$store.state.category.category.filter((cat) => {
-        return cat.name !== "A propos de nous" && cat.name !== "e-Services";
+        return (
+          cat.name !== "A propos de nous" &&
+          cat.name !== "e-Services" &&
+          cat.name !== "Publications"
+        );
       });
       return categories;
     },
