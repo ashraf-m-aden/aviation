@@ -15,7 +15,7 @@
           alt="aviation djibouti"
         />
       </div>
-      <div class="toast-body">Hello, world! This is a toast message.</div>
+      <div class="toast-body">{{ message }}</div>
     </div>
     <div
       v-show="!success"
@@ -32,7 +32,7 @@
           alt="aviation djibouti"
         />
       </div>
-      <div class="toast-body">Hello, world! This is a toast message.</div>
+      <div class="toast-body">{{ message }}</div>
     </div>
   </div>
 </template>
@@ -59,16 +59,25 @@ export default {
 }
 .toast-container {
   z-index: 999;
+  right: 0;
 }
 .success {
   padding: 5px;
-  background-color: green;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 212, 255, 1) 40%,
+    rgba(25, 0, 255, 0.4430147058823529) 89%
+  );
   border-radius: 5%;
 }
 
 .warning {
   padding: 5px;
-  background-color: red;
+  background: linear-gradient(
+    90deg,
+    rgb(219, 177, 86) 40%,
+    rgba(235, 9, 9, 0.836) 89%
+  );
   border-radius: 5%;
 }
 

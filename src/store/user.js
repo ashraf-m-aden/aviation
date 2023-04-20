@@ -39,7 +39,7 @@ export const actions = {
     commit("SET_USER", user);
     commit("SET_ID", user.uid);
   },
-  async getUser({ commit }) {
+  async getUser({ commit, dispatch }) {
     return authF.onAuthStateChanged(async (user) => {
       if (user) {
         if (router.currentRoute.value.fullPath == "/login") {
@@ -52,7 +52,7 @@ export const actions = {
           commit("SET_ID", null);
           localStorage.clear();
         }
-
+        dispatch("successNotif", "Bienvenue, " + response.data().name);
         commit("SET_USER", response.data());
       } else {
         // No user is signed in.
@@ -78,11 +78,12 @@ export const actions = {
       commit("SET_STAFF", staff);
     });
   },
-  async logout({ commit }) {
+  async logout({ commit, dispatch }) {
     await auth.logout();
     commit("SET_USER", []);
     commit("SET_ID", null);
     localStorage.clear();
+    dispatch("warningNotif", "Utilisateur déconnecté");
   },
 
   patchUser({ commit }, payload) {

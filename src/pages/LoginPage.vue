@@ -85,13 +85,8 @@ export default {
       try {
         const data = await authService.signIn(email, password);
 
-        this.$store.dispatch("login", data.user);
+        //  this.$store.dispatch("login", data.user);
         localStorage.setItem("id", data.user.uid);
-        this.$store.dispatch(
-          "successNotif",
-          "Bienvenue, " + data.user.displayName
-        );
-
         this.$router.push({
           path: "/",
         });
