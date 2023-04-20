@@ -2,14 +2,15 @@ import documents from "./documents";
 import category from "./categoryMenu";
 import media from "./media";
 import user from "./user";
-import { createStore } from 'vuex'
+import notif from "./notif";
+import { createStore } from "vuex";
 
-const store =  createStore({
+const store = createStore({
   state() {
-return{
-  lang: "french",
-
-}  },
+    return {
+      lang: "french",
+    };
+  },
   getters: {
     getLang(state) {
       return state.lang;
@@ -30,6 +31,7 @@ return{
     category,
     media,
     user,
+    notif,
   },
 });
 export default store;

@@ -36,13 +36,15 @@
             Connection
           </button>
           <button class="btn btn-group btn-outline-success" v-if="loading">
-              Loading...
+            Loading...
           </button>
         </div>
       </div>
-      <span class="text-danger bg-white rounded-pill text-center" v-if="error">{{
-        errorMessage
-      }}</span>
+      <span
+        class="text-danger bg-white rounded-pill text-center"
+        v-if="error"
+        >{{ errorMessage }}</span
+      >
     </div>
   </div>
 </template>
@@ -83,16 +85,17 @@ export default {
       try {
         const data = await authService.signIn(email, password);
 
-        this.$store.dispatch("login", data.user);
+        //  this.$store.dispatch("login", data.user);
         localStorage.setItem("id", data.user.uid);
         this.$router.push({
           path: "/",
         });
       } catch (error) {
         this.loading = false;
-        this.error = true
-        this.errorMessage= error
+        this.error = true;
+        this.errorMessage = error;
         console.log(error);
+        this.$store.dispatch("warningNotif", error);
       }
     },
   },

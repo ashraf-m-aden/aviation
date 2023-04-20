@@ -2,6 +2,7 @@
   <div class="container-fluid app">
     <div class="row">
       <div class="col-12">
+        <NotificationComponent></NotificationComponent>
         <HeaderComp class="header"></HeaderComp>
         <!-- <HeaderEng class="header" v-else></HeaderEng> -->
         <router-view />
@@ -14,6 +15,7 @@
 import HeaderComp from "./components/NewHeader.vue";
 // import HeaderEng from "./components/HeaderEng.vue";
 import FooterComp from "./components/FooterComponent.vue";
+import NotificationComponent from "./components/NotificationComponent.vue";
 export default {
   metaInfo: {
     // if no subcomponents specify a metaInfo.title, this title will be used
@@ -53,6 +55,7 @@ export default {
     HeaderComp,
     // HeaderEng,
     FooterComp,
+    NotificationComponent,
   },
   computed: {
     lang() {
