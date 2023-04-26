@@ -88,7 +88,7 @@
         </table>
       </div>
       <div class="col-12 col-md-8 mt-5" v-if="isSubOne">
-        <div class="d-flex">
+        <div class="d-flex" v-if="subOneDoc.length == 0">
           <input type="text" v-model="newSubTwo.name" class="form-control" />
 
           <button
@@ -215,7 +215,7 @@
             >
           </div>
         </nav>
-        <div class="" v-if="subTwo !== ''">
+        <div class="col-12" v-if="subTwo !== ''">
           <div class="d-flex float-right justify-content-between">
             <button v-if="subTwo.enabled">
               <font-awesome-icon
