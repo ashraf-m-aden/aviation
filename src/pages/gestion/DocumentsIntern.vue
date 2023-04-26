@@ -20,28 +20,84 @@
     </div>
     <div class="row mt-5">
       <div class="col-12 col-md-4 mt-5" v-show="subCategoryOne.length > 0">
-        <strong>Sous-Categories de niveau 1:</strong>
-
-        <div
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
-          <a
-            class="nav-link subOne text-dark btn-group btn-outline-info"
-            :id="item._id"
-            role="tab"
-            @click="getSubCategoryTwo(item)"
-            v-for="(item, index) in subCategoryOne"
-            :key="index"
-            >{{ item.name }}</a
-          >
+        <div class="d-flex justify-content-between mb-5">
+          <strong>Sous-Categories de niveau 1:</strong>
+          <button>
+            <font-awesome-icon
+              v-if="!addSubOne"
+              :icon="['fas', 'plus']"
+              @click="addSubOne = !addSubOne"
+            />
+            <font-awesome-icon
+              v-if="addSubOne"
+              :icon="['fas', 'minus']"
+              @click="
+                {
+                  addSubOne = !addSubOne;
+                  newSubOne.name = '';
+                }
+              "
+            />
+          </button>
         </div>
+        <table class="table">
+          <tr v-for="(item, index) in subCategoryOne" :key="index">
+            <td v-if="item.enabled">
+              <div
+                @click="getSubCategoryTwo(item)"
+                class="d-flex justify-content-between align-center subOne text-dark btn-group btn-outline-primary btn"
+              >
+                <h6>{{ item.name }}</h6>
+                <font-awesome-icon
+                  class="text-warning"
+                  :icon="['fas', 'trash']"
+                  @click="removeSubOne(item._id)"
+                />
+              </div>
+            </td>
+            <td v-else>
+              <div
+                class="nav-link d-flex justify-content-between align-center border-bottom text-secondary btn-group btn-outline-info"
+              >
+                <a :id="item._id" role="tab">{{ item.name }}</a>
+                <font-awesome-icon
+                  class="text-success"
+                  :icon="['fas', 'trash-restore']"
+                  @click="retrieveSubOne(item._id)"
+                />
+                <font-awesome-icon
+                  class="text-danger"
+                  :icon="['fas', 'trash']"
+                  @click="eraseSubOne(item._id)"
+                />
+              </div>
+            </td>
+          </tr>
+          <div class="d-flex" v-if="addSubOne">
+            <input type="text" v-model="newSubOne.name" class="form-control" />
+            <button
+              class="btn btn-group btn-success"
+              @click="addNewSubOne(subCategoryOne[0].idParent)"
+            >
+              Save
+            </button>
+          </div>
+        </table>
       </div>
       <div class="col-12 col-md-8 mt-5" v-if="isSubOne">
+        <div class="d-flex" v-if="subOneDoc.length == 0">
+          <input type="text" v-model="newSubTwo.name" class="form-control" />
+
+          <button
+            class="float-right btn btn-group btn-group btn-success"
+            @click="addSubCategory2(subOne._id)"
+          >
+            creer sous-catégories
+          </button>
+        </div>
         <FirebaseUpload
           class="mt-2 mb-5"
-          :isPrivateDocument1="true"
+          :isPublicDocumentS1="true"
           :category="category"
           :subOne="subOne"
           @uploaded="uploaded"
@@ -70,6 +126,8 @@
               <th scope="col">#</th>
               <th scope="col">Fichier</th>
               <th scope="col">Nom</th>
+              <th scope="col">Suspendre</th>
+              <th scope="col">Re-Publier</th>
               <th scope="col">Supprimer</th>
             </tr>
           </thead>
@@ -89,6 +147,28 @@
               <td>{{ doc.name }}</td>
               <td>
                 <button
+                  @click="disableDocument(subOne, 1, doc._id)"
+                  class="btn btn-group btn-outline-warning"
+                  :disabled="!doc.enabled"
+                >
+                  <v-icon size="small" color="yellow-darken-2">
+                    mdi-eye-off-outline</v-icon
+                  >
+                </button>
+              </td>
+              <td>
+                <button
+                  @click="enableDocument(subOne, 1, doc._id)"
+                  class="btn btn-group btn-outline-success"
+                  :disabled="doc.enabled"
+                >
+                  <v-icon size="small" color="green-darken-2">
+                    mdi-eye-outline</v-icon
+                  >
+                </button>
+              </td>
+              <td>
+                <button
                   @click="deleteDocument(subOne, 1, doc)"
                   class="btn btn-group btn-outline-danger"
                 >
@@ -102,7 +182,6 @@
         </table>
         <div class="loading" v-if="loading">
           <p class="spinner">
-            Suppression
             <v-progress-circular
               indeterminate
               color="primary"
@@ -111,6 +190,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Sous categories 2 -->
+
     <div class="row">
       <div class="col-12 mt-5" v-show="subCategoryTwo.length > 0">
         <strong>Sous-Categories de niveau 2:</strong>
@@ -132,76 +214,101 @@
           </div>
         </nav>
         <div class="col-12" v-if="subTwo !== ''">
-          <FirebaseUpload
-            class="mt-2 mb-5"
-            :isPrivateDocument2="true"
-            :category="category"
-            :subOne="subOne"
-            :subTwo="subTwo"
-            @uploaded="uploaded"
-          ></FirebaseUpload>
-          <div class="float-right">
-            <button
-              v-if="!actual2 && !loading2"
-              class="btn small btn-group btn-outline-info"
-              @click="actualiser(subTwo, 2)"
-            >
-              Actualiser
+          <div class="d-flex float-right justify-content-between">
+            <button v-if="subTwo.enabled">
+              <font-awesome-icon
+                class="text-warning mr-2"
+                :icon="['fas', 'trash']"
+                @click="removeSubTwo(subTwo._id)"
+              />
             </button>
-            <button
-              v-if="actual2 && !loading2"
-              class="btn disabled small btn-group btn-outline-info"
-            >
-              <v-progress-circular
-                indeterminate
-                color="primary"
-              ></v-progress-circular>
+            <button v-if="!subTwo.enabled">
+              <font-awesome-icon
+                class="text-success mr-2"
+                :icon="['fas', 'trash-restore']"
+                @click="retrieveSubTwo(subTwo._id)"
+              />
+            </button>
+            <button v-if="!subTwo.enabled">
+              <font-awesome-icon
+                class="text-danger"
+                :icon="['fas', 'trash']"
+                @click="eraseSubTwo(subTwo._id)"
+              />
             </button>
           </div>
-          <table v-if="!actual2 && !loading2" class="table mb-5">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Fichier</th>
-                <th scope="col" class="w-50">Nom</th>
-                <th scope="col" class="small">Supprimer</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(doc, index) in subTwoDoc" :key="index">
-                <th scope="row">{{ index + 1 }}</th>
-                <td>
-                  <a :href="doc.src" target="_blank">
-                    <img
-                      src="../../assets/pdf.png"
-                      class="img-fluid"
-                      width="30"
-                      alt=""
-                    />
-                  </a>
-                </td>
-                <td>{{ doc.name }}</td>
-                <td>
-                  <button
-                    @click="deleteDocument(subTwo, 2, doc)"
-                    class="btn btn-group btn-outline-danger"
-                  >
-                    <v-icon size="small" color="red-darken-2">
-                      mdi-delete
-                    </v-icon>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="loading" v-if="loading2">
-            <p class="spinner">
-              Suppression
-              <v-progress-circular
-                indeterminate
-                color="primary"
-              ></v-progress-circular>
-            </p>
+          <div v-if="subTwo.enabled">
+            <FirebaseUpload
+              class="mt-2 mb-5"
+              :isPrivateDocument2="true"
+              :category="category"
+              :subOne="subOne"
+              :subTwo="subTwo"
+              @uploaded="uploaded"
+            ></FirebaseUpload>
+            <div class="float-right">
+              <button
+                v-if="!actual2 && !loading2"
+                class="btn small btn-group btn-outline-info"
+                @click="actualiser(subTwo, 2)"
+              >
+                Actualiser
+              </button>
+              <button
+                v-if="actual2 && !loading2"
+                class="btn disabled small btn-group btn-outline-info"
+              >
+                <v-progress-circular
+                  indeterminate
+                  color="primary"
+                ></v-progress-circular>
+              </button>
+            </div>
+            <table v-if="!actual2 && !loading2" class="table mb-5">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Fichier</th>
+                  <th scope="col" class="w-50">Nom</th>
+                  <th scope="col" class="small">Supprimer</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(doc, index) in subTwoDoc" :key="index">
+                  <th scope="row">{{ index + 1 }}</th>
+                  <td>
+                    <a :href="doc.src" target="_blank">
+                      <img
+                        src="../../assets/pdf.png"
+                        class="img-fluid"
+                        width="30"
+                        alt=""
+                      />
+                    </a>
+                  </td>
+                  <td>{{ doc.name }}</td>
+                  <td>
+                    <button
+                      @click="deleteDocument(subTwo, 2, doc)"
+                      class="btn btn-group btn-outline-danger"
+                    >
+                      <v-icon size="small" color="red-darken-2">
+                        mdi-delete
+                      </v-icon>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="loading" v-if="loading2">
+              <p class="spinner">
+                Suppression
+                <v-progress-circular
+                  indeterminate
+                  color="primary"
+                ></v-progress-circular>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -214,6 +321,7 @@
 import FirebaseUpload from "../../components/FirebaseUpload.vue";
 import $ from "jquery";
 import { storage } from "../../firebaseConfig.js";
+import categoryService from "@/services/category.service";
 
 export default {
   metaInfo() {
@@ -248,6 +356,18 @@ export default {
       loading2: false,
       actual: false,
       actual2: false,
+      newSubOne: {
+        idParent: "",
+        enabled: true,
+        _id: "",
+        name: "",
+      },
+      newSubTwo: {
+        idParent: "",
+        enabled: true,
+        _id: "",
+        name: "",
+      },
     };
   },
   methods: {
@@ -356,6 +476,59 @@ export default {
         this.getSubTwoName(item);
       }
     },
+    async addNewSubOne(idParent) {
+      this.newSubOne.idParent = idParent;
+      await categoryService.addSubCategoryToCategory(this.newSubOne);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
+      this.newSubOne.name = "";
+      this.addSubOne = false;
+    },
+    async removeSubOne(id) {
+      await categoryService.removeSubCategoryOne(id);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
+    },
+    async retrieveSubOne(id) {
+      await categoryService.retrieveSubCategoryOne(id);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
+    },
+    async eraseSubOne(id) {
+      await categoryService.eraseSubCategoryOne(id);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
+    },
+    async addSubCategory2(idParent) {
+      this.newSubTwo.idParent = idParent;
+      await categoryService.addSubCategoryTwo(this.newSubTwo);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
+      this.newSubTwo.name = "";
+    },
+    async removeSubTwo(id) {
+      await categoryService.removeSubCategoryTwo(id);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
+    },
+    async retrieveSubTwo(id) {
+      await categoryService.retrieveSubCategoryTwo(id);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
+    },
+    async eraseSubTwo(id) {
+      await categoryService.eraseSubCategoryTwo(id);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
+    },
   },
   computed: {
     allDocuments() {
@@ -366,7 +539,11 @@ export default {
     },
     categories() {
       let categories = this.$store.state.category.category.filter((cat) => {
-        return cat.name !== "A propos de nous" && cat.name !== "e-Services";
+        return (
+          cat.name !== "A propos de nous" &&
+          cat.name !== "e-Services" &&
+          cat.name !== "Publications"
+        );
       });
       return categories;
     },
@@ -423,5 +600,8 @@ export default {
   color: #009688;
   font-size: 0.1rem;
   float: right;
+}
+.subOne {
+  border: none;
 }
 </style>
