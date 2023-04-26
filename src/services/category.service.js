@@ -21,13 +21,13 @@ export default {
       .doc(newSub.id)
       .update("_id", newSub.id);
   },
-  async removeSubCategoryToCategory(id) {
+  async removeSubCategoryOne(id) {
     await db.collection("subcategories").doc(id).update("enabled", false);
   },
-  async retrieveSubCategoryToCategory(id) {
+  async retrieveSubCategoryOne(id) {
     await db.collection("subcategories").doc(id).update("enabled", true);
   },
-  async eraseSubCategoryToCategory(id) {
+  async eraseSubCategoryOne(id) {
     await db.collection("subcategories").doc(id).delete();
   },
 
@@ -37,6 +37,22 @@ export default {
     return db.collection("subcategorytwos").get();
   },
 
+  async addSubCategoryTwo(sub) {
+    const newSub = await db.collection("subcategorytwos").add(sub);
+    await db
+      .collection("subcategorytwos")
+      .doc(newSub.id)
+      .update("_id", newSub.id);
+  },
+  async removeSubCategoryTwo(id) {
+    await db.collection("subcategorytwos").doc(id).update("enabled", false);
+  },
+  async retrieveSubCategoryTwo(id) {
+    await db.collection("subcategorytwos").doc(id).update("enabled", true);
+  },
+  async eraseSubCategoryTwo(id) {
+    await db.collection("subcategorytwos").doc(id).delete();
+  },
   ///////////////////////////////////////////////////////////////////////////////////
   async saveToFirestore(subcategorytwos) {
     subcategorytwos.forEach(async (categorie) => {
