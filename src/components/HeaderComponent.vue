@@ -235,15 +235,7 @@ export default {
             },
           ],
         },
-        {
-          title: "Inspection",
-          sub: [
-            {
-              title: "Audit et Inspection",
-              router: "/Audit-et-Inspection",
-            },
-          ],
-        },
+
         {
           title: "e-Services",
           sub: [
