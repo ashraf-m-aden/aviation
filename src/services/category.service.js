@@ -10,7 +10,25 @@ export default {
 
   getSubCategoryOne() {
     // return category.get("/allSubCategoryOne");
+    // return db.collection("subcategories").where("enabled", "==", true).get();
     return db.collection("subcategories").get();
+  },
+
+  async addSubCategoryToCategory(sub) {
+    const newSub = await db.collection("subcategories").add(sub);
+    await db
+      .collection("subcategories")
+      .doc(newSub.id)
+      .update("_id", newSub.id);
+  },
+  async removeSubCategoryToCategory(id) {
+    await db.collection("subcategories").doc(id).update("enabled", false);
+  },
+  async retrieveSubCategoryToCategory(id) {
+    await db.collection("subcategories").doc(id).update("enabled", true);
+  },
+  async eraseSubCategoryToCategory(id) {
+    await db.collection("subcategories").doc(id).delete();
   },
 
   /////////////////////////////////////////////////////////////////// SUB CATEGORIES 2

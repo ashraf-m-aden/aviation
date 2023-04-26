@@ -4,6 +4,8 @@
       <div class="col-12">
         <h1>Liste des documents publiques</h1>
       </div>
+
+      <!-- Categories -->
       <div class="col-12">
         <strong>Categories:</strong>
         <v-radio-group inline>
@@ -17,24 +19,75 @@
         </v-radio-group>
       </div>
     </div>
+
+    <!-- Sous categories 1 -->
     <div class="row mt-5">
       <div class="col-12 col-md-4 mt-5" v-show="subCategoryOne.length > 0">
-        <strong>Sous-Categories de niveau 1:</strong>
-
+        <div class="d-flex justify-content-between mb-5">
+          <strong>Sous-Categories de niveau 1:</strong>
+          <button>
+            <font-awesome-icon
+              v-if="!addSubOne"
+              :icon="['fas', 'plus']"
+              @click="addSubOne = !addSubOne"
+            />
+            <font-awesome-icon
+              v-if="addSubOne"
+              :icon="['fas', 'minus']"
+              @click="
+                {
+                  addSubOne = !addSubOne;
+                  newSubOne.name = '';
+                }
+              "
+            />
+          </button>
+        </div>
         <div
           class="nav flex-column nav-pills"
           role="tablist"
           aria-orientation="vertical"
         >
-          <a
-            class="nav-link subOne text-dark btn-group btn-outline-info"
-            :id="item._id"
-            role="tab"
-            @click="getSubCategoryTwo(item)"
-            v-for="(item, index) in subCategoryOne"
-            :key="index"
-            >{{ item.name }}</a
-          >
+          <div class="" v-for="(item, index) in subCategoryOne" :key="index">
+            <div
+              v-if="item.enabled"
+              class="nav-link d-flex justify-content-between align-center border-bottom subOne text-dark btn-group btn-outline-info"
+            >
+              <a :id="item._id" role="tab" @click="getSubCategoryTwo(item)">{{
+                item.name
+              }}</a>
+              <font-awesome-icon
+                class="text-warning"
+                :icon="['fas', 'trash']"
+                @click="removeSubOne(item._id)"
+              />
+            </div>
+            <div
+              v-else
+              class="nav-link d-flex justify-content-between align-center border-bottom text-secondary btn-group btn-outline-info"
+            >
+              <a :id="item._id" role="tab">{{ item.name }}</a>
+              <font-awesome-icon
+                class="text-success"
+                :icon="['fas', 'trash-restore']"
+                @click="retrieveSubOne(item._id)"
+              />
+              <font-awesome-icon
+                class="text-danger"
+                :icon="['fas', 'trash']"
+                @click="eraseSubOne(item._id)"
+              />
+            </div>
+          </div>
+          <div class="d-flex" v-if="addSubOne">
+            <input type="text" v-model="newSubOne.name" class="form-control" />
+            <button
+              class="btn btn-group btn-success"
+              @click="addNewSubOne(subCategoryOne[0].idParent)"
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
       <div class="col-12 col-md-8 mt-5" v-if="isSubOne">
@@ -133,6 +186,8 @@
         </div>
       </div>
     </div>
+    <!-- Sous categories 2 -->
+
     <div class="row">
       <div class="col-12 mt-5" v-show="subCategoryTwo.length > 0">
         <strong>Sous-Categories de niveau 2:</strong>
@@ -255,6 +310,7 @@
 import FirebaseUpload from "../../components/FirebaseUpload.vue";
 import $ from "jquery";
 import { storage } from "../../firebaseConfig.js";
+import categoryService from "@/services/category.service";
 export default {
   metaInfo() {
     // if no subcomponents specify a metaInfo.title, this title will be used
@@ -288,6 +344,13 @@ export default {
       loading2: false,
       actual: false,
       actual2: false,
+      addSubOne: false,
+      newSubOne: {
+        idParent: "",
+        enabled: true,
+        _id: "",
+        name: "",
+      },
     };
   },
   methods: {
@@ -420,6 +483,33 @@ export default {
 
         this.getSubTwoName(item);
       }
+    },
+    async addNewSubOne(idParent) {
+      this.newSubOne.idParent = idParent;
+      await categoryService.addSubCategoryToCategory(this.newSubOne);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
+      this.newSubOne.name = "";
+      this.addSubOne = false;
+    },
+    async removeSubOne(id) {
+      await categoryService.removeSubCategoryToCategory(id);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
+    },
+    async retrieveSubOne(id) {
+      await categoryService.retrieveSubCategoryToCategory(id);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
+    },
+    async eraseSubOne(id) {
+      await categoryService.eraseSubCategoryToCategory(id);
+      this.$store.dispatch("fetchCategory");
+      this.$store.dispatch("fetchSubCategoryOne");
+      this.$store.dispatch("fetchSubCategoryTwo");
     },
   },
   computed: {
