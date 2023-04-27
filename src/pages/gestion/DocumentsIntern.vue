@@ -4,9 +4,10 @@
       <div class="col-12">
         <h1>Liste des documents en interne</h1>
       </div>
+
+      <!-- Categories -->
       <div class="col-12">
         <strong>Categories:</strong>
-
         <v-radio-group inline>
           <v-radio
             @change="getSubCategoryOne(category)"
@@ -18,8 +19,13 @@
         </v-radio-group>
       </div>
     </div>
+
+    <!-- Sous categories 1 -->
     <div class="row mt-5">
-      <div class="col-12 col-md-4 mt-5" v-show="subCategoryOne.length > 0">
+      <div
+        class="col-12 col-md-4 mt-5"
+        v-show="subCategoryOne.length > 0 && !loading"
+      >
         <div class="d-flex justify-content-between mb-5">
           <strong>Sous-Categories de niveau 1:</strong>
           <button>
@@ -84,17 +90,14 @@
           </div>
         </table>
       </div>
-      <div class="col-12 col-md-8 mt-5" v-if="isSubOne">
-        <div class="d-flex" v-if="subOneDoc.length == 0">
-          <input type="text" v-model="newSubTwo.name" class="form-control" />
-
-          <button
-            class="float-right btn btn-group btn-group btn-success"
-            @click="addSubCategory2(subOne._id)"
-          >
-            creer sous-catégories
-          </button>
-        </div>
+      <div class="col-12 col-md-8 mt-5" v-if="isSubOne && !loading">
+        <button
+          v-if="subOneDoc.length == 0"
+          class="float-right btn btn-group btn-group btn-success"
+          @click="addSubCategory2(subOne._id)"
+        >
+          creer sous-catégories
+        </button>
         <FirebaseUpload
           class="mt-2 mb-5"
           :isPublicDocumentS1="true"
@@ -189,8 +192,15 @@
           </p>
         </div>
       </div>
+      <div class="loading col-12 m-5" v-if="loading">
+        <p class="spinner">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+          ></v-progress-circular>
+        </p>
+      </div>
     </div>
-
     <!-- Sous categories 2 -->
 
     <div class="row">
@@ -214,7 +224,10 @@
           </div>
         </nav>
         <div class="col-12" v-if="subTwo !== ''">
-          <div class="d-flex float-right justify-content-between">
+          <div
+            v-if="!loading"
+            class="d-flex float-right justify-content-between"
+          >
             <button v-if="subTwo.enabled">
               <font-awesome-icon
                 class="text-warning mr-2"
@@ -237,10 +250,10 @@
               />
             </button>
           </div>
-          <div v-if="subTwo.enabled">
+          <div v-if="subTwo.enabled && !loading">
             <FirebaseUpload
               class="mt-2 mb-5"
-              :isPrivateDocument2="true"
+              :isPublicDocumentS2="true"
               :category="category"
               :subOne="subOne"
               :subTwo="subTwo"
@@ -264,12 +277,14 @@
                 ></v-progress-circular>
               </button>
             </div>
-            <table v-if="!actual2 && !loading2" class="table mb-5">
+            <table class="table mb-5" v-if="!actual2 && !loading2">
               <thead>
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Fichier</th>
                   <th scope="col" class="w-50">Nom</th>
+                  <th scope="col" class="small">Suspendre</th>
+                  <th scope="col" class="small">Re-Publier</th>
                   <th scope="col" class="small">Supprimer</th>
                 </tr>
               </thead>
@@ -289,6 +304,24 @@
                   <td>{{ doc.name }}</td>
                   <td>
                     <button
+                      @click="disableDocument(subTwo, 2, doc._id)"
+                      class="btn btn-group btn-outline-warning"
+                      :disabled="!doc.enabled"
+                    >
+                      <v-icon icon="md:eye_off"></v-icon>
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      @click="enableDocument(subTwo, 2, doc._id)"
+                      class="btn btn-group btn-outline-success"
+                      :disabled="doc.enabled"
+                    >
+                      <v-icon icon="md:eye"></v-icon>
+                    </button>
+                  </td>
+                  <td>
+                    <button
                       @click="deleteDocument(subTwo, 2, doc)"
                       class="btn btn-group btn-outline-danger"
                     >
@@ -302,7 +335,6 @@
             </table>
             <div class="loading" v-if="loading2">
               <p class="spinner">
-                Suppression
                 <v-progress-circular
                   indeterminate
                   color="primary"
@@ -310,12 +342,19 @@
               </p>
             </div>
           </div>
+          <div class="loading col-12 m-5" v-if="loading">
+            <p class="spinner">
+              <v-progress-circular
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 //import documentService from "../../services/document.service";
 import FirebaseUpload from "../../components/FirebaseUpload.vue";
@@ -356,6 +395,8 @@ export default {
       loading2: false,
       actual: false,
       actual2: false,
+      addSubOne: false,
+
       newSubOne: {
         idParent: "",
         enabled: true,
@@ -477,57 +518,98 @@ export default {
       }
     },
     async addNewSubOne(idParent) {
+      this.loading = true;
+
       this.newSubOne.idParent = idParent;
       await categoryService.addSubCategoryToCategory(this.newSubOne);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryOne(this.category);
       this.newSubOne.name = "";
       this.addSubOne = false;
+      this.loading = false;
     },
     async removeSubOne(id) {
+      this.loading = true;
+
       await categoryService.removeSubCategoryOne(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryOne(this.category);
+      this.loading = false;
     },
     async retrieveSubOne(id) {
+      this.loading = true;
+
       await categoryService.retrieveSubCategoryOne(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryOne(this.category);
+      this.loading = false;
     },
     async eraseSubOne(id) {
+      this.loading = true;
+
       await categoryService.eraseSubCategoryOne(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryOne(this.category);
+      this.loading = false;
     },
     async addSubCategory2(idParent) {
+      this.loading = true;
+      await categoryService.addSubCategoryTwo(idParent);
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      this.getSubCategoryTwo(this.subOne);
+      this.loading = false;
+    },
+    async addNewSubCategory2Field(idParent) {
+      this.loading = true;
+
       this.newSubTwo.idParent = idParent;
-      await categoryService.addSubCategoryTwo(this.newSubTwo);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await categoryService.addNewSubCategoryTwoField(this.newSubTwo);
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      this.getSubCategoryTwo(this.subOne);
       this.newSubTwo.name = "";
+      this.loading = false;
     },
     async removeSubTwo(id) {
+      this.loading = true;
+
       await categoryService.removeSubCategoryTwo(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      this.getSubCategoryTwo(this.subOne);
+      this.loading = false;
     },
     async retrieveSubTwo(id) {
+      this.loading = true;
+
       await categoryService.retrieveSubCategoryTwo(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      this.getSubCategoryTwo(this.subOne);
+      this.loading = false;
     },
     async eraseSubTwo(id) {
+      this.loading = true;
+
       await categoryService.eraseSubCategoryTwo(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      this.getSubCategoryTwo(this.subOne);
+      this.loading = false;
     },
   },
   computed: {
