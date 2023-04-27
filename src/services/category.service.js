@@ -37,7 +37,32 @@ export default {
     return db.collection("subcategorytwos").get();
   },
 
-  async addSubCategoryTwo(sub) {
+  async addSubCategoryTwo(idParent) {
+    let newSubTwo = {
+      idParent: idParent,
+      enabled: true,
+      _id: "",
+      name: "",
+    };
+    const arrayOfFieldTwoNames = [
+      "Formulaires",
+      "Guides",
+      "Manuels",
+      "Reglements",
+      "Procédures",
+      "Programmes d'inspection",
+      "Programmes nationaux",
+    ];
+    for (let index = 0; index < arrayOfFieldTwoNames.length; index++) {
+      newSubTwo.name = arrayOfFieldTwoNames[index];
+      const newSub = await db.collection("subcategorytwos").add(newSubTwo);
+      await db
+        .collection("subcategorytwos")
+        .doc(newSub.id)
+        .update("_id", newSub.id);
+    }
+  },
+  async addNewSubCategoryTwoField(sub) {
     const newSub = await db.collection("subcategorytwos").add(sub);
     await db
       .collection("subcategorytwos")

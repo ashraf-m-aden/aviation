@@ -22,7 +22,10 @@
 
     <!-- Sous categories 1 -->
     <div class="row mt-5">
-      <div class="col-12 col-md-4 mt-5" v-show="subCategoryOne.length > 0">
+      <div
+        class="col-12 col-md-4 mt-5"
+        v-show="subCategoryOne.length > 0 && !loading"
+      >
         <div class="d-flex justify-content-between mb-5">
           <strong>Sous-Categories de niveau 1:</strong>
           <button>
@@ -87,17 +90,14 @@
           </div>
         </table>
       </div>
-      <div class="col-12 col-md-8 mt-5" v-if="isSubOne">
-        <div class="d-flex" v-if="subOneDoc.length == 0">
-          <input type="text" v-model="newSubTwo.name" class="form-control" />
-
-          <button
-            class="float-right btn btn-group btn-group btn-success"
-            @click="addSubCategory2(subOne._id)"
-          >
-            creer sous-catégories
-          </button>
-        </div>
+      <div class="col-12 col-md-8 mt-5" v-if="isSubOne && !loading">
+        <button
+          v-if="subOneDoc.length == 0"
+          class="float-right btn btn-group btn-group btn-success"
+          @click="addSubCategory2(subOne._id)"
+        >
+          creer sous-catégories
+        </button>
         <FirebaseUpload
           class="mt-2 mb-5"
           :isPublicDocumentS1="true"
@@ -192,6 +192,14 @@
           </p>
         </div>
       </div>
+      <div class="loading col-12 m-5" v-if="loading">
+        <p class="spinner">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+          ></v-progress-circular>
+        </p>
+      </div>
     </div>
     <!-- Sous categories 2 -->
 
@@ -216,7 +224,10 @@
           </div>
         </nav>
         <div class="col-12" v-if="subTwo !== ''">
-          <div class="d-flex float-right justify-content-between">
+          <div
+            v-if="!loading"
+            class="d-flex float-right justify-content-between"
+          >
             <button v-if="subTwo.enabled">
               <font-awesome-icon
                 class="text-warning mr-2"
@@ -239,7 +250,7 @@
               />
             </button>
           </div>
-          <div v-if="subTwo.enabled">
+          <div v-if="subTwo.enabled && !loading">
             <FirebaseUpload
               class="mt-2 mb-5"
               :isPublicDocumentS2="true"
@@ -330,6 +341,14 @@
                 ></v-progress-circular>
               </p>
             </div>
+          </div>
+          <div class="loading col-12 m-5" v-if="loading">
+            <p class="spinner">
+              <v-progress-circular
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
+            </p>
           </div>
         </div>
       </div>
@@ -523,57 +542,98 @@ export default {
       }
     },
     async addNewSubOne(idParent) {
+      this.loading = true;
+
       this.newSubOne.idParent = idParent;
       await categoryService.addSubCategoryToCategory(this.newSubOne);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryOne(this.category);
       this.newSubOne.name = "";
       this.addSubOne = false;
+      this.loading = false;
     },
     async removeSubOne(id) {
+      this.loading = true;
+
       await categoryService.removeSubCategoryOne(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryOne(this.category);
+      this.loading = false;
     },
     async retrieveSubOne(id) {
+      this.loading = true;
+
       await categoryService.retrieveSubCategoryOne(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryOne(this.category);
+      this.loading = false;
     },
     async eraseSubOne(id) {
+      this.loading = true;
+
       await categoryService.eraseSubCategoryOne(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryOne(this.category);
+      this.loading = false;
     },
     async addSubCategory2(idParent) {
+      this.loading = true;
+      await categoryService.addSubCategoryTwo(idParent);
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      this.getSubCategoryTwo(this.subOne);
+      this.loading = false;
+    },
+    async addNewSubCategory2Field(idParent) {
+      this.loading = true;
+
       this.newSubTwo.idParent = idParent;
-      await categoryService.addSubCategoryTwo(this.newSubTwo);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await categoryService.addNewSubCategoryTwoField(this.newSubTwo);
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      this.getSubCategoryTwo(this.subOne);
       this.newSubTwo.name = "";
+      this.loading = false;
     },
     async removeSubTwo(id) {
+      this.loading = true;
+
       await categoryService.removeSubCategoryTwo(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      this.getSubCategoryTwo(this.subOne);
+      this.loading = false;
     },
     async retrieveSubTwo(id) {
+      this.loading = true;
+
       await categoryService.retrieveSubCategoryTwo(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      this.getSubCategoryTwo(this.subOne);
+      this.loading = false;
     },
     async eraseSubTwo(id) {
+      this.loading = true;
+
       await categoryService.eraseSubCategoryTwo(id);
-      this.$store.dispatch("fetchCategory");
-      this.$store.dispatch("fetchSubCategoryOne");
-      this.$store.dispatch("fetchSubCategoryTwo");
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      this.getSubCategoryTwo(this.subOne);
+      this.loading = false;
     },
   },
   computed: {
