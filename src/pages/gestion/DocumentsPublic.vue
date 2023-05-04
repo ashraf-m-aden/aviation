@@ -47,7 +47,7 @@
           </button>
         </div>
         <table class="table">
-          <tr v-for="(item, index) in subCategoryOne" :key="index">
+          <tr v-for="(item, index) in subCategoryOne" :key="index"  class="subOne" :id="item._id">
             <td v-if="item.enabled">
               <div
                 @click="getSubCategoryTwo(item)"
