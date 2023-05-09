@@ -47,18 +47,48 @@
           </button>
         </div>
         <table class="table">
-          <tr v-for="(item, index) in subCategoryOne" :key="index"  class="subOne" :id="item._id">
+          <tr
+            v-for="(item, index) in subCategoryOne"
+            :key="index"
+            class="subOne"
+            :id="item._id"
+          >
             <td v-if="item.enabled">
               <div
                 @click="getSubCategoryTwo(item)"
-                class="d-flex justify-content-between align-center subOne text-dark btn-group btn-outline-primary btn"
+                class="d-flex justify-content-between align-center subOne text-dark btn"
               >
                 <h6>{{ item.name }}</h6>
                 <font-awesome-icon
+                  v-if="
+                    subOne._id == item._id &&
+                    subOneDoc.length == 0 &&
+                    subCategoryTwo.length == 0
+                  "
                   class="text-warning"
                   :icon="['fas', 'trash']"
                   @click="removeSubOne(item._id)"
                 />
+                <div class="d-flex justify-content-between">
+                  <button
+                    v-if="subOne._id == item._id"
+                    @click="togglePublicItem(!item.isPublic, item._id)"
+                  >
+                    <font-awesome-icon
+                      :class="item.isPublic ? 'text-white' : 'text-danger'"
+                      :icon="['fas', 'globe']"
+                    />
+                  </button>
+                  <button
+                    @click="toggleInternItem(!item.isIntern, item._id)"
+                    v-if="subOne._id == item._id"
+                  >
+                    <font-awesome-icon
+                      :class="item.isIntern ? 'text-white' : 'text-danger'"
+                      :icon="['fas', 'house']"
+                    />
+                  </button>
+                </div>
               </div>
             </td>
             <td v-else>
@@ -90,7 +120,10 @@
           </div>
         </table>
       </div>
-      <div class="col-12 col-md-8 mt-5" v-if="isSubOne && !loading">
+      <div
+        class="col-12 col-md-8 mt-5"
+        v-if="isSubOne && !loading && subOne.isPublic"
+      >
         <button
           v-if="subOneDoc.length == 0"
           class="float-right btn btn-group btn-group btn-success"
@@ -249,6 +282,20 @@
                 @click="eraseSubTwo(subTwo._id)"
               />
             </button>
+            <div class="d-flex justify-content-between">
+              <button @click="togglePublicItem(!item.isPublic, item._id)">
+                <font-awesome-icon
+                  :class="subTwo.isPublic ? 'text-success' : 'text-danger'"
+                  :icon="['fas', 'globe']"
+                />
+              </button>
+              <button @click="toggleInternItem(!item.isIntern, item._id)">
+                <font-awesome-icon
+                  :class="subTwo.isIntern ? 'text-success' : 'text-danger'"
+                  :icon="['fas', 'house']"
+                />
+              </button>
+            </div>
           </div>
           <div v-if="subTwo.enabled && !loading">
             <FirebaseUpload
@@ -399,18 +446,25 @@ export default {
       newSubOne: {
         idParent: "",
         enabled: true,
+        isIntern: false,
+        isPublic: true,
         _id: "",
         name: "",
       },
       newSubTwo: {
         idParent: "",
         enabled: true,
+        isIntern: false,
+        isPublic: true,
         _id: "",
         name: "",
       },
     };
   },
   methods: {
+    // async addPublic(isPublic){  fonction pour ajouter les parametre isPublic et isIntern
+    //   await categoryService.addPublicIntern(isPublic);
+    // },
     async getSubCategoryOne(item) {
       this.subCategoryOne = [];
       this.subCategoryTwo = [];
@@ -421,19 +475,15 @@ export default {
       this.subTwo = "";
 
       await this.allsubCategoryOne.forEach((element) => {
-        if (
-          element.idParent === item._id &&
-          element._id !== "6035f340a713263cf8a98c55" &&
-          element._id !== "6035f357a713263cf8a98c58"
-        ) {
+        if (element.idParent === item._id) {
           this.subCategoryOne.push(element);
         }
       });
     },
     getSubCategoryTwo(item) {
-      $(".subOne").removeClass("bg-info text-light").addClass("text-dark");
+      $(".subOne").removeClass("bg-secondary text-light").addClass("text-dark");
       $("#" + item._id)
-        .addClass("bg-info text-light")
+        .addClass("bg-secondary text-light")
         .removeClass("text-dark");
       this.getSubOneDoc(item);
       this.subOne = item;
@@ -633,6 +683,30 @@ export default {
       await this.$store.dispatch("fetchSubCategoryOne");
       await this.$store.dispatch("fetchSubCategoryTwo");
       this.getSubCategoryTwo(this.subOne);
+      this.loading = false;
+    },
+    async toggleInternItem(data, id) {
+      this.loading = true;
+
+      await categoryService.toggleInternItem(data, id);
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryTwo(this.subOne);
+      await this.getSubCategoryOne(this.category);
+
+      this.loading = false;
+    },
+    async togglePublicItem(data, id) {
+      this.loading = true;
+
+      await categoryService.togglePublicItem(data, id);
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryOne(this.category);
+
+      await this.getSubCategoryTwo(this.subOne);
       this.loading = false;
     },
   },

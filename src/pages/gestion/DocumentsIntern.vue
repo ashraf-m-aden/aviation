@@ -59,7 +59,8 @@
                 class="d-flex justify-content-between align-center subOne text-dark btn-group btn-outline-primary btn"
               >
                 <h6>{{ item.name }}</h6>
-                <font-awesome-icon
+                <font-awesome-icon                 v-if="subOne._id == item._id && subOneDoc.length ==0 && subCategoryTwo.length ==0 "
+
                   class="text-warning"
                   :icon="['fas', 'trash']"
                   @click="removeSubOne(item._id)"
@@ -394,6 +395,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 <script>
@@ -444,16 +446,23 @@ export default {
         enabled: true,
         _id: "",
         name: "",
+        isIntern: true,
+        isPublic: false,
       },
       newSubTwo: {
         idParent: "",
         enabled: true,
+        isIntern: true,
+        isPublic: false,
         _id: "",
         name: "",
       },
     };
   },
   methods: {
+    // async addPublic(isPublic){
+    //   await categoryService.addPublicIntern(isPublic);
+    // },
     async getSubCategoryOne(item) {
       this.subCategoryOne = [];
       this.subCategoryTwo = [];
