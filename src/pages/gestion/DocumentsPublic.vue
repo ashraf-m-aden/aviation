@@ -254,11 +254,28 @@
             >
               {{ subTwo.name }}</a
             >
+            <button
+              class="nav-item subTwo nav-link"
+              role="tab"
+              @click="addSubTwo = !addSubTwo"
+            >
+              <font-awesome-icon v-if="!addSubTwo" :icon="['fas', 'plus']" />
+              <font-awesome-icon
+                v-if="addSubTwo"
+                :icon="['fas', 'minus']"
+                @click="
+                  {
+                    addSubTwo = !addSubTwo;
+                    newSubTwo.name = '';
+                  }
+                "
+              />
+            </button>
           </div>
         </nav>
         <div class="col-12" v-if="subTwo !== ''">
           <div
-            v-if="!loading"
+            v-if="!loading && !addSubTwo"
             class="d-flex float-right justify-content-between"
           >
             <button v-if="subTwo.enabled">
@@ -283,21 +300,25 @@
               />
             </button>
             <div class="d-flex justify-content-between">
-              <button @click="togglePublicItem(!item.isPublic, item._id)">
-                <font-awesome-icon
-                  :class="subTwo.isPublic ? 'text-success' : 'text-danger'"
-                  :icon="['fas', 'globe']"
-                />
-              </button>
-              <button @click="toggleInternItem(!item.isIntern, item._id)">
-                <font-awesome-icon
-                  :class="subTwo.isIntern ? 'text-success' : 'text-danger'"
-                  :icon="['fas', 'house']"
-                />
-              </button>
-            </div>
+                  <button
+                    @click="togglePublicItem(!subTwo.isPublic, subTwo._id)"
+                  >
+                    <font-awesome-icon
+                      :class="subTwo.isPublic ? 'text-success' : 'text-danger'"
+                      :icon="['fas', 'globe']"
+                    />
+                  </button>
+                  <button
+                    @click="toggleInternItem(!subTwo.isIntern, subTwo._id)"
+                  >
+                    <font-awesome-icon
+                      :class="subTwo.isIntern ? 'text-success' : 'text-danger'"
+                      :icon="['fas', 'house']"
+                    />
+                  </button>
+                </div>
           </div>
-          <div v-if="subTwo.enabled && !loading">
+          <div v-if="subTwo.enabled && !loading && !addSubTwo">
             <FirebaseUpload
               class="mt-2 mb-5"
               :isPublicDocumentS2="true"
@@ -389,6 +410,7 @@
               </p>
             </div>
           </div>
+
           <div class="loading col-12 m-5" v-if="loading">
             <p class="spinner">
               <v-progress-circular
@@ -396,6 +418,24 @@
                 color="primary"
               ></v-progress-circular>
             </p>
+          </div>
+        </div>
+        <div class="col-12">
+          <div v-if="addSubTwo" class="mt-5">
+            <h4>Enregistrer une sous catégorie</h4>
+            <div class="col-3 d-flex justify-content-between mt-5 mb-10">
+              <input
+                v-model="newSubTwo.name"
+                type="text"
+                class="form-control"
+              />
+              <button
+                class="btn btn-group btn-primary"
+                @click="addNewSubCategory2Field(subOne._id)"
+              >
+                Enregistrer
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -443,6 +483,7 @@ export default {
       actual: false,
       actual2: false,
       addSubOne: false,
+      addSubTwo:false,
       newSubOne: {
         idParent: "",
         enabled: true,
@@ -481,9 +522,9 @@ export default {
       });
     },
     getSubCategoryTwo(item) {
-      $(".subOne").removeClass("bg-secondary text-light").addClass("text-dark");
+      $(".subOne").removeClass("bg-info text-light").addClass("text-dark");
       $("#" + item._id)
-        .addClass("bg-secondary text-light")
+        .addClass("bg-info text-light")
         .removeClass("text-dark");
       this.getSubOneDoc(item);
       this.subOne = item;
@@ -509,7 +550,9 @@ export default {
       $("#" + item._id).addClass("active border-danger");
       this.subTwo = item;
       this.subTwoDoc = [];
-
+      if (this.addSubTwo) {
+        this.addSubTwo = !this.addSubTwo;
+      }
       await this.allDocuments.forEach((element) => {
         if (element.idParent === this.subTwo._id) {
           this.subTwoDoc.push(element);
