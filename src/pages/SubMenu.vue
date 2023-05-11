@@ -100,13 +100,11 @@ export default {
         let sorted = subtwo.filter((doc) => {
           return (doc.idParent == this.$route.query.id && doc.isPublic);
         });
-        console.log(sorted);
         return sorted;
       } else {
         let sorted = subtwo.filter((doc) => {
           return (doc.idParent == this.$route.query.id && doc.isPublic);
         });
-        console.log(sorted);
 
         return sorted;
       }

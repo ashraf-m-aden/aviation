@@ -193,7 +193,7 @@ export default {
         (element) => element._id === this.$route.query.id
       );
       this.$store.state.category.subCategoryTwo.forEach((sub) => {
-        if (sub.idParent === subTwo[0].idParent) {
+        if (sub.idParent === subTwo[0].idParent && sub.isPublic) {
           this.menu.push(sub);
         }
       });

@@ -24,6 +24,7 @@ import StaffDetails from "../pages/gestion/StaffDetails.vue";
 import AIP from "../pages/aip/PublicationsInformationAéronautique.vue";
 import PageNotFound from "../pages/PageNotFound.vue";
 import { createRouter, createWebHistory } from "vue-router";
+import SousCategoryTwoStraight from "@/pages/SousCategoryTwoStraight.vue";
 
 const routes = [
   {
@@ -126,6 +127,18 @@ const routes = [
   {
     path: "/surete/:subCategoryOne/:subCategoryTwo",
     component: SousCategoryTwo,
+  },
+  {
+    path: "/publications/:name",
+    component: SousCategoryOne,
+  },
+  {
+    path: "/publications/:subCategoryOne/:subCategoryTwo",
+    component: SousCategoryTwo,
+  },
+  {
+    path: "/publications/docs/:subCategoryOne/",
+    component: SousCategoryTwoStraight,
   },
   {
     path: "/administration/:name",

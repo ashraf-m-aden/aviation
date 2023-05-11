@@ -16,7 +16,7 @@
           <span> / Organisation</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <SideMenuS2 :apropo="apropo"></SideMenuS2>
+          <SideMenuS1 :apropo="apropo"></SideMenuS1>
         </div>
         <div class="col-12 col-md-8 justify">
           <h1 class="h3 title">Organisation</h1>
@@ -40,10 +40,10 @@
 </template>
 
 <script>
-import SideMenuS2 from "../../components/SideMenuSousCategoryTwo";
+import SideMenuS1 from "../../components/SideMenuSousCategoryOne.vue";
 export default {
   components: {
-    SideMenuS2,
+    SideMenuS1,
   },
   metaInfo: {
     // if no subcomponents specify a metaInfo.title, this title will be used

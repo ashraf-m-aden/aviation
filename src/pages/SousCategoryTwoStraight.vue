@@ -77,31 +77,34 @@
 </template>
 
 <script>
-import SideMenuS1 from "../../components/SideMenuSousCategoryOne.vue";
+import SideMenuS1 from "../components/SideMenuSousCategoryOne.vue";
 export default {
-  components: {
-    SideMenuS1,
-  },
+
   metaInfo() {
+    const subOne = this.subOne;
     return {
-      title: "Directives",
+      title() {
+        return subOne.name;
+      },
       meta: [
         {
           vmid: "description",
           name: "description",
-          content:
-            "Toutes les directives de l'autorité de l'aviation civile de djibouti",
+          content: subOne.description,
         },
       ],
     };
   },
-
+  components: {
+    SideMenuS1,
+  },
   data() {
     return {
       searchResults: [],
       idDirectives: "",
       menu: [],
       errorSearch: "",
+      subOne: {},
       sortDesc: false,
       page: 1,
       sortBy: "name",
@@ -119,9 +122,14 @@ export default {
     b2() {
       return this.$store.state.category.breadCrumb2;
     },
+    b3() {
+      if (this.$store.state.category.subCategoryOne !== []) {
+        this.fetchBreadCrumb();
+        this.fetchMenu();
+      }
+      return this.$store.state.category.breadCrumb3;
+    },
     documents() {
-      this.fetchBreadCrumb();
-      this.fetchMenu();
       let docs = this.$store.state.documents.publicDocuments.filter((docs) => {
         return !docs.isIntern;
       });
@@ -130,12 +138,12 @@ export default {
     sortedDocuments() {
       if (this.documents.length > 0) {
         let sorted = this.documents.filter((doc) => {
-          return doc.idParent == "5f537094ebe78a001f392739";
+          return doc.idParent === this.$route.query.id;
         });
         return sorted;
       } else {
         let sorted = this.documents.filter((doc) => {
-          return doc.idParent == "5f537094ebe78a001f392739";
+          return doc.idParent === this.$route.query.id;
         });
         return sorted;
       }
@@ -163,26 +171,25 @@ export default {
     },
     fetchBreadCrumb() {
       this.$store.state.category.subCategoryOne.forEach((subOne) => {
-        if (subOne._id === "5f537094ebe78a001f392739") {
+        if (subOne._id === this.$route.query.id) {
           this.subOne = subOne;
           this.$store.dispatch("fetchB2", subOne.name);
-          this.$store.state.category.category.forEach((cat) => {
-            if (cat._id === subOne.idParent) {
-              this.$store.dispatch("fetchB1", cat.name);
-            }
-          });
-        }
-      });
+              this.$store.state.category.category.forEach((cat) => {
+                if (cat._id === subOne.idParent) {
+                  this.$store.dispatch("fetchB1", cat.name);
+                }
+              });
+            }});
+
+
     },
     fetchMenu() {
       this.menu = [];
       const subOne = this.$store.state.category.subCategoryOne.filter(
-        (element) => {
-          return element._id === "5f537094ebe78a001f392739";
-        }
+        (element) => element._id === this.$route.query.id
       );
       this.$store.state.category.subCategoryOne.forEach((sub) => {
-        if (sub.idParent == subOne[0].idParent && sub.name !== "Accords") {
+        if (sub.idParent === subOne[0].idParent) {
           this.menu.push(sub);
         }
       });
@@ -205,11 +212,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../sass/main.scss";
+@import "../sass/main.scss";
 .title-box {
   position: relative;
   height: 40vh !important;
-  background-image: url("../../assets/article.jpeg");
+  background-image: url("../assets/article.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

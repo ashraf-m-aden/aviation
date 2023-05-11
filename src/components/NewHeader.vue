@@ -140,24 +140,24 @@ export default {
           sub: [
             {
               title: "Legislations",
-              router: "/securite/Legislations?id=5f53706c838ed6002be47d36",
+              router: "/publications/Legislations?id=5f53706c838ed6002be47d36&category=publications",
             },
             {
               title: "Textes reglementaires",
               router:
-                "/securite/Textes reglementaires?id=5f53707658ac040039a1a6c0",
+                "/publications/Textes reglementaires?id=5f53707658ac040039a1a6c0&category=publications",
             },
             {
               title: "Directives",
-              router: "/Directives",
+              router: "/publications/#/Directives?id=5f537094ebe78a001f392739&category=publications",
             },
             {
               title: "Circulaires",
-              router: "/Circulaires",
+              router: "/publications/#/Circulaires?id=5f537098522dae004424ab1a&category=publications",
             },
             {
               title: "Decisions",
-              router: "/Decisions",
+              router: "/publications/#/Decisions?id=5f53709c09b8d5003da4daf8&category=publications",
             },
           ],
         },
@@ -307,7 +307,6 @@ export default {
           this.sub[index] = true;
         }
       }
-      console.log(this.sub);
     },
     logout() {
       auth
