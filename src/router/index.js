@@ -105,11 +105,7 @@ const routes = [
       }
     },
   },
-  // {
-  //   path: "/securite/:id",
-  //   name: "Securité",
-  //   component: Securite,
-  // },
+
   {
     path: "/aip",
     name: "Publications d'Information Aéronautique",
@@ -143,37 +139,7 @@ const routes = [
     path: "/securite/:name",
     component: SubMenu,
   },
-  // {
-  //   path: "/Formulaires/:id",
-  //   name: "Formulaires",
-  //   component: Formulaires,
-  // },
-  // {
-  //   path: "/Guides/:id",
-  //   name: "Guides",
-  //   component: Guides,
-  // },
-  // {
-  //   path: "/Procedures/:id",
-  //   name: "Procedures",
-  //   component: Procedure,
-  // },
-  // {
-  //   path: "/Manuels/:id",
-  //   name: "Manuels",
-  //   component: Manuels,
-  // },
-  // {
-  //   path: "/Reglements/:id",
-  //   name: "Reglements",
-  //   component: Reglements,
-  // },
-  // {
-  //   path: "/Directives",
-  //   alias: ["/Guidelines"],
-  //   name: "DirectiveS",
-  //   component: DirectiveS,
-  // },
+
   {
     path: "/Presentation",
     name: "Presentation",
@@ -204,54 +170,7 @@ const routes = [
     name: "PdeS",
     component: PdeS,
   },
-  // {
-  //   path: "/Textes-reglementaires/Arretes",
-  //   name: "Arretés",
-  //   component: Arretes,
-  // },
-  // {
-  //   path: "/Textes-reglementaires/Decrets",
-  //   name: "Decrets",
-  //   component: Decrets,
-  // },
-  // {
-  //   path: "/Textes-reglementaires/Djibouti aeronautical regulations",
-  //   alias: ["/Textes-reglementaires/Reglementation aeronautique de Djibouti"],
-  //   name: "Reglementation aéronautique de Djibouti",
-  //   component: RAD,
-  // },
-  // {
-  //   path: "/Legislations/Lois",
-  //   name: "Lois",
-  //   component: Lois,
-  // },
-  // {
-  //   path: "/Accords/Accords-internationaux",
-  //   name: "Accords internationaux",
-  //   component: AI,
-  // },
-  // {
-  //   path: "/Accords/Accords-bilateraux",
-  //   name: "Accords bilateraux",
-  //   component: AB,
-  // },
-  // {
-  //   path: "/Directives/:id",
-  //   alias: ["/Guidelines/:id"],
-  //   name: "Directives",
-  //   component: Directives,
-  // },
-  // {
-  //   path: "/Circulaires",
-  //   alias: ["/Circulars"],
-  //   name: "Circulaires",
-  //   component: Circulaires,
-  // },
-  // {
-  //   path: "/Decisions",
-  //   name: "Decisions",
-  //   component: Decisions,
-  // },
+
   {
     path: "/Demande-d'autorisation-de-vol",
     name: "Demande d'autorisation de vol",
@@ -275,46 +194,7 @@ const routes = [
     name: "SubMenu",
     component: SubMenu,
   },
-  // {
-  //   path: "/Juridiques/Lois",
-  //   alias: ["/Legal/Law"],
-  //   component: JurLoi,
-  // },
-  // {
-  //   path: "/Juridiques/Décrets",
-  //   alias: ["/Legal/Decrees"],
-  //   component: JurDecre,
-  // },
-  // {
-  //   path: "/Juridiques/Arrêtés",
-  //   alias: ["/Legal/orders"],
-  //   component: JurArre,
-  // },
-  // {
-  //   path: "/Juridiques/Règlements",
-  //   alias: ["/Legal/regulations"],
-  //   component: JurRegle,
-  // },
-  // {
-  //   path: "/Juridiques/Procédures",
-  //   alias: ["/Legal/procedures/"],
-  //   component: JurProce,
-  // },
-  // {
-  //   path: "/Juridiques/Directives",
-  //   alias: ["/Legal/directives"],
-  //   component: JurDire,
-  // },
-  // {
-  //   path: "/Juridiques/Circulaires",
-  //   alias: ["/Legal/circulars"],
-  //   component: JurCir,
-  // },
-  // {
-  //   path: "/Juridiques/Politiques",
-  //   alias: ["/Legal/policies"],
-  //   component: JurPoli,
-  // },
+
 
   {
     path: "/Article/:id",

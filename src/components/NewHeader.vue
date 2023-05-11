@@ -140,12 +140,12 @@ export default {
           sub: [
             {
               title: "Legislations",
-              router: "/Categorie/Legislations?id=5f53706c838ed6002be47d36",
+              router: "/securite/Legislations?id=5f53706c838ed6002be47d36",
             },
             {
               title: "Textes reglementaires",
               router:
-                "/Categorie/Textes reglementaires?id=5f53707658ac040039a1a6c0",
+                "/securite/Textes reglementaires?id=5f53707658ac040039a1a6c0",
             },
             {
               title: "Directives",
@@ -166,48 +166,48 @@ export default {
           sub: [
             {
               title: "Navigabilité",
-              router: "/Categorie/Navigabilité?id=5f3aa3413c2c433e946dcca6",
+              router: "/securite/Navigabilité?id=5f3aa3413c2c433e946dcca6&category=securite",
             },
             {
               title: "Exploitation technique des aeronefs",
               router:
-                "/Categorie/Exploitation technique des aéronefs?id=5f3aa7e234512340cc2b8253",
+                "/securite/Exploitation technique des aéronefs?id=5f3aa7e234512340cc2b8253&category=securite",
             },
             {
               title: "License du personel",
               router:
-                "/Categorie/License du personel?id=5f3aa7f034512340cc2b8254",
+                "/securite/License du personel?id=5f3aa7f034512340cc2b8254&category=securite",
             },
             {
               title: "Aérodrome et infrastructures aéroportuaires",
               router:
-                "/Categorie/Aérodrome et infrastructures aéroportuaires?id=5f3aa7fe34512340cc2b8255",
+                "/securite/Aérodrome et infrastructures aéroportuaires?id=5f3aa7fe34512340cc2b8255&category=securite",
             },
             {
               title:
                 "Service de l'information aéronautique et de la cartographie",
               router:
-                "/Categorie/Service de l'information aéronautique et de la cartographie?id=5f3aa80a34512340cc2b8256",
+                "/securite/Service de l'information aéronautique et de la cartographie?id=5f3aa80a34512340cc2b8256&category=securite",
             },
             {
               title: "Communication, navigation et surveillance",
               router:
-                "/Categorie/Communication, navigation et surveillance?id=5f535bbc1dc9dc44eceead5c",
+                "/securite/Communication, navigation et surveillance?id=5f535bbc1dc9dc44eceead5c&category=securite",
             },
             {
               title: "Gestion de l'espace aérien",
               router:
-                "/Categorie/Gestion de l'espace aérien?id=5f535bcd1dc9dc44eceead5d",
+                "/securite/Gestion de l'espace aérien?id=5f535bcd1dc9dc44eceead5d&category=securite",
             },
             {
               title: "Service metéorologique",
               router:
-                "/Categorie/Service metéorologique?id=5f535bd91dc9dc44eceead5e",
+                "/securite/Service metéorologique?id=5f535bd91dc9dc44eceead5e&category=securite",
             },
             {
               title: "Recherches et sauvetages",
               router:
-                "/Categorie/Recherches et sauvetages?id=5f57966756cc341290c683d2",
+                "/securite/Recherches et sauvetages?id=5f57966756cc341290c683d2&category=securite",
             },
           ],
         },
@@ -216,11 +216,11 @@ export default {
           sub: [
             {
               title: "Sureté",
-              router: "/Categorie/Sureté?id=5f535d6433d82b0034f95ee8",
+              router: "/surete/Sureté?id=5f535d6433d82b0034f95ee8&category=surete",
             },
             {
               title: "Facilitation",
-              router: "/Categorie/Facilitation?id=5f535d69c0161b0045e05444",
+              router: "/surete/Facilitation?id=5f535d69c0161b0045e05444&category=surete",
             },
           ],
         },
@@ -328,7 +328,7 @@ export default {
         });
     },
     goTo(id, name) {
-      this.$router.push({ path: "/Categorie/" + name, query: { id } });
+      this.$router.push({ path: "/securite/" + name, query: { id } });
     },
     switchLang(lang) {
       this.$store.dispatch("setLang", lang);
