@@ -241,29 +241,38 @@ export default {
         {
           title: "Administration et Affaires juridiques",
 
-          sub: [
-
+          sub:  [
             {
-              title: "Règlements",
-              router: "/Juridiques/Règlements?id=6035f337a713263cf8a98c54",
+              title: "Administration et organisation",
+              router: "/administration/Administration-organisation?id=6qON33g3tdyQzNse10AY&category=administration",
             },
             {
-              title: "Procédures",
-              router: "/Juridiques/Procédures?id=6035f350a713263cf8a98c57",
-            },
-            {
-              title: "Directives",
-              router: "/Juridiques/Directives?id=6035f35da713263cf8a98c59",
-            },
-            {
-              title: "Circulaires",
-              router: "/Juridiques/Circulaires?id=6035f362a713263cf8a98c5a",
-            },
-            {
-              title: "Politiques",
-              router: "/Juridiques/Politiques?id=6035f347a713263cf8a98c56",
+              title: "Service des affaires juridiques",
+              router: "/administration/Service-juridique?id=PESEI3HvRw2SFlPx6CRB&category=administration",
             },
           ],
+
+          //   {
+          //     title: "Règlements",
+          //     router: "/Juridiques/Règlements?id=6035f337a713263cf8a98c54",
+          //   },
+          //   {
+          //     title: "Procédures",
+          //     router: "/Juridiques/Procédures?id=6035f350a713263cf8a98c57",
+          //   },
+          //   {
+          //     title: "Directives",
+          //     router: "/Juridiques/Directives?id=6035f35da713263cf8a98c59",
+          //   },
+          //   {
+          //     title: "Circulaires",
+          //     router: "/Juridiques/Circulaires?id=6035f362a713263cf8a98c5a",
+          //   },
+          //   {
+          //     title: "Politiques",
+          //     router: "/Juridiques/Politiques?id=6035f347a713263cf8a98c56",
+          //   },
+          // ],
         },
         {
           title: "A.I.P.",

@@ -3,7 +3,7 @@
     <ul class="list-group">
       <li class="list-group-item" v-for="(item, index) in menu" :key="index">
         <router-link
-          :to="{ name: item.name, params: { id: item._id } }"
+        :to="{ path: this.$route.query.category+'/'+ item.name, query: { id: item._id, category:this.$route.query.category } }"
           class="path"
         >
           {{ item.name }}</router-link
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-export default {   
+export default {
 
   data() {
     return {};

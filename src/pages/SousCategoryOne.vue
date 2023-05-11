@@ -17,7 +17,7 @@
           <span> / {{ b2 }}</span>
         </div>
         <div class="col-md-4 sideMenu border">
-          <SideMenuSub :menu="menu" :apropo="false"></SideMenuSub>
+          <SideMenuS1 :menu="menu" :apropo="false"></SideMenuS1>
         </div>
         <div class="col">
           <div class="row">
@@ -28,8 +28,8 @@
             >
               <router-link
                 :to="{
-                  name: item.name,
-                  params: { id: item._id },
+                  path: this.$route.path+'/'+item.name,
+                query: { id: item._id, category:this.$route.path },
                 }"
               >
                 <div class="card text-left">
@@ -65,10 +65,10 @@
 </template>
 
 <script>
-import SideMenuSub from "../components/SideMenuSousCategoryOne.vue";
+import SideMenuS1 from "../components/SideMenuSousCategoryOne.vue";
 export default {
   components: {
-    SideMenuSub,
+    SideMenuS1,
   },
   metaInfo() {
     const description = this.subOne.description;

@@ -16,7 +16,7 @@
           <span> / Politique de supervision</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <Menu :apropo="apropo"></Menu>
+          <SideMenuS2 :apropo="apropo"></SideMenuS2>
         </div>
         <div class="col-12 col-md-8 justify">
           <h1 class="h3 title">POLITIQUE DE SUPERVISION</h1>
@@ -136,11 +136,10 @@
 </template>
 
 <script>
-import Menu from "../../components/SideMenuSub.vue";
-export default {   
-
+import SideMenuS2 from "../../components/SideMenuSousCategoryTwo";
+export default {
   components: {
-    Menu,
+    SideMenuS2,
   },
   metaInfo: {
     // if no subcomponents specify a metaInfo.title, this title will be used

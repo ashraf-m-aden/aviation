@@ -16,7 +16,7 @@
           <span> / Politique de formation</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <MenuCompnent :apropo="apropo"></MenuCompnent>
+          <SideMenuS2 :apropo="apropo"></SideMenuS2>
         </div>
         <div class="col-12 col-md-8 justify">
           <h1 class="h3 title">POLITIQUE ET ENGAGEMENT DU DIRECTEUR GENERAL</h1>
@@ -102,10 +102,10 @@
 </template>
 
 <script>
-import MenuCompnent from "../../components/SideMenuSub.vue";
+import SideMenuS2 from "../../components/SideMenuSousCategoryTwo";
 export default {
   components: {
-    MenuCompnent,
+    SideMenuS2,
   },
   metaInfo() {
     return {

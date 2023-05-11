@@ -16,7 +16,7 @@
           <span> / Mot du directeur</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <Menu :apropo="apropo"></Menu>
+          <SideMenuS2 :apropo="apropo"></SideMenuS2>
         </div>
         <div class="col-12 col-md-8">
           <md-card class="ceo">
@@ -120,11 +120,10 @@
 </template>
 
 <script>
-import Menu from "../../components/SideMenuSub.vue";
-export default {   
-
+import SideMenuS2 from "../../components/SideMenuSousCategoryTwo";
+export default {
   components: {
-    Menu,
+    SideMenuS2,
   },
   metaInfo() {
     // if no subcomponents specify a metaInfo.title, this title will be used

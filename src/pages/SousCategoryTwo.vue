@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-12">
           <div class="title-box">
-            <h1 class="title">Directives</h1>
+            <h1 class="title">{{ b3 }}</h1>
           </div>
         </div>
       </div>
@@ -12,11 +12,12 @@
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <span>Administration et Affaires Juridiques</span>
-          <span> / Directives</span>
+          <span>{{ b1 }}</span>
+          <span> / {{ b2 }}</span>
+          <span v-show="b3 !== ''"> / {{ b3 }}</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <Menu :menu="menu"></Menu>
+          <SideMenuS2 :menu="menu"></SideMenuS2>
         </div>
         <div class="col-12 col-md-8">
           <div class="m-5 p5 d-flex flex-column align-items-center">
@@ -29,7 +30,7 @@
             />
             <div class="card result mt-2" v-show="searchResults.length > 0">
               <table class="table table-striped">
-                <thead class="table-dark">
+                <thead>
                   <tr>
                     <th scope="col">Titre</th>
                   </tr>
@@ -77,22 +78,24 @@
 </template>
 
 <script>
-import Menu from "../../components/SideMenuJuridique.vue";
+import SideMenuS2 from "../components/SideMenuSousCategoryTwo";
 export default {
   metaInfo() {
+    const subTwo = this.subTwo;
     return {
       title() {
-        return "Directives";
+        return subTwo.name;
       },
       meta: [
         {
           vmid: "description",
           name: "description",
-          content: "Toutes les directives relatives aux affaires juridiques ",
+          content: subTwo.description,
         },
       ],
     };
-  },  components: {
+  },
+  components: {
     SideMenuS2,
   },
   data() {
@@ -113,8 +116,18 @@ export default {
     numberOfPages() {
       return Math.ceil(this.sortedDocuments.length / this.itemsPerPage);
     },
+    b1() {
+      return this.$store.state.category.breadCrumb1;
+    },
     b2() {
       return this.$store.state.category.breadCrumb2;
+    },
+    b3() {
+      if (this.$store.state.category.subCategoryTwo !== []) {
+        this.fetchBreadCrumb();
+        this.fetchMenu();
+      }
+      return this.$store.state.category.breadCrumb3;
     },
     documents() {
       let docs = this.$store.state.documents.publicDocuments.filter((docs) => {
@@ -156,13 +169,31 @@ export default {
       this.searchResults = [];
       this.errorSearch = "";
     },
+    fetchBreadCrumb() {
+      this.$store.state.category.subCategoryTwo.forEach((subTwo) => {
+        if (subTwo._id === this.$route.query.id) {
+          this.subTwo = subTwo;
+          this.$store.dispatch("fetchB3", subTwo.name);
+          this.$store.state.category.subCategoryOne.forEach((subOne) => {
+            if (subOne._id === subTwo.idParent) {
+              this.$store.dispatch("fetchB2", subOne.name);
+              this.$store.state.category.category.forEach((cat) => {
+                if (cat._id === subOne.idParent) {
+                  this.$store.dispatch("fetchB1", cat.name);
+                }
+              });
+            }
+          });
+        }
+      });
+    },
     fetchMenu() {
       this.menu = [];
-      const subOne = this.$store.state.category.subCategoryOne.filter(
+      const subTwo = this.$store.state.category.subCategoryTwo.filter(
         (element) => element._id === this.$route.query.id
       );
-      this.$store.state.category.subCategoryOne.forEach((sub) => {
-        if (sub.idParent === subOne[0].idParent) {
+      this.$store.state.category.subCategoryTwo.forEach((sub) => {
+        if (sub.idParent === subTwo[0].idParent) {
           this.menu.push(sub);
         }
       });
@@ -178,17 +209,18 @@ export default {
     },
   },
   mounted() {
+    this.fetchBreadCrumb();
     this.fetchMenu();
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../../sass/main.scss";
+@import "../sass/main.scss";
 .title-box {
   position: relative;
   height: 40vh !important;
-  background-image: url("../../assets/article.jpeg");
+  background-image: url("../assets/article.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
