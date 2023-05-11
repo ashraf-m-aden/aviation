@@ -242,18 +242,7 @@ export default {
           title: "Administration et Affaires juridiques",
 
           sub: [
-            {
-              title: "Lois",
-              router: "/Juridiques/Lois?id=6035f30ea713263cf8a98c51",
-            },
-            {
-              title: "Décrets",
-              router: "/Juridiques/Décrets?id=6035f317a713263cf8a98c52",
-            },
-            {
-              title: "Arrêtés",
-              router: "/Juridiques/Arrêtés?id=6035f32ca713263cf8a98c53",
-            },
+
             {
               title: "Règlements",
               router: "/Juridiques/Règlements?id=6035f337a713263cf8a98c54",

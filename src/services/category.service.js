@@ -84,4 +84,20 @@ export default {
       await db.collection("subcategorytwos").doc(categorie._id).set(categorie);
     });
   },
+  async togglePublicItem(data, id) {
+  try {
+    await db.collection("subcategories").doc(id).update("isPublic", data);
+  } catch (error) {
+    await db.collection("subcategorytwos").doc(id).update("isPublic", data);
+
+  }
+  },
+  async toggleInternItem(data, id) {
+   try {
+    await db.collection("subcategories").doc(id).update("isIntern", data);
+   } catch (error) {
+    await db.collection("subcategorytwos").doc(id).update("isIntern", data);
+
+   }
+  },
 };

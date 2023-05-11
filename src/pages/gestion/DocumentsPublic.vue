@@ -47,18 +47,48 @@
           </button>
         </div>
         <table class="table">
-          <tr v-for="(item, index) in subCategoryOne" :key="index">
+          <tr
+            v-for="(item, index) in subCategoryOne"
+            :key="index"
+            class="subOne"
+            :id="item._id"
+          >
             <td v-if="item.enabled">
               <div
                 @click="getSubCategoryTwo(item)"
-                class="d-flex justify-content-between align-center subOne text-dark btn-group btn-outline-primary btn"
+                class="d-flex justify-content-between align-center subOne text-dark btn"
               >
                 <h6>{{ item.name }}</h6>
                 <font-awesome-icon
+                  v-if="
+                    subOne._id == item._id &&
+                    subOneDoc.length == 0 &&
+                    subCategoryTwo.length == 0
+                  "
                   class="text-warning"
                   :icon="['fas', 'trash']"
                   @click="removeSubOne(item._id)"
                 />
+                <div class="d-flex justify-content-between">
+                  <button
+                    v-if="subOne._id == item._id"
+                    @click="togglePublicItem(!item.isPublic, item._id)"
+                  >
+                    <font-awesome-icon
+                      :class="item.isPublic ? 'text-white' : 'text-danger'"
+                      :icon="['fas', 'globe']"
+                    />
+                  </button>
+                  <button
+                    @click="toggleInternItem(!item.isIntern, item._id)"
+                    v-if="subOne._id == item._id"
+                  >
+                    <font-awesome-icon
+                      :class="item.isIntern ? 'text-white' : 'text-danger'"
+                      :icon="['fas', 'house']"
+                    />
+                  </button>
+                </div>
               </div>
             </td>
             <td v-else>
@@ -90,7 +120,10 @@
           </div>
         </table>
       </div>
-      <div class="col-12 col-md-8 mt-5" v-if="isSubOne && !loading">
+      <div
+        class="col-12 col-md-8 mt-5"
+        v-if="isSubOne && !loading && subOne.isPublic"
+      >
         <button
           v-if="subOneDoc.length == 0"
           class="float-right btn btn-group btn-group btn-success"
@@ -221,11 +254,28 @@
             >
               {{ subTwo.name }}</a
             >
+            <button
+              class="nav-item subTwo nav-link"
+              role="tab"
+              @click="addSubTwo = !addSubTwo"
+            >
+              <font-awesome-icon v-if="!addSubTwo" :icon="['fas', 'plus']" />
+              <font-awesome-icon
+                v-if="addSubTwo"
+                :icon="['fas', 'minus']"
+                @click="
+                  {
+                    addSubTwo = !addSubTwo;
+                    newSubTwo.name = '';
+                  }
+                "
+              />
+            </button>
           </div>
         </nav>
         <div class="col-12" v-if="subTwo !== ''">
           <div
-            v-if="!loading"
+            v-if="!loading && !addSubTwo"
             class="d-flex float-right justify-content-between"
           >
             <button v-if="subTwo.enabled">
@@ -249,8 +299,26 @@
                 @click="eraseSubTwo(subTwo._id)"
               />
             </button>
+            <div class="d-flex justify-content-between">
+                  <button
+                    @click="togglePublicItem(!subTwo.isPublic, subTwo._id)"
+                  >
+                    <font-awesome-icon
+                      :class="subTwo.isPublic ? 'text-success' : 'text-danger'"
+                      :icon="['fas', 'globe']"
+                    />
+                  </button>
+                  <button
+                    @click="toggleInternItem(!subTwo.isIntern, subTwo._id)"
+                  >
+                    <font-awesome-icon
+                      :class="subTwo.isIntern ? 'text-success' : 'text-danger'"
+                      :icon="['fas', 'house']"
+                    />
+                  </button>
+                </div>
           </div>
-          <div v-if="subTwo.enabled && !loading">
+          <div v-if="subTwo.enabled && !loading && !addSubTwo">
             <FirebaseUpload
               class="mt-2 mb-5"
               :isPublicDocumentS2="true"
@@ -342,6 +410,7 @@
               </p>
             </div>
           </div>
+
           <div class="loading col-12 m-5" v-if="loading">
             <p class="spinner">
               <v-progress-circular
@@ -349,6 +418,24 @@
                 color="primary"
               ></v-progress-circular>
             </p>
+          </div>
+        </div>
+        <div class="col-12">
+          <div v-if="addSubTwo" class="mt-5">
+            <h4>Enregistrer une sous catégorie</h4>
+            <div class="col-3 d-flex justify-content-between mt-5 mb-10">
+              <input
+                v-model="newSubTwo.name"
+                type="text"
+                class="form-control"
+              />
+              <button
+                class="btn btn-group btn-primary"
+                @click="addNewSubCategory2Field(subOne._id)"
+              >
+                Enregistrer
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -396,21 +483,29 @@ export default {
       actual: false,
       actual2: false,
       addSubOne: false,
+      addSubTwo:false,
       newSubOne: {
         idParent: "",
         enabled: true,
+        isIntern: false,
+        isPublic: true,
         _id: "",
         name: "",
       },
       newSubTwo: {
         idParent: "",
         enabled: true,
+        isIntern: false,
+        isPublic: true,
         _id: "",
         name: "",
       },
     };
   },
   methods: {
+    // async addPublic(isPublic){  fonction pour ajouter les parametre isPublic et isIntern
+    //   await categoryService.addPublicIntern(isPublic);
+    // },
     async getSubCategoryOne(item) {
       this.subCategoryOne = [];
       this.subCategoryTwo = [];
@@ -421,11 +516,7 @@ export default {
       this.subTwo = "";
 
       await this.allsubCategoryOne.forEach((element) => {
-        if (
-          element.idParent === item._id &&
-          element._id !== "6035f340a713263cf8a98c55" &&
-          element._id !== "6035f357a713263cf8a98c58"
-        ) {
+        if (element.idParent === item._id) {
           this.subCategoryOne.push(element);
         }
       });
@@ -459,7 +550,9 @@ export default {
       $("#" + item._id).addClass("active border-danger");
       this.subTwo = item;
       this.subTwoDoc = [];
-
+      if (this.addSubTwo) {
+        this.addSubTwo = !this.addSubTwo;
+      }
       await this.allDocuments.forEach((element) => {
         if (element.idParent === this.subTwo._id) {
           this.subTwoDoc.push(element);
@@ -633,6 +726,30 @@ export default {
       await this.$store.dispatch("fetchSubCategoryOne");
       await this.$store.dispatch("fetchSubCategoryTwo");
       this.getSubCategoryTwo(this.subOne);
+      this.loading = false;
+    },
+    async toggleInternItem(data, id) {
+      this.loading = true;
+
+      await categoryService.toggleInternItem(data, id);
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryTwo(this.subOne);
+      await this.getSubCategoryOne(this.category);
+
+      this.loading = false;
+    },
+    async togglePublicItem(data, id) {
+      this.loading = true;
+
+      await categoryService.togglePublicItem(data, id);
+      await this.$store.dispatch("fetchCategory");
+      await this.$store.dispatch("fetchSubCategoryOne");
+      await this.$store.dispatch("fetchSubCategoryTwo");
+      await this.getSubCategoryOne(this.category);
+
+      await this.getSubCategoryTwo(this.subOne);
       this.loading = false;
     },
   },

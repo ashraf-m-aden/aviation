@@ -39,6 +39,8 @@ import {
   faMinus,
   faTrash,
   faTrashRestore,
+faHouse,
+faGlobe,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -59,7 +61,9 @@ library.add(
   faMinus,
   faPlus,
   faTrash,
-  faTrashRestore
+  faTrashRestore,
+  faHouse,
+  faGlobe
 );
 import "./firebaseConfig";
 app.component("font-awesome-icon", FontAwesomeIcon);
