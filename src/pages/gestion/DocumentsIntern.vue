@@ -93,7 +93,7 @@
             </td>
             <td v-else>
               <div
-                class="nav-link d-flex justify-content-between align-center border-bottom text-secondary btn-group btn-outline-info"
+                class="nav-link d-flex justify-content-between  align-center border-bottom text-secondary btn-group btn-outline-info"
               >
                 <a :id="item._id" role="tab">{{ item.name }}</a>
                 <font-awesome-icon
