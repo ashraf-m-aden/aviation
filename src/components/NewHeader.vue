@@ -149,15 +149,15 @@ export default {
             },
             {
               title: "Directives",
-              router: "/publications/#/Directives?id=5f537094ebe78a001f392739&category=publications",
+              router: "/publications/docs/Directives?id=5f537094ebe78a001f392739&category=publications",
             },
             {
               title: "Circulaires",
-              router: "/publications/#/Circulaires?id=5f537098522dae004424ab1a&category=publications",
+              router: "/publications/docs/Circulaires?id=5f537098522dae004424ab1a&category=publications",
             },
             {
               title: "Decisions",
-              router: "/publications/#/Decisions?id=5f53709c09b8d5003da4daf8&category=publications",
+              router: "/publications/docs/Decisions?id=5f53709c09b8d5003da4daf8&category=publications",
             },
           ],
         },
@@ -230,11 +230,11 @@ export default {
           sub: [
             {
               title: "Formulaire de compte rendu",
-              router: "/Formulaire-de-compte-rendu",
+              router: "/eservice/Formulaire de compte rendu?category=eservice",
             },
             {
               title: "Demande d'autorisation de vol",
-              router: "/Demande autorisation",
+              router: "/eservice/Demande d'autorisation de vol?category=eservice",
             },
           ],
         },

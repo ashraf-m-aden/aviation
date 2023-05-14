@@ -148,10 +148,7 @@ const routes = [
     path: "/administration/:subCategoryOne/:subCategoryTwo",
     component: SousCategoryTwo,
   },
-  {
-    path: "/securite/:name",
-    component: SubMenu,
-  },
+
 
   {
     path: "/Presentation",
@@ -185,14 +182,14 @@ const routes = [
   },
 
   {
-    path: "/Demande-d'autorisation-de-vol",
+    path: "/eservice/Demande d'autorisation de vol",
     name: "Demande d'autorisation de vol",
     alias: ["/Flight permit request"],
 
     component: DA,
   },
   {
-    path: "/Formulaire-de-compte-rendu",
+    path: "/eservice/Formulaire de compte rendu",
     alias: ["/Occurrence report"],
     name: "Formulaire de compte rendu",
     component: FCR,

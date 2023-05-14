@@ -2,7 +2,13 @@
   <div class="border-right">
     <ul class="list-group">
       <li class="list-group-item" v-for="(item, index) in menu" :key="index">
-        <router-link
+        <router-link v-if="this.$route.query.category=='eservice'"
+        :to="{ path: '/'+this.$route.query.category+'/'+ item.name, query: { category:this.$route.query.category } }"
+          class="path"
+        >
+          {{ item.name }}</router-link
+        >
+        <router-link v-else
         :to="{ path: this.$route.query.category+'/'+ item.name, query: { id: item._id, category:this.$route.query.category } }"
           class="path"
         >
