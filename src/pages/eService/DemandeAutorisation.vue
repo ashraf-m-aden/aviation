@@ -16,7 +16,7 @@
           <span> / {{ b2 }}</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <SideMenu :menu="menu"></SideMenu>
+          <SideMenuS2 :menu="menu"></SideMenuS2>
         </div>
         <div class="col-12 col-md-8">
           <v-tabs v-model="tab" bg-color="primary">
@@ -36,10 +36,11 @@
 </template>
 
 <script>
-import SideMenu from "../../components/SideMenu.vue";
+import SideMenuS2 from "../../components/SideMenuSousCategoryTwo.vue";
 export default {
+
   components: {
-    SideMenu,
+    SideMenuS2,
   },
   metaInfo: {
     // if no subcomponents specify a metaInfo.title, this title will be used

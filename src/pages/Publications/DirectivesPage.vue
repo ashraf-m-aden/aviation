@@ -16,7 +16,7 @@
           <span> / {{ b2 }}</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <SideMenuSub :menu="menu"></SideMenuSub>
+          <SideMenuS1 :menu="menu"></SideMenuS1>
         </div>
         <div class="col-12 col-md-8">
           <div class="m-5 p5 d-flex flex-column align-items-center">
@@ -77,10 +77,10 @@
 </template>
 
 <script>
-import SideMenuSub from "../../components/SideMenuSub.vue";
+import SideMenuS1 from "../../components/SideMenuSousCategoryOne.vue";
 export default {
   components: {
-    SideMenuSub,
+    SideMenuS1,
   },
   metaInfo() {
     return {

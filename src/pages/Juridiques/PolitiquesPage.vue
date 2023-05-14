@@ -92,9 +92,8 @@ export default {
         },
       ],
     };
-  },
-  components: {
-    Menu,
+  },  components: {
+    SideMenuS2,
   },
   data() {
     return {

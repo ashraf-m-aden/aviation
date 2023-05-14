@@ -16,29 +16,25 @@
           <span> / Mot du directeur</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <Menu :apropo="apropo"></Menu>
+          <SideMenuS1 :apropo="apropo"></SideMenuS1>
         </div>
         <div class="col-12 col-md-8">
-          <md-card class="ceo">
-            <md-card-media-cover md-text-scrim>
-              <md-card-media md-ratio="16:9">
-                <img
+          <v-card
+     class="ceo mx-auto">
+                <v-img
                   src="../../assets/DG.jpg"
                   class="img-fluid"
-                  alt="photo directeur Daoud Ali Abdou"
-                />
-              </md-card-media>
-              <md-card-area>
-                <md-card-header>
-                  <span class="md-title font-weight-bold">Daoud Ali Abdou</span>
-                  <span class="md-subhead"
-                    >Directeur de l'Autorité de l'aviation civile de
-                    Djibouti</span
-                  >
-                </md-card-header>
-              </md-card-area>
-            </md-card-media-cover>
-          </md-card>
+                 cover
+                >
+
+                </v-img>
+                <v-card-title>Daoud Ali Abdou</v-card-title>
+                <v-card-subtitle >
+                  Directeur de l'Autorité de l'aviation civile de
+                    Djibouti
+    </v-card-subtitle>
+
+          </v-card>
           <div class="justify">
             <p>
               La barre des 4 milliards de passagers transportés dans le monde a
@@ -120,11 +116,10 @@
 </template>
 
 <script>
-import Menu from "../../components/SideMenuSub.vue";
-export default {   
-
+import SideMenuS1 from "../../components/SideMenuSousCategoryOne.vue";
+export default {
   components: {
-    Menu,
+    SideMenuS1,
   },
   metaInfo() {
     // if no subcomponents specify a metaInfo.title, this title will be used

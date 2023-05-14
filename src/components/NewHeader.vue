@@ -140,24 +140,24 @@ export default {
           sub: [
             {
               title: "Legislations",
-              router: "/Categorie/Legislations?id=5f53706c838ed6002be47d36",
+              router: "/publications/Legislations?id=5f53706c838ed6002be47d36&category=publications",
             },
             {
               title: "Textes reglementaires",
               router:
-                "/Categorie/Textes reglementaires?id=5f53707658ac040039a1a6c0",
+                "/publications/Textes reglementaires?id=5f53707658ac040039a1a6c0&category=publications",
             },
             {
               title: "Directives",
-              router: "/Directives",
+              router: "/publications/docs/Directives?id=5f537094ebe78a001f392739&category=publications",
             },
             {
               title: "Circulaires",
-              router: "/Circulaires",
+              router: "/publications/docs/Circulaires?id=5f537098522dae004424ab1a&category=publications",
             },
             {
               title: "Decisions",
-              router: "/Decisions",
+              router: "/publications/docs/Decisions?id=5f53709c09b8d5003da4daf8&category=publications",
             },
           ],
         },
@@ -166,48 +166,48 @@ export default {
           sub: [
             {
               title: "Navigabilité",
-              router: "/Categorie/Navigabilité?id=5f3aa3413c2c433e946dcca6",
+              router: "/securite/Navigabilité?id=5f3aa3413c2c433e946dcca6&category=securite",
             },
             {
               title: "Exploitation technique des aeronefs",
               router:
-                "/Categorie/Exploitation technique des aéronefs?id=5f3aa7e234512340cc2b8253",
+                "/securite/Exploitation technique des aéronefs?id=5f3aa7e234512340cc2b8253&category=securite",
             },
             {
               title: "License du personel",
               router:
-                "/Categorie/License du personel?id=5f3aa7f034512340cc2b8254",
+                "/securite/License du personel?id=5f3aa7f034512340cc2b8254&category=securite",
             },
             {
               title: "Aérodrome et infrastructures aéroportuaires",
               router:
-                "/Categorie/Aérodrome et infrastructures aéroportuaires?id=5f3aa7fe34512340cc2b8255",
+                "/securite/Aérodrome et infrastructures aéroportuaires?id=5f3aa7fe34512340cc2b8255&category=securite",
             },
             {
               title:
                 "Service de l'information aéronautique et de la cartographie",
               router:
-                "/Categorie/Service de l'information aéronautique et de la cartographie?id=5f3aa80a34512340cc2b8256",
+                "/securite/Service de l'information aéronautique et de la cartographie?id=5f3aa80a34512340cc2b8256&category=securite",
             },
             {
               title: "Communication, navigation et surveillance",
               router:
-                "/Categorie/Communication, navigation et surveillance?id=5f535bbc1dc9dc44eceead5c",
+                "/securite/Communication, navigation et surveillance?id=5f535bbc1dc9dc44eceead5c&category=securite",
             },
             {
               title: "Gestion de l'espace aérien",
               router:
-                "/Categorie/Gestion de l'espace aérien?id=5f535bcd1dc9dc44eceead5d",
+                "/securite/Gestion de l'espace aérien?id=5f535bcd1dc9dc44eceead5d&category=securite",
             },
             {
               title: "Service metéorologique",
               router:
-                "/Categorie/Service metéorologique?id=5f535bd91dc9dc44eceead5e",
+                "/securite/Service metéorologique?id=5f535bd91dc9dc44eceead5e&category=securite",
             },
             {
               title: "Recherches et sauvetages",
               router:
-                "/Categorie/Recherches et sauvetages?id=5f57966756cc341290c683d2",
+                "/securite/Recherches et sauvetages?id=5f57966756cc341290c683d2&category=securite",
             },
           ],
         },
@@ -216,11 +216,11 @@ export default {
           sub: [
             {
               title: "Sureté",
-              router: "/Categorie/Sureté?id=5f535d6433d82b0034f95ee8",
+              router: "/surete/Sureté?id=5f535d6433d82b0034f95ee8&category=surete",
             },
             {
               title: "Facilitation",
-              router: "/Categorie/Facilitation?id=5f535d69c0161b0045e05444",
+              router: "/surete/Facilitation?id=5f535d69c0161b0045e05444&category=surete",
             },
           ],
         },
@@ -230,40 +230,49 @@ export default {
           sub: [
             {
               title: "Formulaire de compte rendu",
-              router: "/Formulaire-de-compte-rendu",
+              router: "/eservice/Formulaire de compte rendu?category=eservice",
             },
             {
               title: "Demande d'autorisation de vol",
-              router: "/Demande autorisation",
+              router: "/eservice/Demande d'autorisation de vol?category=eservice",
             },
           ],
         },
         {
           title: "Administration et Affaires juridiques",
 
-          sub: [
-
+          sub:  [
             {
-              title: "Règlements",
-              router: "/Juridiques/Règlements?id=6035f337a713263cf8a98c54",
+              title: "Administration et organisation",
+              router: "/administration/Administration-organisation?id=6qON33g3tdyQzNse10AY&category=administration",
             },
             {
-              title: "Procédures",
-              router: "/Juridiques/Procédures?id=6035f350a713263cf8a98c57",
-            },
-            {
-              title: "Directives",
-              router: "/Juridiques/Directives?id=6035f35da713263cf8a98c59",
-            },
-            {
-              title: "Circulaires",
-              router: "/Juridiques/Circulaires?id=6035f362a713263cf8a98c5a",
-            },
-            {
-              title: "Politiques",
-              router: "/Juridiques/Politiques?id=6035f347a713263cf8a98c56",
+              title: "Service des affaires juridiques",
+              router: "/administration/Service-juridique?id=PESEI3HvRw2SFlPx6CRB&category=administration",
             },
           ],
+
+          //   {
+          //     title: "Règlements",
+          //     router: "/Juridiques/Règlements?id=6035f337a713263cf8a98c54",
+          //   },
+          //   {
+          //     title: "Procédures",
+          //     router: "/Juridiques/Procédures?id=6035f350a713263cf8a98c57",
+          //   },
+          //   {
+          //     title: "Directives",
+          //     router: "/Juridiques/Directives?id=6035f35da713263cf8a98c59",
+          //   },
+          //   {
+          //     title: "Circulaires",
+          //     router: "/Juridiques/Circulaires?id=6035f362a713263cf8a98c5a",
+          //   },
+          //   {
+          //     title: "Politiques",
+          //     router: "/Juridiques/Politiques?id=6035f347a713263cf8a98c56",
+          //   },
+          // ],
         },
         {
           title: "A.I.P.",
@@ -298,7 +307,6 @@ export default {
           this.sub[index] = true;
         }
       }
-      console.log(this.sub);
     },
     logout() {
       auth
@@ -319,7 +327,7 @@ export default {
         });
     },
     goTo(id, name) {
-      this.$router.push({ path: "/Categorie/" + name, query: { id } });
+      this.$router.push({ path: "/securite/" + name, query: { id } });
     },
     switchLang(lang) {
       this.$store.dispatch("setLang", lang);
