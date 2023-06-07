@@ -66,10 +66,10 @@ export const actions = {
       let documents = querySnapshot.docs.map((doc) => doc.data()); // on fait ca pack qu'on recupere plein de doc dans querysnapshot
 
       await documents.sort((a, b) => {
-        if (a.pseudo > b.pseudo) {
+        if (a.name > b.name) {
           return 1;
         }
-        if (a.pseudo < b.pseudo) {
+        if (a.name < b.name) {
           return -1;
         }
         return 0;

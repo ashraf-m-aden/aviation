@@ -150,7 +150,6 @@ export const actions = {
     commit("TOP_NEWS", index);
   },
   downNews({ commit }, index) {
-    console.log("ok");
     commit("DOWN_NEWS", index);
   },
   saveNewBanner({ state }) {
@@ -161,7 +160,7 @@ export const actions = {
   },
 };
 
-export default {   
+export default {
 
   getters,
   actions,

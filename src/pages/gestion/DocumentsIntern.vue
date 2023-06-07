@@ -596,7 +596,6 @@ export default {
         })
         .catch(function () {
           // Uh-oh, an error occurred!
-          console.log(item);
           this.loading = false;
           this.loading2 = false;
         });

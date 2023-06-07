@@ -60,12 +60,10 @@ class Auth {
     }
   }
   async modifyStaff(staff) {
-    console.log(staff);
     return await db.collection("users").doc(staff.id).update(staff);
 
   }
   async deleteStaff(id) {
-    console.log(id);
     return await db.collection("users").doc(id).update("enabled", false);
 
   }
