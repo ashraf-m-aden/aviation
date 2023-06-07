@@ -32,6 +32,9 @@ export default {
 <style lang="scss" scoped>
 .list-group .list-group-item {
   border: none;
+  &:hover{
+ text-transform: capitalize;
+  }
 }
 
 .card {

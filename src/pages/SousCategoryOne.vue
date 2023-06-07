@@ -4,19 +4,14 @@
       <div class="row">
         <div class="col-12">
           <div class="title-box">
-            <h1 class="title">{{ b2 }} </h1>
+            <h1 class="title">{{ b2 }}</h1>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="container">
       <div class="row">
-        <div class="col-12">
-          <span>{{ b1 }}</span>
-          <span> / {{ b2 }}</span>
-        </div>
-        <div class="col-md-4 sideMenu border">
+    <BreadCrumbs :b1="b1" :b2="b2" :b3="b3"></BreadCrumbs>
+        <div class="col-md-4 sideMenu">
           <SideMenuS1 :menu="menu" :apropo="false"></SideMenuS1>
         </div>
         <div class="col">
@@ -28,8 +23,8 @@
             >
               <router-link
                 :to="{
-                  path: this.$route.path+'/'+item.name,
-                query: { id: item._id, category:this.$route.path },
+                  path: this.$route.path + '/' + item.name,
+                  query: { id: item._id, category: this.$route.path },
                 }"
               >
                 <div class="card text-left">
@@ -66,9 +61,12 @@
 
 <script>
 import SideMenuS1 from "../components/SideMenuSousCategoryOne.vue";
+import BreadCrumbs from "../components/BreadCrumbs";
+
 export default {
   components: {
     SideMenuS1,
+    BreadCrumbs,
   },
   metaInfo() {
     const description = this.subOne.description;
@@ -98,12 +96,12 @@ export default {
       let subtwo = this.$store.state.category.subCategoryTwo;
       if (subtwo.length > 0) {
         let sorted = subtwo.filter((doc) => {
-          return (doc.idParent == this.$route.query.id && doc.isPublic);
+          return doc.idParent == this.$route.query.id && doc.isPublic;
         });
         return sorted;
       } else {
         let sorted = subtwo.filter((doc) => {
-          return (doc.idParent == this.$route.query.id && doc.isPublic);
+          return doc.idParent == this.$route.query.id && doc.isPublic;
         });
 
         return sorted;
@@ -162,6 +160,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "../sass/main.scss";
+.container-fluid{
+  margin-bottom: 300px;
+}
 .title-box {
   position: relative;
   height: 40vh !important;

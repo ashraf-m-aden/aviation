@@ -8,32 +8,23 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="container">
+
       <div class="row">
-        <div class="col-12">
-          <span>A propos de nous</span>
-          <span> / Mot du directeur</span>
-        </div>
+        <BreadCrumbs
+          :b1="'A propos de nous'"
+          :b2="'Mot du directeur'"
+        ></BreadCrumbs>
+
         <div class="col-md-4 sideMenu">
           <SideMenuS1 :apropo="apropo"></SideMenuS1>
         </div>
         <div class="col-12 col-md-8">
-          <v-card
-     class="ceo mx-auto">
-                <v-img
-                  src="../../assets/DG.jpg"
-                  class="img-fluid"
-                 cover
-                >
-
-                </v-img>
-                <v-card-title>Daoud Ali Abdou</v-card-title>
-                <v-card-subtitle >
-                  Directeur de l'Autorité de l'aviation civile de
-                    Djibouti
-    </v-card-subtitle>
-
+          <v-card class="ceo mx-auto">
+            <v-img src="../../assets/DG.jpg" class="img-fluid" cover> </v-img>
+            <v-card-title>Daoud Ali Abdou</v-card-title>
+            <v-card-subtitle>
+              Directeur de l'Autorité de l'aviation civile de Djibouti
+            </v-card-subtitle>
           </v-card>
           <div class="justify">
             <p>
@@ -117,9 +108,11 @@
 
 <script>
 import SideMenuS1 from "../../components/SideMenuSousCategoryOne.vue";
+import BreadCrumbs from "../../components/BreadCrumbs";
+
 export default {
   components: {
-    SideMenuS1,
+    SideMenuS1, BreadCrumbs
   },
   metaInfo() {
     // if no subcomponents specify a metaInfo.title, this title will be used

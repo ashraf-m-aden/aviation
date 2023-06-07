@@ -16,7 +16,7 @@
           <span>{{ b1 }}</span>
           <span> / {{ b2 }}</span>
         </div>
-        <div class="col-md-4 sideMenu border">
+        <div class="col-md-4 ">
           <SideMenuSub :menu="menu" :apropo="false"></SideMenuSub>
         </div>
         <div class="col">

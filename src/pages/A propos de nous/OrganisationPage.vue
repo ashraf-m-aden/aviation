@@ -8,13 +8,13 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="container">
+
       <div class="row">
-        <div class="col-12">
-          <span>A propos de nous</span>
-          <span> / Organisation</span>
-        </div>
+
+        <BreadCrumbs
+          :b1="'A propos de nous'"
+          :b2="'Organisation'"
+        ></BreadCrumbs>
         <div class="col-md-4 sideMenu">
           <SideMenuS1 :apropo="apropo"></SideMenuS1>
         </div>
@@ -41,9 +41,11 @@
 
 <script>
 import SideMenuS1 from "../../components/SideMenuSousCategoryOne.vue";
+import BreadCrumbs from "../../components/BreadCrumbs";
+
 export default {
   components: {
-    SideMenuS1,
+    SideMenuS1,BreadCrumbs
   },
   metaInfo: {
     // if no subcomponents specify a metaInfo.title, this title will be used

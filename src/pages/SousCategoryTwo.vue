@@ -8,34 +8,38 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="container">
+
       <div class="row">
-        <div class="col-12">
-          <span>{{ b1 }}</span>
-          <span> / {{ b2 }}</span>
-          <span v-show="b3 !== ''"> / {{ b3 }}</span>
-        </div>
+        <BreadCrumbs :b1="b1" :b2="b2" :b3="b3"></BreadCrumbs>
         <div class="col-md-4 sideMenu">
           <SideMenuS2 :menu="menu"></SideMenuS2>
         </div>
         <div class="col-12 col-md-8">
           <div class="m-5 p5 d-flex flex-column align-items-center">
-            <input
+            <!-- <input
               type="text"
-              class="form-control border-danger w-100 search input"
+              class="form-control  search "
               placeholder="Search"
               v-on:keyup.enter="search"
               v-on:keyup.delete="enleve"
-            />
-            <div class="card result mt-2" v-show="searchResults.length > 0">
+            /> -->
+            <v-text-field
+              label="Rechercher"
+              class=" search"
+              v-on:keyup.enter="search"
+              v-on:keyup.delete="enleve" :loading="loading"
+            ></v-text-field>
+            <div
+              class="card result mt-2 table"
+              v-show="searchResults.length > 0"
+            >
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th scope="col">Titre</th>
+                    <th scope="col">Resutats de la recherche</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-body">
                   <tr v-for="(item, index) in searchResults" :key="index">
                     <td>
                       <li>
@@ -79,6 +83,7 @@
 
 <script>
 import SideMenuS2 from "../components/SideMenuSousCategoryTwo";
+import BreadCrumbs from "../components/BreadCrumbs";
 export default {
   metaInfo() {
     const subTwo = this.subTwo;
@@ -97,6 +102,7 @@ export default {
   },
   components: {
     SideMenuS2,
+    BreadCrumbs,
   },
   data() {
     return {
@@ -105,11 +111,22 @@ export default {
       menu: [],
       errorSearch: "",
       subTwo: {},
-      sortDesc: false,
-      page: 1,
-      sortBy: "name",
-      itemsPerPage: 6,
-      itemsPerPageArray: [4, 8, 12],
+      loading : false,
+      arrayForNautique: [
+        "5f3aa6cb34512340cc2b8252",
+        "5f3aa8fe34512340cc2b825e",
+        "5f3aa91c34512340cc2b8264",
+        "5f3aa94334512340cc2b826a",
+        "5f3aa95b34512340cc2b8270",
+        "5f585d9eb1398d47641a5ecd",
+        "5f58f66747a3152af4d2e319",
+        "5f58f77f47a3152af4d2e31e",
+        "5f585a81b1398d47641a5ec8",
+        "5f5b37ab638e43228cf0a56e",
+        "5f5b409c638e43228cf0a573",
+        "d2Bnp1Jr4f6Xy807zogw",
+        "n33qsnbVKKsWQ2LcDIdX",
+      ],
     };
   },
   computed: {
@@ -137,20 +154,40 @@ export default {
     },
     sortedDocuments() {
       if (this.documents.length > 0) {
-        let sorted = this.documents.filter((doc) => {
-          return doc.idParent === this.$route.query.id;
-        });
-        return sorted;
+        if (this.b3 === "Reglementation aéronautique de Djibouti") {
+          // cette partie est reservé uniquement pour regrouper tous les documents de reglements dans cette section
+          let sorted = this.documents.filter((doc) => {
+            return this.arrayForNautique.includes(doc.idParent);
+          });
+          return sorted;
+        } else {
+          // c'est pour le reste
+          let sorted = this.documents.filter((doc) => {
+            return doc.idParent === this.$route.query.id;
+          });
+          return sorted;
+        }
       } else {
-        let sorted = this.documents.filter((doc) => {
-          return doc.idParent === this.$route.query.id;
-        });
-        return sorted;
+        if (this.b3 === "Reglementation aéronautique de Djibouti") {
+          // cette partie est reservé uniquement pour regrouper tous les documents de reglements dans cette section
+          let sorted = this.documents.filter((doc) => {
+            return this.arrayForNautique.includes(doc.idParent);
+          });
+          return sorted;
+        } else {
+          // c'est pour le reste
+          let sorted = this.documents.filter((doc) => {
+            return doc.idParent === this.$route.query.id;
+          });
+          return sorted;
+        }
       }
     },
   },
   methods: {
     search(event) {
+      this.loading = true;
+
       this.searchResults = [];
       const nameFile = event.target.value.toLowerCase().trim();
       if (nameFile !== "") {
@@ -164,10 +201,13 @@ export default {
           this.errorSearch = "Pas de resultat pour '" + nameFile + "'";
         }
       }
+
     },
     enleve() {
       this.searchResults = [];
       this.errorSearch = "";
+      this.loading = false;
+
     },
     fetchBreadCrumb() {
       this.$store.state.category.subCategoryTwo.forEach((subTwo) => {
@@ -217,6 +257,10 @@ export default {
 
 <style lang="scss" scoped>
 @import "../sass/main.scss";
+
+.container-fluid {
+  margin-bottom: 300px;
+}
 .title-box {
   position: relative;
   height: 40vh !important;
@@ -279,11 +323,7 @@ export default {
   }
 }
 .search {
-  border-radius: 100px;
-  /* mozilla */
-  -moz-border-radius: 100px;
-  /* webkit */
-  -webkit-border-radius: 100px;
+  width: 100%;
 }
 .table-footer {
   border-top: solid 1px grey;
@@ -291,5 +331,10 @@ export default {
   display: flex;
   justify-content: space-around;
   width: 100%;
+}
+
+.table {
+  max-height: 500px;
+  overflow-y: scroll;
 }
 </style>

@@ -8,78 +8,72 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <span>{{ b1 }}</span>
-          <span> / {{ b2 }}</span>
-        </div>
-        <div class="col-md-4 sideMenu">
-          <SideMenuS1 :menu="menu"></SideMenuS1>
-        </div>
-        <div class="col-12 col-md-8">
-          <div class="m-5 p5 d-flex flex-column align-items-center">
-            <input
-              type="text"
-              class="form-control border-danger w-100 search input"
-              placeholder="Search"
-              v-on:keyup.enter="search"
-              v-on:keyup.delete="enleve"
-            />
-            <div class="card result mt-2" v-show="searchResults.length > 0">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th scope="col">Titre</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) in searchResults" :key="index">
-                    <td>
-                      <li>
-                        <a :href="item.src" target="_blank">{{ item.name }}</a>
-                      </li>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <span
-              class="border-bottom border-danger"
-              v-show="errorSearch !== ''"
-              >{{ errorSearch }}</span
-            >
-          </div>
 
-          <div class="table">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th scope="col">Titre</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in sortedDocuments" :key="index">
-                  <td>
-                    <li>
-                      <a :href="item.src" target="_blank">{{ item.name }}</a>
-                    </li>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+
+  <div class="row">
+    <BreadCrumbs :b1="b1" :b2="b2" :b3="b3"></BreadCrumbs>
+    <div class="col-md-4 sideMenu">
+      <SideMenuS1 :menu="menu"></SideMenuS1>
+    </div>
+    <div class="col-12 col-md-8">
+      <div class="m-5 p5 d-flex flex-column align-items-center">
+        <v-text-field
+              label="Rechercher"
+              class=" search"
+              v-on:keyup.enter="search"
+              v-on:keyup.delete="enleve" :loading="loading"
+            ></v-text-field>
+        <div class="card result mt-2" v-show="searchResults.length > 0">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Titre</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in searchResults" :key="index">
+                <td>
+                  <li>
+                    <a :href="item.src" target="_blank">{{ item.name }}</a>
+                  </li>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+        <span class="border-bottom border-danger" v-show="errorSearch !== ''">{{
+          errorSearch
+        }}</span>
+      </div>
+
+      <div class="table">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Titre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in sortedDocuments" :key="index">
+              <td>
+                <li>
+                  <a :href="item.src" target="_blank">{{ item.name }}</a>
+                </li>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+  </div></div>
 </template>
 
 <script>
 import SideMenuS1 from "../components/SideMenuSousCategoryOne.vue";
-export default {
+import BreadCrumbs from "../components/BreadCrumbs";
 
+export default {
   metaInfo() {
     const subOne = this.subOne;
     return {
@@ -96,7 +90,7 @@ export default {
     };
   },
   components: {
-    SideMenuS1,
+    SideMenuS1,BreadCrumbs
   },
   data() {
     return {
@@ -105,11 +99,7 @@ export default {
       menu: [],
       errorSearch: "",
       subOne: {},
-      sortDesc: false,
-      page: 1,
-      sortBy: "name",
-      itemsPerPage: 6,
-      itemsPerPageArray: [4, 8, 12],
+      loading:false
     };
   },
   computed: {
@@ -151,6 +141,8 @@ export default {
   },
   methods: {
     search(event) {
+      this.loading = true;
+
       this.searchResults = [];
       const nameFile = event.target.value.toLowerCase().trim();
       if (nameFile !== "") {
@@ -168,20 +160,21 @@ export default {
     enleve() {
       this.searchResults = [];
       this.errorSearch = "";
+      this.loading = false;
+
     },
     fetchBreadCrumb() {
       this.$store.state.category.subCategoryOne.forEach((subOne) => {
         if (subOne._id === this.$route.query.id) {
           this.subOne = subOne;
           this.$store.dispatch("fetchB2", subOne.name);
-              this.$store.state.category.category.forEach((cat) => {
-                if (cat._id === subOne.idParent) {
-                  this.$store.dispatch("fetchB1", cat.name);
-                }
-              });
-            }});
-
-
+          this.$store.state.category.category.forEach((cat) => {
+            if (cat._id === subOne.idParent) {
+              this.$store.dispatch("fetchB1", cat.name);
+            }
+          });
+        }
+      });
     },
     fetchMenu() {
       this.menu = [];
@@ -213,6 +206,10 @@ export default {
 
 <style lang="scss" scoped>
 @import "../sass/main.scss";
+
+.container-fluid{
+  margin-bottom: 300px;
+}
 .title-box {
   position: relative;
   height: 40vh !important;
@@ -275,11 +272,7 @@ export default {
   }
 }
 .search {
-  border-radius: 100px;
-  /* mozilla */
-  -moz-border-radius: 100px;
-  /* webkit */
-  -webkit-border-radius: 100px;
+  width: 100%;
 }
 .table-footer {
   border-top: solid 1px grey;

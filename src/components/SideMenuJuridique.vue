@@ -90,7 +90,7 @@
 </template>
 
 <script>
-export default {   
+export default {
 
   data() {
     return {};
@@ -102,6 +102,9 @@ export default {
 <style lang="scss" scoped>
 .list-group .list-group-item {
   border: none;
+  &:hover{
+ text-transform: capitalize;
+  }
 }
 
 .card {

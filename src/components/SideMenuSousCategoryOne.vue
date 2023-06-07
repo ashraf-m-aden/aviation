@@ -62,11 +62,12 @@ export default {
 <style lang="scss" scoped>
 .list-group .list-group-item {
   border: none;
+  &:hover{
+ text-transform: capitalize;
+  }
 }
 
-.card {
-  height: 100%;
-}
+
 .path {
   display: block;
   padding-top: 0.5rem;

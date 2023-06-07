@@ -103,10 +103,13 @@ export default {
 .list-group-item {
   cursor: pointer;
   &:hover {
-    background: #526488;
-    color: white !important;
+    background:  linear-gradient(
+    90deg,
+    rgba(0, 212, 255, 1) 40%,
+    rgba(25, 0, 255, 0.4430147058823529) 89%);
+    color: white ;
     .router {
-      color: white !important;
+      color: white ;
     }
   }
 
