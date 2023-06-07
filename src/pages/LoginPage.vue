@@ -94,7 +94,6 @@ export default {
         this.loading = false;
         this.error = true;
         this.errorMessage = error;
-        console.log(error);
         this.$store.dispatch("warningNotif", error);
       }
     },

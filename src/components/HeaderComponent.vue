@@ -320,7 +320,6 @@ export default {
           this.sub[index] = true;
         }
       }
-      console.log(this.sub);
     },
     logout() {
       auth

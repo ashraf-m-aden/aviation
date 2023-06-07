@@ -40,8 +40,8 @@
           >Ministere de l'equipements et des transports</a
         >
         <a href="#" class="text-light">Aeroport de Djibouti</a>
-        <a href="#" class="text-light"> Air Djibouti </a>
-        <a href="#" class="text-light mb-5"> La nation </a>
+        <a href="https://www.air-djibouti.com/" target="_blank" class="text-light"> Air Djibouti </a>
+        <a href="https://www.lanation.dj/" target="_blank" class="text-light mb-5"> La nation </a>
 
         <router-link to="/login" v-show="!user.id">
           <a class="btn btn-group text-light small btn-secondary"

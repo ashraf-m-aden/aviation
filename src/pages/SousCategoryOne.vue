@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-12">
           <div class="title-box">
-            <h1 class="title">{{ b2 }}</h1>
+            <h1 class="title">{{ b2 }} </h1>
           </div>
         </div>
       </div>

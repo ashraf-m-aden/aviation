@@ -532,8 +532,9 @@ export default {
       this.subCategoryTwo = [];
       this.allsubCategoryTwo.forEach((element) => {
         if (
-          element.idParent === item._id &&
-          element.name !== "Reglementation aéronautique de Djibouti"
+          element.idParent === item._id
+          // &&
+       //   element.name !== "Reglementation aéronautique de Djibouti"
         ) {
           this.subCategoryTwo.push(element);
         }
@@ -614,7 +615,6 @@ export default {
         })
         .catch(function () {
           // Uh-oh, an error occurred!
-          console.log(item);
           this.loading = false;
           this.loading2 = false;
         });
