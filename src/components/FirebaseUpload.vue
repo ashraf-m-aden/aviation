@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div class="container m-5" >
     <div class="row">
       <div class="col-12">
-        <div class="d-flex flex-column">
-          {{ message }}:
+        <div class="d-flex flex-column mb-5">
+          <h2>{{ message }}</h2>
           <input
             v-show="!isBanner && !isNews"
             class="input"
@@ -15,16 +15,19 @@
 
           <div v-if="isBanner" class="d-flex flex-column">
             <label>Titre: </label
-            ><input class="input" type="text" v-model="banner.title" />
+            ><input class="input form-control" type="text" v-model="banner.title" />
             <label>Description: </label
-            ><input class="input" type="text" v-model="banner.description" />
+            ><input class="input form-control" type="text" v-model="banner.description" />
           </div>
           <div v-if="isNews" class="d-flex flex-column">
-            <label>Titre: </label>
-            <input class="input" type="text" v-model="news.title" />
-            <label>Contenu: </label>
+            <h4>Titre: </h4>
+            <input class="input form-control" type="text" v-model="news.title" />
+            <h4>Contenu: </h4>
             <!-- <textarea rows="10" cols="100" class="border mb-5" type="text" v-model="news.content" /> -->
-            <quill-editor theme="snow" v-model="news.content"></quill-editor>
+            <div class="editor">
+              <quill-editor theme="snow" toolbar="full" v-model="news.content" class="editor"></quill-editor>
+
+            </div>
           </div>
 
           <input
@@ -543,5 +546,10 @@ export default {
 <style scoped>
 img.preview {
   width: 200px;
+}
+
+.editor {
+  border: solid 1px blue;
+  height: 500px;
 }
 </style>

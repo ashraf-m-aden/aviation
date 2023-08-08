@@ -12,7 +12,7 @@
 
       <button
         v-if="!loading"
-        class="btn btn-group btn-primary mt-5"
+        class="btn btn-group btn-primary m-5"
         @click="postUser"
       >
         Enregistrer

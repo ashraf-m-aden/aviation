@@ -10,7 +10,7 @@
 
         <v-card>
           <v-window v-model="tab">
-            <v-window-item value="Bannieres">
+            <v-window-item value="Bannieres"  >
               <Banner></Banner>
             </v-window-item>
             <v-window-item value="Articles">

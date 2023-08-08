@@ -4,7 +4,7 @@
       <div class="col-12">
         <FirebaseUpload :isNews="news"></FirebaseUpload>
       </div>
-      <div class="col-12 mt-5">
+      <div class="col-12 m-5">
         <h2 class="h2">Les articles</h2>
         <table class="table table-bordered" v-if="Allnews.length > 0">
           <thead class="thead-dark">
