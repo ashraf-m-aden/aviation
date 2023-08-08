@@ -7,18 +7,18 @@
         </a>
         <h1>
           <strong class="text-light"
-            >Autorité de l'aviation civile de Djibouti</strong
+            >Autorité de l'Aviation Civile de Djibouti</strong
           >
         </h1>
         <p>
           Réglementation et supervision de la sécurité et de la sûreté de
-          l'aviation.
+          l'Aviation.
         </p>
       </div>
       <div class="col-12 col-md-4 text-light">
         <h2 class="h4">Siège social</h2>
         Aéroport international de Djibouti (Ambouli) <br />
-        Autorité de l'aviation civile<br />
+        Autorité de l'Aviation Civile<br />
         <font-awesome-icon :icon="['fas', 'phone']" />
         +253 21 335100 <br />
         <font-awesome-icon :icon="['fas', 'fax']" />
