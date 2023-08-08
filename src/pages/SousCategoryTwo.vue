@@ -1,4 +1,5 @@
 <template>
+  <!-- ICI JAI MIS TTE LES PAGES DES SOUS CATEGORIES TWO CEST DES PAGES ICI PAS DES MENUS  EXEMPLE / Securité / Exploitation technique des aéronefs / Guides -->
   <div>
     <div class="container-fluid">
       <div class="row">
@@ -165,9 +166,13 @@ export default {
           let sorted = this.documents.filter((doc) => {
             return doc.idParent === this.$route.query.id;
           });
+          console.log(this.$route.query.id);
+          console.log(sorted);
+
           return sorted;
         }
       } else {
+
         if (this.b3 === "Reglementation aéronautique de Djibouti") {
           // cette partie est reservé uniquement pour regrouper tous les documents de reglements dans cette section
           let sorted = this.documents.filter((doc) => {
@@ -179,6 +184,7 @@ export default {
           let sorted = this.documents.filter((doc) => {
             return doc.idParent === this.$route.query.id;
           });
+
           return sorted;
         }
       }

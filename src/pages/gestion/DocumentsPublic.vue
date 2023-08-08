@@ -300,23 +300,19 @@
               />
             </button>
             <div class="d-flex justify-content-between">
-                  <button
-                    @click="togglePublicItem(!subTwo.isPublic, subTwo._id)"
-                  >
-                    <font-awesome-icon
-                      :class="subTwo.isPublic ? 'text-success' : 'text-danger'"
-                      :icon="['fas', 'globe']"
-                    />
-                  </button>
-                  <button
-                    @click="toggleInternItem(!subTwo.isIntern, subTwo._id)"
-                  >
-                    <font-awesome-icon
-                      :class="subTwo.isIntern ? 'text-success' : 'text-danger'"
-                      :icon="['fas', 'house']"
-                    />
-                  </button>
-                </div>
+              <button @click="togglePublicItem(!subTwo.isPublic, subTwo._id)">
+                <font-awesome-icon
+                  :class="subTwo.isPublic ? 'text-success' : 'text-danger'"
+                  :icon="['fas', 'globe']"
+                />
+              </button>
+              <button @click="toggleInternItem(!subTwo.isIntern, subTwo._id)">
+                <font-awesome-icon
+                  :class="subTwo.isIntern ? 'text-success' : 'text-danger'"
+                  :icon="['fas', 'house']"
+                />
+              </button>
+            </div>
           </div>
           <div v-if="subTwo.enabled && !loading && !addSubTwo">
             <FirebaseUpload
@@ -483,7 +479,7 @@ export default {
       actual: false,
       actual2: false,
       addSubOne: false,
-      addSubTwo:false,
+      addSubTwo: false,
       newSubOne: {
         idParent: "",
         enabled: true,
@@ -534,7 +530,7 @@ export default {
         if (
           element.idParent === item._id
           // &&
-       //   element.name !== "Reglementation aéronautique de Djibouti"
+          //   element.name !== "Reglementation aéronautique de Djibouti"
         ) {
           this.subCategoryTwo.push(element);
         }

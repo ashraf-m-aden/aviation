@@ -1,4 +1,6 @@
 <template>
+    <!-- ICI JAI MIS TTE LES PAGES DES SOUS CATEGORIES ONE CEST DES PAGES ICI PAS DES MENUS  EXEMPLE / Securité / Exploitation technique des aéronefs -->
+
   <div>
     <div class="container-fluid">
       <div class="row">
@@ -10,7 +12,7 @@
       </div>
 
       <div class="row">
-    <BreadCrumbs :b1="b1" :b2="b2" :b3="b3"></BreadCrumbs>
+    <BreadCrumbs :b1="b1" :b2="b2"></BreadCrumbs>
         <div class="col-md-4 sideMenu">
           <SideMenuS1 :menu="menu" :apropo="false"></SideMenuS1>
         </div>

@@ -22,7 +22,7 @@ export const mutations = {
   },
 };
 export const actions = {
-  setDocuments({ commit }) {
+  async setDocuments({ commit }) {
     return documentService.getDocuments().then(async (querySnapshot) => {
       const documents = querySnapshot.docs.map((doc) => doc.data());
       await documents.sort((a, b) => {
@@ -40,7 +40,7 @@ export const actions = {
           typeof doc.createdAt == "string"
             ? doc.createdAt
             : doc.createdAt.toDate();
-        doc.createdAt = moment(String(doc.createdAt)).format("DD/MM/YYYY");
+        doc.createdAt = moment(String(doc.createdAt)).format('L');
       });
       await commit("SET_DOCUMENTS", documents);
     });
@@ -62,7 +62,8 @@ export const actions = {
           typeof doc.createdAt == "string"
             ? doc.createdAt
             : doc.createdAt.toDate();
-        doc.createdAt = moment(String(doc.createdAt)).format("DD/MM/YYYY");
+
+        doc.createdAt = moment(String(doc.createdAt)).format('L');
       });
       await commit("SET_PUBLIC_DOCUMENTS", documents);
     });
@@ -93,7 +94,7 @@ export const actions = {
   },
 };
 
-export default {   
+export default {
 
   actions,
   mutations,

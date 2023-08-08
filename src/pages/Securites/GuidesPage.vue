@@ -17,7 +17,7 @@
           <span v-show="b3 !== ''"> / {{ b3 }}</span>
         </div>
         <div class="col-md-4 sideMenu">
-          <Menu :menu="menu"></Menu>
+          <SideMenuS2 :menu="menu"></SideMenuS2>
         </div>
         <div class="col-12 col-md-8">
           <div class="m-5 p5 d-flex flex-column align-items-center">
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import Menu from "../../components/SideMenu.vue";
+import SideMenuS2 from "../../components/SideMenu.vue";
 export default {
   metaInfo() {
     const subTwo = this.subTwo;
@@ -129,21 +129,26 @@ export default {
       return this.$store.state.category.breadCrumb3;
     },
     documents() {
+
       let docs = this.$store.state.documents.publicDocuments.filter((docs) => {
         return !docs.isIntern;
       });
       return docs;
     },
     sortedDocuments() {
+
       if (this.documents.length > 0) {
         let sorted = this.documents.filter((doc) => {
           return doc.idParent === this.$route.params.id;
         });
+        console.log(sorted);
         return sorted;
       } else {
         let sorted = this.documents.filter((doc) => {
           return doc.idParent === this.$route.params.id;
         });
+        console.log(sorted);
+
         return sorted;
       }
     },
