@@ -1,16 +1,11 @@
 import { auth, db, config } from "../firebaseConfig";
 import firebase from "firebase/compat/app";
-import {
-  sendPasswordResetEmail,
-  confirmPasswordReset,
-  getAuth,
-} from "firebase/auth";
+
 class Auth {
   // authToken = null;
   // userProfile = null;
   // tokenExpiry = null;
   // const isloggedIn = "isLoggedIn";
-  firebaseAuth = getAuth();
 
   async signIn(email, password) {
     const user = await db.collection("users").where("email", "==", email).get();
@@ -75,24 +70,8 @@ class Auth {
 
   async resetPassword(email) {
     /// dans authservice
-    var actionCodeSettings = {
-      url: "https://www.example.com/?email=user@example.com",
-      iOS: {
-        bundleId: "com.example.ios",
-      },
-      android: {
-        packageName: "com.example.android",
-        installApp: true,
-        minimumVersion: "12",
-      },
-      handleCodeInApp: true,
-    };
-    return await sendPasswordResetEmail(this.firebaseAuth, email);
-  }
 
-  async confirmNewPassword(link, newPassword) {
-    // return await confirmPasswordReset(this.firebaseAuth, link, newPassword);
-    // return sendCustomVerificationEmail(useremail, displayName, link);
+    return await auth.sendPasswordResetEmail(email);
   }
 }
 
