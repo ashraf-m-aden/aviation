@@ -2,8 +2,6 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
 
 export var config = {
   apiKey: "AIzaSyAlw6UL5PLeW9uKMfLU9c15Mx2FjZQcD8Y",
@@ -19,12 +17,9 @@ export var config = {
 firebase.initializeApp(config);
 export const db = firebase.firestore();
 export const storage = firebase.storage();
-const auth = getAuth();
+export const auth = firebase.auth();
 
-if (location.hostname === "localhost") {
-  connectAuthEmulator(auth, "http://localhost:9099");
-}
 // Export types that exists in Firestore
 // This is not always necessary, but it's used in other examples
 const { Timestamp, GeoPoint } = firebase.firestore;
-export { Timestamp, GeoPoint, auth };
+export { Timestamp, GeoPoint };
