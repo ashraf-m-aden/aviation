@@ -7,6 +7,7 @@ import PdeF from "../pages/A propos de nous/PolitiqueDeFormation.vue";
 import PdeS from "../pages/A propos de nous/PolitiqueDeSupervision.vue";
 
 import Login from "../pages/LoginPage.vue";
+import ResetPassword from "../pages/ResetPassword.vue";
 import Docs from "../pages/gestion/GestionDocuments.vue";
 import Media from "../pages/gestion/GestionMedia.vue";
 import DocIntern from "../pages/gestion/DocumentInternView.vue";
@@ -50,6 +51,18 @@ const routes = [
     },
   },
   {
+    path: "/reset-password",
+    name: "Reset",
+    component: ResetPassword,
+    beforeEnter: (to, from, next) => {
+      if (to.name === "Reset" && store.state.user.user.id) {
+        next({ alias: ["/"], name: "Dashboard" });
+      } else {
+        next();
+      }
+    },
+  },
+  {
     path: "/staff",
     name: "Staff",
     component: StaffDetails,
@@ -67,10 +80,12 @@ const routes = [
     component: Docs,
     beforeEnter: async (to, from, next) => {
       if (to.name === "Docs" && !store.state.user.user.isAdmin) {
-        await store.dispatch('getUser');
+        await store.dispatch("getUser");
         if (!store.state.user.user.id) {
-          next('/');
-        } else { next()}
+          next("/");
+        } else {
+          next();
+        }
       } else {
         next();
       }
@@ -80,12 +95,14 @@ const routes = [
     path: "/docIntern",
     name: "DocIntern",
     component: DocIntern,
-    beforeEnter: async (to, from, next) =>  {
+    beforeEnter: async (to, from, next) => {
       if (to.name === "DocIntern" && !store.state.user.user.id) {
-        await store.dispatch('getUser');
+        await store.dispatch("getUser");
         if (!store.state.user.user.id) {
-          next('/');
-        } else { next()}
+          next("/");
+        } else {
+          next();
+        }
       } else {
         next();
       }
@@ -95,12 +112,14 @@ const routes = [
     path: "/gestionMedia",
     name: "Media",
     component: Media,
-    beforeEnter:async (to, from, next) => {
+    beforeEnter: async (to, from, next) => {
       if (to.name === "Media" && !store.state.user.user.isAdmin) {
-        await store.dispatch('getUser');
+        await store.dispatch("getUser");
         if (!store.state.user.user.isAdmin) {
-          next('/');
-        } else { next()}
+          next("/");
+        } else {
+          next();
+        }
       } else {
         next();
       }
@@ -148,7 +167,6 @@ const routes = [
     path: "/administration/:subCategoryOne/:subCategoryTwo",
     component: SousCategoryTwo,
   },
-
 
   {
     path: "/Presentation",
@@ -205,7 +223,6 @@ const routes = [
     component: SubMenu,
   },
 
-
   {
     path: "/Article/:id",
     name: "Article",
@@ -214,7 +231,6 @@ const routes = [
   { path: "/404", name: "404", component: PageNotFound },
   { path: "/:pathMatch(.*)*", name: "Error", component: PageNotFound },
 ];
-
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

@@ -4,47 +4,28 @@
       <h4 class="mr-auto ml-auto mb-5">Connection</h4>
       <div class="form-group">
         <div class="form-group">
-          <label class="form-check-label small font-italic font-weight-bold"
-            >Votre addresse email</label
-          >
-          <input
-            id="email"
-            v-model="email"
-            type="text"
-            class="form-control"
-            placeholder="email"
-          />
+          <label class="form-check-label small font-italic font-weight-bold">Votre addresse email</label>
+          <input id="email" v-model="email" type="text" class="form-control" placeholder="email" />
         </div>
         <div class="form-group">
-          <label class="form-check-label small font-italic font-weight-bold"
-            >Votre mot de passe</label
-          >
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-            class="form-control"
-            placeholder="mot de passe"
-          />
+          <label class="form-check-label small font-italic font-weight-bold">Votre mot de passe</label>
+          <input id="password" v-model="password" type="password" class="form-control" placeholder="mot de passe" />
         </div>
         <div class="form-group d-flex">
-          <button
-            v-if="!loading"
-            class="btn btn-group btn-outline-success"
-            @click="submit()"
-          >
+          <button v-if="!loading" class="btn btn-group btn-outline-success" @click="submit()">
             Connection
           </button>
           <button class="btn btn-group btn-outline-success" v-if="loading">
             Loading...
           </button>
         </div>
+        <div class="form-group d-flex">
+          <router-link to="/reset-password">
+            <h6>Réinitialiser mon mot de passe</h6>
+          </router-link>
+        </div>
       </div>
-      <span
-        class="text-danger bg-white rounded-pill text-center"
-        v-if="error"
-        >{{ errorMessage }}</span
-      >
+      <span class="text-danger bg-white rounded-pill text-center" v-if="error">{{ errorMessage }}</span>
     </div>
   </div>
 </template>
