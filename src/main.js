@@ -1,7 +1,7 @@
 /**
  * main.js
  *
- * Bootstraps Vuetify and other plugins then mounts the App`
+ * Bootstraps Vuetify and other plugins then mounts the App
  */
 
 // Components
@@ -13,6 +13,10 @@ import { createApp } from "vue";
 import { registerPlugins } from "@/plugins";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
+
+// i18n (FR / EN / AR + RTL)
+import i18n, { applyDirection } from "./i18n";
+
 const app = createApp(App);
 
 registerPlugins(app);
@@ -26,6 +30,8 @@ import router from "./router/index";
 
 app.use(store);
 app.use(router);
+app.use(i18n);
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faUserSecret,
@@ -39,8 +45,8 @@ import {
   faMinus,
   faTrash,
   faTrashRestore,
-faHouse,
-faGlobe,
+  faHouse,
+  faGlobe,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -67,10 +73,8 @@ library.add(
 );
 import "./firebaseConfig";
 app.component("font-awesome-icon", FontAwesomeIcon);
-// app.use(MdCard);
-// app.use(MdContent);
-// app.use(MdTabs);
-// app.use(MdButton);
-// app.use(MdIcon);
-// app.use(MdProgress);
+
+// Applique html[dir=rtl|ltr] + html[lang] selon la langue détectée
+applyDirection();
+
 router.isReady().then(() => app.mount("#app"));

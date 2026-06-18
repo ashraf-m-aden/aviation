@@ -1,0 +1,42 @@
+{
+  "brand": {
+    "name": "Autorité de l'Aviation Civile",
+    "country": "République de Djibouti",
+    "full": "Autorité de l'Aviation Civile de Djibouti"
+  },
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "regulations": "Réglementation",
+    "publications": "Publications",
+    "eservices": "e-Services",
+    "contact": "Contact"
+  },
+  "common": {
+    "search": "Rechercher…",
+    "consult": "Consulter",
+    "download": "Télécharger",
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "staffArea": "Espace agent",
+    "loading": "Chargement…",
+    "readMore": "Lire la suite",
+    "backToSite": "Voir le site"
+  },
+  "footer": {
+    "tagline": "Réglementation et supervision de la sécurité et de la sûreté de l'aviation.",
+    "headOffice": "Siège social",
+    "quickLinks": "Liens rapides",
+    "address": "Aéroport international de Djibouti (Ambouli)",
+    "authority": "Autorité de l'Aviation Civile",
+    "copyright": "Autorité de l'Aviation Civile de Djibouti © {year}"
+  },
+  "links": {
+    "presidency": "Présidence de la République",
+    "primature": "Primature",
+    "ministry": "Ministère de l'équipement et des transports",
+    "airport": "Aéroport de Djibouti",
+    "airDjibouti": "Air Djibouti",
+    "laNation": "La Nation"
+  }
+}

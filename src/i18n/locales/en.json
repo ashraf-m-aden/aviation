@@ -1,0 +1,42 @@
+{
+  "brand": {
+    "name": "Civil Aviation Authority",
+    "country": "Republic of Djibouti",
+    "full": "Djibouti Civil Aviation Authority"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "regulations": "Regulations",
+    "publications": "Publications",
+    "eservices": "e-Services",
+    "contact": "Contact"
+  },
+  "common": {
+    "search": "Search…",
+    "consult": "Open",
+    "download": "Download",
+    "login": "Sign in",
+    "logout": "Sign out",
+    "staffArea": "Staff area",
+    "loading": "Loading…",
+    "readMore": "Read more",
+    "backToSite": "View site"
+  },
+  "footer": {
+    "tagline": "Aviation safety and security regulation and supervision.",
+    "headOffice": "Head office",
+    "quickLinks": "Quick links",
+    "address": "Djibouti International Airport (Ambouli)",
+    "authority": "Civil Aviation Authority",
+    "copyright": "Djibouti Civil Aviation Authority © {year}"
+  },
+  "links": {
+    "presidency": "Presidency of the Republic",
+    "primature": "Prime Minister's Office",
+    "ministry": "Ministry of Equipment and Transport",
+    "airport": "Djibouti Airport",
+    "airDjibouti": "Air Djibouti",
+    "laNation": "La Nation"
+  }
+}

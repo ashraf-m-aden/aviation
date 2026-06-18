@@ -8,7 +8,6 @@
     "preview": "vite preview",
     "lint": "eslint . --fix --ignore-path .gitignore",
     "serve:firebase": "firebase serve"
-
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
@@ -17,6 +16,7 @@
     "@mdi/font": "7.0.96",
     "@vue-leaflet/vue-leaflet": "^0.8.3",
     "@vueup/vue-quill": "^1.1.0",
+    "aviation": "file:",
     "boostrap": "^2.0.0",
     "bootstrap": "^5.3.0-alpha3",
     "bootstrap-icons": "^1.10.4",
@@ -28,6 +28,7 @@
     "roboto-fontface": "*",
     "vue": "^3.2.13",
     "vue-3-meta": "^2.4.0",
+    "vue-i18n": "^9.14.5",
     "vue-meta": "^3.0.0-alpha.7",
     "vue-router": "^4.0.0",
     "vue-toast-notification": "3.0",
