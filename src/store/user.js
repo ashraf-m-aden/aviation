@@ -51,6 +51,7 @@ export const actions = {
           commit("SET_USER", []);
           commit("SET_ID", null);
           localStorage.clear();
+            return;            // ← à ajouter
         }
         dispatch("successNotif", "Bienvenue, " + response.data().name);
         commit("SET_USER", response.data());
@@ -84,6 +85,7 @@ export const actions = {
     commit("SET_ID", null);
     localStorage.clear();
     dispatch("warningNotif", "Utilisateur déconnecté");
+      return;            // ← à ajouter
   },
 
   patchUser({ commit }, payload) {

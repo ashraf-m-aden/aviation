@@ -1,103 +1,79 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12">
-        <FirebaseUpload :isNews="news"></FirebaseUpload>
+  <div class="news">
+    <!-- Ajout -->
+    <DriveUpload :isNews="true" />
+
+    <!-- Liste -->
+    <h3 class="news__h3">Articles</h3>
+    <p v-if="!allNews.length" class="news__empty">Aucun article pour le moment.</p>
+
+    <div v-else class="ngrid">
+      <div class="ncard" v-for="(article, index) in allNews" :key="article._id || index">
+        <div class="ncard__media">
+          <img :src="imageSrc(article)" alt="" @error="onImgError($event, article)" />
+        </div>
+        <div class="ncard__body">
+          <label>Titre</label>
+          <input class="inp" type="text" v-model="article.title" />
+          <label>Contenu</label>
+          <div class="ncard__quill">
+            <QuillEditor
+              :content="article.content"
+              content-type="html"
+              theme="snow"
+              @update:content="(v) => (article.content = v)"
+            />
+          </div>
+
+          <div class="ncard__foot">
+            <div class="order">
+              <button class="ico" :disabled="index === 0" @click="top(index)" title="Monter">▲</button>
+              <button class="ico" :disabled="index === allNews.length - 1" @click="down(index)" title="Descendre">▼</button>
+            </div>
+            <div class="acts">
+              <button class="btn-save" @click="modify(article)">Enregistrer</button>
+              <button class="ico del" @click="remove(article)" title="Supprimer">🗑</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col-12 m-5">
-        <h2 class="h2">Les articles</h2>
-        <table class="table table-bordered" v-if="Allnews.length > 0">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">Image</th>
-              <th scope="col">Titre</th>
-              <th scope="col">Contenu</th>
-              <th scope="col">Position</th>
-              <th scope="col">Supprimer</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(news, index) in Allnews" :key="index">
-              <td scope="row"><img width="50" :src="news.url" /></td>
-              <td><input type="text" :value="news.title" /></td>
-              <td>
-                <textarea
-                  rows="10"
-                  cols="50"
-                  class="border mb-5"
-                  type="text"
-                  :value="news.content"
-                />
-              </td>
-              <td>
-                <div class="div-icon">
-                  <v-icon @click="top(index)" class="icon icon-up">
-                    mdi-chevron-up
-                  </v-icon>
-                  <v-icon @click="down(index)" class="icon icon-down">
-                    mdi-chevron-down
-                  </v-icon>
-                </div>
-              </td>
-              <td>
-                <button
-                  @click="deleteArticles(news)"
-                  class="btn btn-group btn-outline-success"
-                >
-                  <v-icon size="small" color="red-darken-2">
-                    mdi-delete
-                  </v-icon>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <v-btn small class="saveButton" @click="save"> Enregistrer </v-btn>
-      </div>
+    </div>
+
+    <div class="news__bar" v-if="allNews.length">
+      <button class="btn-order" @click="saveOrder">Enregistrer l'ordre</button>
     </div>
   </div>
 </template>
 
 <script>
-import FirebaseUpload from "../../components/FirebaseUpload.vue";
-import { storage } from "../../firebaseConfig.js";
+import DriveUpload from "@/components/DriveUpload.vue";
+import { driveImageUrl, driveThumbUrl } from "@/utils/drive";
 
 export default {
-  components: {
-    FirebaseUpload,
-  },
-  data() {
-    return {
-      news: true,
-    };
-  },
+  name: "NewsPage",
+  components: { DriveUpload },
   computed: {
-    Allnews() {
-      return this.$store.state.media.allNews;
+    allNews() {
+      return this.$store.state.media.allNews || [];
     },
   },
   methods: {
-    modifyArticles(news) {
-      this.$store.dispatch("modifyNews", news);
+    imageSrc(item) {
+      return item.driveId ? driveImageUrl(item.driveId, 600) : item.url || "";
     },
-    enableArticles(id) {
-      this.$store.dispatch("enableOneArticles", id);
+    onImgError(e, item) {
+      if (item.driveId) {
+        const fb = driveThumbUrl(item.driveId, 600);
+        if (e.target.src !== fb) e.target.src = fb;
+      }
     },
-    deleteArticles(item) {
-      // Create a reference to the file to delete
-      var desertRef = storage.ref(item.ref);
-
-      // Delete the file
-      desertRef
-        .delete()
-        .then(() => {
-          // File deleted successfully
-          this.$store.dispatch("deleteOneNews", item._id);
-        })
-        .catch(function () {
-          // Uh-oh, an error occurred!
-          console.log(item);
-        });
+    modify(article) {
+      this.$store.dispatch("modifyNews", article);
+      this.$store.dispatch("successNotif", "Article mis à jour.");
+    },
+    remove(item) {
+      if (!confirm("Supprimer cet article ?")) return;
+      this.$store.dispatch("deleteOneNews", item._id);
     },
     top(index) {
       this.$store.dispatch("topNews", index);
@@ -105,37 +81,112 @@ export default {
     down(index) {
       this.$store.dispatch("downNews", index);
     },
-    save() {
+    saveOrder() {
       this.$store.dispatch("saveNewNews");
+      this.$store.dispatch("successNotif", "Ordre enregistré.");
     },
+  },
+  created() {
+    this.$store.dispatch("getNews");
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../../sass/main.scss";
+$navy: #0a2b4e;
+$navy-700: #103a66;
+$sky: #1b9dd9;
+$red: #e0322b;
+$muted: #5b6b78;
+$line: #dde6ec;
 
-.div-icon {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  .icon {
-    cursor: pointer;
-
-    &:hover {
-      transform: scale(1.5);
-    }
-
-    font-size: 2rem;
-
-    &-down {
-      color: #ff1744;
-    }
-
-    &-up {
-      color: #009688;
-    }
+.news {
+  &__h3 { font-size: 16px; color: $navy; margin: 28px 0 14px; }
+  &__empty { color: $muted; font-size: 14px; }
+  &__bar { display: flex; justify-content: flex-end; margin-top: 16px; }
+}
+.ngrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.ncard {
+  background: #fff;
+  border: 1px solid $line;
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  &__media {
+    background: linear-gradient(120deg, $navy, $sky);
+    img { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 180px; }
   }
+  &__body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    label { font-size: 11.5px; font-weight: 700; color: $navy; margin: 8px 0 5px; }
+  }
+  &__quill { background: #fff; }
+  &__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+}
+.inp {
+  width: 100%;
+  padding: 8px 11px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+  &:focus { border-color: $sky; }
+}
+.order { display: flex; gap: 5px; }
+.acts { display: flex; gap: 6px; align-items: center; }
+.ico {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: 1px solid $line;
+  background: #fff;
+  cursor: pointer;
+  color: $muted;
+  font-size: 11px;
+  &:hover:not(:disabled) { color: $navy; border-color: #b9cde0; }
+  &:disabled { opacity: 0.4; cursor: default; }
+  &.del:hover { color: #fff; background: $red; border-color: $red; }
+}
+.btn-save {
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #fff;
+  background: $navy;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 14px;
+  cursor: pointer;
+  &:hover { background: $navy-700; }
+}
+.btn-order {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: $sky;
+  background: #e8f5fc;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  &:hover { background: #d8eefa; }
+}
+
+@media (max-width: 720px) {
+  .ncard { grid-template-columns: 1fr; }
+  .ncard__media img { min-height: 150px; }
 }
 </style>

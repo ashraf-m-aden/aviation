@@ -69,7 +69,7 @@ export default {
         //  this.$store.dispatch("login", data.user);
         localStorage.setItem("id", data.user.uid);
         this.$router.push({
-          path: "/",
+          path: "/admin/navigation",
         });
       } catch (error) {
         this.loading = false;

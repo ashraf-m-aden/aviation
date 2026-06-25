@@ -52,17 +52,33 @@ export const actions = {
   fetchSubCategoryOne({ commit }) {
     return CategoryS.getSubCategoryOne().then(async (querySnapshot) => {
       const categoryMenu = querySnapshot.docs.map((doc) => doc.data());
-
       await commit("SET_SubCategoryOne", categoryMenu);
     });
   },
   fetchSubCategoryTwo({ commit }) {
     return CategoryS.getSubCategoryTwo().then(async (querySnapshot) => {
       const categoryMenu = querySnapshot.docs.map((doc) => doc.data());
-
       await commit("SET_SubCategoryTwo", categoryMenu);
     });
   },
+
+  // --- AJOUTÉ : gestion des catégories ---
+  createCategory({ dispatch }, category) {
+    return CategoryS.addCategory(category).then(() => dispatch("fetchCategory"));
+  },
+  updateCategory({ dispatch }, { id, data }) {
+    return CategoryS.updateCategory(id, data).then(() => dispatch("fetchCategory"));
+  },
+  removeCategory({ dispatch }, id) {
+    return CategoryS.removeCategory(id).then(() => dispatch("fetchCategory"));
+  },
+  retrieveCategory({ dispatch }, id) {
+    return CategoryS.retrieveCategory(id).then(() => dispatch("fetchCategory"));
+  },
+  eraseCategory({ dispatch }, id) {
+    return CategoryS.eraseCategory(id).then(() => dispatch("fetchCategory"));
+  },
+
   fetchB1({ commit }, B1) {
     commit("SET_B1", B1);
   },
@@ -74,8 +90,7 @@ export const actions = {
   },
 };
 
-export default {   
-
+export default {
   actions,
   mutations,
   getters,

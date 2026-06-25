@@ -1,109 +1,72 @@
 <template>
-  <div class="container">
-    <div class="row loading" v-if="loading">
-      <p class="spinner">
-        Suppresion
-        <v-progress-circular
-          indeterminate
-          color="primary"
-        ></v-progress-circular>
-      </p>
+  <div class="banners">
+    <!-- Ajout -->
+    <DriveUpload :isBanner="true" />
+
+    <!-- Liste -->
+    <h3 class="banners__h3">Bannières du carrousel</h3>
+    <p v-if="!banniere.length" class="banners__empty">Aucune bannière pour le moment.</p>
+
+    <div v-else class="bgrid">
+      <div class="bcard" v-for="(banner, index) in banniere" :key="banner._id || index">
+        <div class="bcard__media">
+          <img :src="imageSrc(banner)" alt="" @error="onImgError($event, banner)" />
+        </div>
+        <div class="bcard__body">
+          <label>Titre</label>
+          <input class="inp" type="text" v-model="banner.title" />
+          <label>Description</label>
+          <textarea class="inp" rows="2" v-model="banner.description"></textarea>
+
+          <div class="bcard__foot">
+            <div class="order">
+              <button class="ico" :disabled="index === 0" @click="top(index)" title="Monter">▲</button>
+              <button class="ico" :disabled="index === banniere.length - 1" @click="down(index)" title="Descendre">▼</button>
+            </div>
+            <div class="acts">
+              <button class="btn-save" @click="modify(banner)">Enregistrer</button>
+              <button class="ico del" @click="remove(banner)" title="Supprimer">🗑</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="row" v-else>
-      <div class="col-6">
-        <FirebaseUpload :isBanner="bannier"></FirebaseUpload>
-      </div>
-      <div class="col-12 m-5">
-        <h2>Mes bannieres</h2>
-        <table class="table table-bordered" v-if="banniere.length > 0">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">Image</th>
-              <th scope="col">Titre</th>
-              <th scope="col">Description</th>
-              <th scope="col">Position</th>
-              <th scope="col">Supprimer</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(banner, index) in banniere" :key="index">
-              <td scope="row"><img width="150" :src="banner.url" /></td>
-              <td><input type="text" :value="banner.title" /></td>
-              <td>
-                <textarea
-                  name=""
-                  id=""
-                  :value="banner.description"
-                  cols="15"
-                  rows="3"
-                ></textarea>
-              </td>
-              <td>
-                <div class="div-icon">
-                  <v-icon @click="top(index)" class="icon icon-up">
-                    mdi-chevron-up
-                  </v-icon>
-                  <v-icon @click="down(index)" class="icon icon-down">
-                    mdi-chevron-down
-                  </v-icon>
-                </div>
-              </td>
-              <td>
-                <button
-                  @click="deleteBanner(banner)"
-                  class="btn btn-group btn-outline-danger"
-                >
-                  <v-icon size="small" color="red-darken-2">
-                    mdi-delete
-                  </v-icon>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <v-btn class="saveButton" @click="save"> Enregistrer </v-btn>
-      </div>
+
+    <div class="banners__bar" v-if="banniere.length">
+      <button class="btn-order" @click="saveOrder">Enregistrer l'ordre</button>
     </div>
   </div>
 </template>
 
 <script>
-import FirebaseUpload from "../../components/FirebaseUpload.vue";
-import { storage } from "../../firebaseConfig.js";
+import DriveUpload from "@/components/DriveUpload.vue";
+import { driveImageUrl, driveThumbUrl } from "@/utils/drive";
+
 export default {
-  components: {
-    FirebaseUpload,
-  },
-  data() {
-    return {
-      bannier: true,
-      loading: false,
-    };
-  },
-  mounted() {},
+  name: "BannerPage",
+  components: { DriveUpload },
   computed: {
     banniere() {
-      return this.$store.state.media.banner;
+      return this.$store.state.media.banner || [];
     },
   },
   methods: {
-    deleteBanner(item) {
-      this.loading = true;
-      // Create a reference to the file to delete
-      var desertRef = storage.ref(item.ref);
-      try {
-        // Delete the file
-        desertRef.delete();
-        // File deleted successfully
-
-        this.$store.dispatch("deleteOneBanner", item._id);
-        setTimeout(() => {
-          this.loading = false;
-        }, 3000);
-      } catch (error) {
-        this.$store.dispatch("deleteOneBanner", item._id);
-        this.loading = false;
+    imageSrc(item) {
+      return item.driveId ? driveImageUrl(item.driveId, 600) : item.url || "";
+    },
+    onImgError(e, item) {
+      if (item.driveId) {
+        const fb = driveThumbUrl(item.driveId, 600);
+        if (e.target.src !== fb) e.target.src = fb;
       }
+    },
+    modify(banner) {
+      this.$store.dispatch("modifyBanner", banner);
+      this.$store.dispatch("successNotif", "Bannière mise à jour.");
+    },
+    remove(item) {
+      if (!confirm("Supprimer cette bannière ?")) return;
+      this.$store.dispatch("deleteOneBanner", item._id);
     },
     top(index) {
       this.$store.dispatch("topBanner", index);
@@ -111,44 +74,112 @@ export default {
     down(index) {
       this.$store.dispatch("downBanner", index);
     },
-    save() {
+    saveOrder() {
       this.$store.dispatch("saveNewBanner");
+      this.$store.dispatch("successNotif", "Ordre enregistré.");
     },
+  },
+  created() {
+    this.$store.dispatch("getBanners");
   },
 };
 </script>
-<style lang="scss" scoped>
-@import "../../sass/main.scss";
-.loading {
-  width: 100%;
-  height: 100vh;
-  background: rgb(102, 146, 160);
-}
-.spinner {
-  @include centerElement;
-}
 
-.div-icon {
+<style lang="scss" scoped>
+$navy: #0a2b4e;
+$navy-700: #103a66;
+$sky: #1b9dd9;
+$red: #e0322b;
+$muted: #5b6b78;
+$line: #dde6ec;
+
+.banners {
+  &__h3 { font-size: 16px; color: $navy; margin: 28px 0 14px; }
+  &__empty { color: $muted; font-size: 14px; }
+  &__bar { display: flex; justify-content: flex-end; margin-top: 16px; }
+}
+.bgrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.bcard {
+  background: #fff;
+  border: 1px solid $line;
+  border-radius: 12px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  .icon {
-    cursor: pointer;
-    &:hover {
-      transform: scale(1.5);
-    }
-    font-size: 2rem;
-    &-down {
-      color: #ff1744;
-    }
-    &-up {
-      color: #009688;
-    }
+  &__media {
+    height: 150px;
+    background: linear-gradient(120deg, $navy, $sky);
+    img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  }
+  &__body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    label { font-size: 11.5px; font-weight: 700; color: $navy; margin: 8px 0 5px; }
+  }
+  &__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
   }
 }
-.saveButton {
-  color: #009688;
-  font-size: 0.1rem;
-  float: right;
+.inp {
+  width: 100%;
+  padding: 8px 11px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+  resize: vertical;
+  &:focus { border-color: $sky; }
+}
+.order { display: flex; gap: 5px; }
+.acts { display: flex; gap: 6px; align-items: center; }
+.ico {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: 1px solid $line;
+  background: #fff;
+  cursor: pointer;
+  color: $muted;
+  font-size: 11px;
+  &:hover:not(:disabled) { color: $navy; border-color: #b9cde0; }
+  &:disabled { opacity: 0.4; cursor: default; }
+  &.del:hover { color: #fff; background: $red; border-color: $red; }
+}
+.btn-save {
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #fff;
+  background: $navy;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 14px;
+  cursor: pointer;
+  &:hover { background: $navy-700; }
+}
+.btn-order {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: $sky;
+  background: #e8f5fc;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  &:hover { background: #d8eefa; }
+}
+
+@media (max-width: 720px) {
+  .bgrid { grid-template-columns: 1fr; }
 }
 </style>

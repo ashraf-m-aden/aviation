@@ -1,57 +1,83 @@
 <template>
-  <div class="container-fluid">
-    <div class="row mt-5">
-      <div class="col-12">
-        <v-tabs v-model="tab">
-          <v-tab value="Bannieres">Bannieres </v-tab>
-          <v-tab value="Articles">Articles </v-tab>
-          <v-tab value="Staffs">Staffs </v-tab>
-        </v-tabs>
+  <div class="gestion-media">
+    <h2 class="gm-title">Médias & bannières</h2>
 
-        <v-card>
-          <v-window v-model="tab">
-            <v-window-item value="Bannieres"  >
-              <Banner></Banner>
-            </v-window-item>
-            <v-window-item value="Articles">
-              <News></News>
-            </v-window-item>
-            <v-window-item value="Staffs">
-              <Staff></Staff>
-            </v-window-item>
-          </v-window>
-        </v-card>
-        <!-- <md-tabs>
-          <md-tab md-label="Bannieres">
-            <Banner></Banner>
-          </md-tab>
+    <div class="gm-tabs">
+      <button
+        v-for="t in tabs"
+        :key="t.key"
+        class="gm-tab"
+        :class="{ 'is-active': tab === t.key }"
+        @click="tab = t.key"
+      >
+        {{ t.label }}
+      </button>
+    </div>
 
-          <md-tab md-label="Articles">
-            <News></News>
-          </md-tab>
-          <md-tab md-label="Staffs">
-            <Staff></Staff>
-          </md-tab>
-        </md-tabs> -->
-      </div>
+    <div class="gm-panel">
+      <BannerPage v-if="tab === 'banners'" />
+      <NewsPage v-else />
     </div>
   </div>
 </template>
 
 <script>
-import Banner from "./BannerPage.vue";
-import News from "./NewsPage.vue";
-import Staff from "./StaffPage.vue";
+import BannerPage from "./BannerPage.vue";
+import NewsPage from "./NewsPage.vue";
+
 export default {
+  name: "GestionMedia",
+  components: { BannerPage, NewsPage },
+  metaInfo() {
+    return { meta: [{ name: "robots", content: "noindex" }] };
+  },
   data() {
     return {
-      tab: null,
+      tab: "banners",
+      tabs: [
+        { key: "banners", label: "Bannières" },
+        { key: "news", label: "Actualités" },
+      ],
     };
-  },
-  components: {
-    Banner,
-    News,
-    Staff,
   },
 };
 </script>
+
+<style lang="scss" scoped>
+$navy: #0a2b4e;
+$sky: #1b9dd9;
+$muted: #5b6b78;
+$line: #dde6ec;
+
+.gestion-media {
+  max-width: 1000px;
+}
+.gm-title {
+  font-size: 22px;
+  color: $navy;
+  font-family: "Spectral", Georgia, serif;
+  margin-bottom: 18px;
+}
+.gm-tabs {
+  display: inline-flex;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid $line;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 22px;
+}
+.gm-tab {
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: $muted;
+  background: none;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 7px;
+  cursor: pointer;
+  &:hover { color: $navy; }
+  &.is-active { background: $navy; color: #fff; }
+}
+</style>

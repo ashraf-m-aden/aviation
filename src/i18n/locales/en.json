@@ -38,5 +38,32 @@
     "airport": "Djibouti Airport",
     "airDjibouti": "Air Djibouti",
     "laNation": "La Nation"
+  },
+  "home": {
+    "eyebrow": "Welcome",
+    "title": "Djibouti Civil Aviation Authority",
+    "lead": "Ensuring the safety, security, and sustainable development of civil aviation in Djibouti.",
+    "cta1": "Consult AIP",
+    "cta2": "Flight Authorization Request",
+    "quickTitle": "Quick Access",
+    "qaAip": "Djibouti AIP",
+    "qaAipSub": "Aeronautical information",
+    "qaPermit": "Flight Authorization",
+    "qaPermitSub": "Online application form",
+    "qaReport": "Event Reporting",
+    "qaReportSub": "Safety notification form",
+    "servicesLabel": "Our Missions",
+    "servicesTitle": "Services and Responsibilities",
+    "s1t": "Aviation Safety",
+    "s1p": "Supervision and control of flight operations and airworthiness.",
+    "s2t": "Aviation Security",
+    "s2p": "Implementation of security standards across airport platforms.",
+    "s3t": "Personnel Licensing",
+    "s3p": "Issuance and validation of licenses for aviation professionals.",
+    "s4t": "Air Navigation",
+    "s4p": "Regulation and oversight of air navigation services.",
+    "newsLabel": "News",
+    "newsTitle": "Latest Publications",
+    "newsEmpty": "No news available at the moment."
   }
 }

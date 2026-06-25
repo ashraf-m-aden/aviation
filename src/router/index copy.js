@@ -1,48 +1,34 @@
 import store from "../store/index";
-import Dashboard from "../pages/DashboardPage.vue";
+import Dashboard from "../pages/HomePage.vue/index.js";
 import Presentation from "../pages/A propos de nous/PresentationPage.vue";
 import Organisation from "../pages/A propos de nous/OrganisationPage.vue";
 import MduD from "../pages/A propos de nous/MotDuDiirecteur.vue";
 import PdeF from "../pages/A propos de nous/PolitiqueDeFormation.vue";
 import PdeS from "../pages/A propos de nous/PolitiqueDeSupervision.vue";
-import Arretes from "../pages/Publications/Textes reglementaires/ArretesPage.vue";
-import Decrets from "../pages/Publications/Textes reglementaires/DecretPage.vue";
-import Lois from "../pages/Publications/Textes legislatifs/LoisPage.vue";
-import RAD from "../pages/Publications/Textes reglementaires/ReglementationAeronautiqueDeDjibouti.vue";
-import AI from "../pages/Publications/Accords/AccordsInternationaux.vue";
-import AB from "../pages/Publications/Accords/AccordsBilaterales.vue";
-import DirectiveS from "../pages/Publications/DirectivesPage.vue";
-import Circulaires from "../pages/Publications/CirculairesPage.vue";
-import Decisions from "../pages/Publications/DecisionsPage.vue";
-import Reglements from "../pages/Securites/ReglementsPage.vue";
-import Formulaires from "../pages/Securites/FormulairesPage.vue";
-import Guides from "../pages/Securites/GuidesPage.vue";
-import Directives from "../pages/Securites/DirectivesPage.vue";
-import Manuels from "../pages/Securites/ManuelsPage.vue";
-import Procedure from "../pages/Securites/ProceduresPage.vue";
+
 import Login from "../pages/LoginPage.vue";
+import ResetPassword from "../pages/ResetPassword.vue";
 import Docs from "../pages/gestion/GestionDocuments.vue";
 import Media from "../pages/gestion/GestionMedia.vue";
 import DocIntern from "../pages/gestion/DocumentInternView.vue";
 import Contact from "../pages/ContactPage.vue";
 // import Securite from "../pages/Header/securité.vue";
-import JurLoi from "../pages/Juridiques/LoisPage.vue";
-import JurDecre from "../pages/Juridiques/DecresPage.vue";
-import JurArre from "../pages/Juridiques/ArretesPage.vue";
-import JurRegle from "../pages/Juridiques/ReglementsPage.vue";
-import JurProce from "../pages/Juridiques/ProceduresPage.vue";
-import JurDire from "../pages/Juridiques/DirectivesPage.vue";
-import JurCir from "../pages/Juridiques/CirculairesPage.vue";
-import JurPoli from "../pages/Juridiques/PolitiquesPage.vue";
+
 import DA from "../pages/eService/DemandeAutorisation.vue";
 import FCR from "../pages/eService/FormulaireCompteRendu.vue";
 import AuditInspection from "../pages/inspection/AuditInspection.vue";
 import SubMenu from "../pages/SubMenu.vue";
+import SousCategoryOne from "../pages/SousCategoryOne.vue";
+import SousCategoryTwo from "../pages/SousCategoryTwo.vue";
 import Article from "../pages/ArticlesPage.vue";
 import StaffDetails from "../pages/gestion/StaffDetails.vue";
 import AIP from "../pages/aip/PublicationsInformationAéronautique.vue";
 import PageNotFound from "../pages/PageNotFound.vue";
 import { createRouter, createWebHistory } from "vue-router";
+import SousCategoryTwoStraight from "@/pages/SousCategoryTwoStraight.vue";
+import PageResolver from "@/views/PageResolver.vue";
+import GestionNavigation from "@/components/GestionNavigation.vue";
+import AdminNavigation from "@/pages/AdminNavigation.vue";
 
 const routes = [
   {
@@ -61,6 +47,18 @@ const routes = [
     component: Login,
     beforeEnter: (to, from, next) => {
       if (to.name === "Login" && store.state.user.user.id) {
+        next({ alias: ["/admin"], name: "GestionAdmin" });
+      } else {
+        next();
+      }
+    },
+  },
+  {
+    path: "/reset-password",
+    name: "Reset",
+    component: ResetPassword,
+    beforeEnter: (to, from, next) => {
+      if (to.name === "Reset" && store.state.user.user.id) {
         next({ alias: ["/"], name: "Dashboard" });
       } else {
         next();
@@ -85,10 +83,12 @@ const routes = [
     component: Docs,
     beforeEnter: async (to, from, next) => {
       if (to.name === "Docs" && !store.state.user.user.isAdmin) {
-        await store.dispatch('getUser');
+        await store.dispatch("getUser");
         if (!store.state.user.user.id) {
-          next('/');
-        } else { next()}
+          next("/");
+        } else {
+          next();
+        }
       } else {
         next();
       }
@@ -98,12 +98,14 @@ const routes = [
     path: "/docIntern",
     name: "DocIntern",
     component: DocIntern,
-    beforeEnter: async (to, from, next) =>  {
+    beforeEnter: async (to, from, next) => {
       if (to.name === "DocIntern" && !store.state.user.user.id) {
-        await store.dispatch('getUser');
+        await store.dispatch("getUser");
         if (!store.state.user.user.id) {
-          next('/');
-        } else { next()}
+          next("/");
+        } else {
+          next();
+        }
       } else {
         next();
       }
@@ -113,58 +115,85 @@ const routes = [
     path: "/gestionMedia",
     name: "Media",
     component: Media,
-    beforeEnter:async (to, from, next) => {
+    beforeEnter: async (to, from, next) => {
       if (to.name === "Media" && !store.state.user.user.isAdmin) {
-        await store.dispatch('getUser');
+        await store.dispatch("getUser");
         if (!store.state.user.user.isAdmin) {
-          next('/');
-        } else { next()}
+          next("/");
+        } else {
+          next();
+        }
       } else {
         next();
       }
     },
   },
-  // {
-  //   path: "/securite/:id",
-  //   name: "Securité",
-  //   component: Securite,
-  // },
+
   {
     path: "/aip",
     name: "Publications d'Information Aéronautique",
     component: AIP,
   },
   {
-    path: "/Formulaires/:id",
-    name: "Formulaires",
-    component: Formulaires,
+    path: "/securite/:name",
+    component: SousCategoryOne,
   },
   {
-    path: "/Guides/:id",
-    name: "Guides",
-    component: Guides,
+    path: "/securite/:subCategoryOne/:subCategoryTwo",
+    component: SousCategoryTwo,
   },
   {
-    path: "/Procedures/:id",
-    name: "Procedures",
-    component: Procedure,
+    path: "/surete/:name",
+    component: SousCategoryOne,
   },
   {
-    path: "/Manuels/:id",
-    name: "Manuels",
-    component: Manuels,
+    path: "/surete/:subCategoryOne/:subCategoryTwo",
+    component: SousCategoryTwo,
   },
   {
-    path: "/Reglements/:id",
-    name: "Reglements",
-    component: Reglements,
+    path: "/publications/:name",
+    component: SousCategoryOne,
   },
   {
-    path: "/Directives",
-    alias: ["/Guidelines"],
-    name: "DirectiveS",
-    component: DirectiveS,
+    path: "/publications/:subCategoryOne/:subCategoryTwo",
+    component: SousCategoryTwo,
   },
+  {
+    path: "/publications/docs/:subCategoryOne/",
+    component: SousCategoryTwoStraight,
+  },
+  {
+    path: "/administration/:name",
+    component: SousCategoryOne,
+  },
+  {
+    path: "/administration/:subCategoryOne/:subCategoryTwo",
+    component: SousCategoryTwo,
+  },
+{
+  path: "/admin/navigation",
+  name: "GestionNavigation",
+  component: GestionNavigation,
+  beforeEnter: async (to, from, next) => {
+    console.log("store.state.user.user.isAdmin", store.state.user.user.isAdmin);
+    if (!store.state.user.user.isAdmin) {
+      await store.dispatch("getUser");
+      store.state.user.user.isAdmin ? next() : next("/");
+    } else next();
+  },
+},
+{
+  path: "/admin",
+  name: "GestionAdmin",
+  component: AdminNavigation,
+  beforeEnter: async (to, from, next) => {
+    console.log("store.state.user.user.isAdmin", store.state.user.user.isAdmin);
+    if (!store.state.user.user.isAdmin) {
+      await store.dispatch("getUser");
+      store.state.user.user.isAdmin ? next() : next("/");
+    } else next();
+  },
+},
   {
     path: "/Presentation",
     name: "Presentation",
@@ -195,63 +224,16 @@ const routes = [
     name: "PdeS",
     component: PdeS,
   },
+
   {
-    path: "/Textes-reglementaires/Arretes",
-    name: "Arretés",
-    component: Arretes,
-  },
-  {
-    path: "/Textes-reglementaires/Decrets",
-    name: "Decrets",
-    component: Decrets,
-  },
-  {
-    path: "/Textes-reglementaires/Djibouti aeronautical regulations",
-    alias: ["/Textes-reglementaires/Reglementation aeronautique de Djibouti"],
-    name: "Reglementation aéronautique de Djibouti",
-    component: RAD,
-  },
-  {
-    path: "/Legislations/Lois",
-    name: "Lois",
-    component: Lois,
-  },
-  {
-    path: "/Accords/Accords-internationaux",
-    name: "Accords internationaux",
-    component: AI,
-  },
-  {
-    path: "/Accords/Accords-bilateraux",
-    name: "Accords bilateraux",
-    component: AB,
-  },
-  {
-    path: "/Directives/:id",
-    alias: ["/Guidelines/:id"],
-    name: "Directives",
-    component: Directives,
-  },
-  {
-    path: "/Circulaires",
-    alias: ["/Circulars"],
-    name: "Circulaires",
-    component: Circulaires,
-  },
-  {
-    path: "/Decisions",
-    name: "Decisions",
-    component: Decisions,
-  },
-  {
-    path: "/Demande-d'autorisation-de-vol",
+    path: "/eservice/Demande d'autorisation de vol",
     name: "Demande d'autorisation de vol",
     alias: ["/Flight permit request"],
 
     component: DA,
   },
   {
-    path: "/Formulaire-de-compte-rendu",
+    path: "/eservice/Formulaire de compte rendu",
     alias: ["/Occurrence report"],
     name: "Formulaire de compte rendu",
     component: FCR,
@@ -266,46 +248,6 @@ const routes = [
     name: "SubMenu",
     component: SubMenu,
   },
-  {
-    path: "/Juridiques/Lois",
-    alias: ["/Legal/Law"],
-    component: JurLoi,
-  },
-  {
-    path: "/Juridiques/Décrets",
-    alias: ["/Legal/Decrees"],
-    component: JurDecre,
-  },
-  {
-    path: "/Juridiques/Arrêtés",
-    alias: ["/Legal/orders"],
-    component: JurArre,
-  },
-  {
-    path: "/Juridiques/Règlements",
-    alias: ["/Legal/regulations"],
-    component: JurRegle,
-  },
-  {
-    path: "/Juridiques/Procédures",
-    alias: ["/Legal/procedures/"],
-    component: JurProce,
-  },
-  {
-    path: "/Juridiques/Directives",
-    alias: ["/Legal/directives"],
-    component: JurDire,
-  },
-  {
-    path: "/Juridiques/Circulaires",
-    alias: ["/Legal/circulars"],
-    component: JurCir,
-  },
-  {
-    path: "/Juridiques/Politiques",
-    alias: ["/Legal/policies"],
-    component: JurPoli,
-  },
 
   {
     path: "/Article/:id",
@@ -314,8 +256,9 @@ const routes = [
   },
   { path: "/404", name: "404", component: PageNotFound },
   { path: "/:pathMatch(.*)*", name: "Error", component: PageNotFound },
-];
+      { path: "/:slug(.*)*", name: "dynamic-page", component: PageResolver },
 
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

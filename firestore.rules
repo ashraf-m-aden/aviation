@@ -1,8 +1,73 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    // l'utilisateur connecté est admin si son document users/{uid} a isAdmin == true
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    // --- Contenus publics : lecture libre, écriture réservée aux admins ---
+    match /navigation/{id}      { allow read: if true; allow write: if isAdmin(); }
+    match /banners/{id}         { allow read: if true; allow write: if isAdmin(); }
+    match /news/{id}            { allow read: if true; allow write: if isAdmin(); }
+    match /categories/{id}      { allow read: if true; allow write: if isAdmin(); }
+    match /subcategories/{id}   { allow read: if true; allow write: if isAdmin(); }
+    match /subcategorytwos/{id} { allow read: if true; allow write: if isAdmin(); }
+
+    // --- Documents ---
+    // Pour l'instant lecture libre (cohérent avec le choix de différer la
+    // protection de l'interne). Écriture admin uniquement.
+    match /documents/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // --- Comptes : lecture réservée aux connectés, écriture admin ---
+    match /users/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // --- Tout le reste : fermé par défaut ---
     match /{document=**} {
-      allow read, write;
+      allow read, write: if false;
     }
   }
 }
+
+/*
+============================================================================
+ VARIANTE — protéger réellement les documents internes (à activer plus tard)
+============================================================================
+ Remplace le bloc `documents` ci-dessus par :
+
+    match /documents/{id} {
+      allow read: if resource.data.isIntern == false || isSignedIn();
+      allow write: if isAdmin();
+    }
+
+ ⚠️ Si tu actives ça, un visiteur anonyme ne doit PLUS charger TOUS les
+    documents (sinon la requête échoue). Dans App.vue, ne déclenche
+    `setDocuments` (qui lit tout) que pour un utilisateur connecté, et garde
+    `setPublicDocuments` (qui filtre enabled + isIntern == false) pour tous :
+
+      mounted() {
+        this.$store.dispatch("setPublicDocuments");
+        if (this.$store.state.user.user.id) {
+          this.$store.dispatch("setDocuments");
+        }
+      }
+
+ ⚠️ Rappel : restreindre la lecture côté Firestore ne cache que les MÉTADONNÉES.
+    Le fichier lui-même reste accessible tant que le lien Drive est public.
+    Une vraie confidentialité de l'interne passe par les permissions Drive.
+============================================================================
+*/

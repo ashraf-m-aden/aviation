@@ -3,40 +3,30 @@
     <div class="row">
       <div class="col-12">
         <NotificationComponent></NotificationComponent>
-        <HeaderComp class="header"></HeaderComp>
-        <!-- <HeaderEng class="header" v-else></HeaderEng> -->
+        <AppHeader v-if="!isAdminArea" class="header"></AppHeader>
         <router-view />
-        <FooterComp class="mt-5"></FooterComp>
+        <AppFooter v-if="!isAdminArea" class="mt-5"></AppFooter>
       </div>
     </div>
   </div>
 </template>
+
 <script>
-import HeaderComp from "./components/NewHeader.vue";
-// import HeaderEng from "./components/HeaderEng.vue";
-import FooterComp from "./components/FooterComponent.vue";
+import AppHeader from "./components/AppHeader.vue";
+import AppFooter from "./components/AppFooter.vue";
 import NotificationComponent from "./components/NotificationComponent.vue";
+
 export default {
   metaInfo: {
-    // if no subcomponents specify a metaInfo.title, this title will be used
     title: "Aviation Civile de Djibouti",
     titleTemplate: "%s | Autorité de l'Aviation Civile de Djibouti | AACD",
-
     bodyAttrs: {
       class: ["dark-mode", "mobile"],
     },
     meta: [
-      {
-        charset: "utf-8",
-      },
-      {
-        name: "viewport",
-        content: "width=device-width, initial-scale=1",
-      },
-      {
-        "http-equiv": "Content-Type",
-        content: "text/html; charset=utf-8",
-      },
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { "http-equiv": "Content-Type", content: "text/html; charset=utf-8" },
       {
         vmid: "description",
         name: "description",
@@ -52,15 +42,17 @@ export default {
     ],
   },
   components: {
-    HeaderComp,
-    // HeaderEng,
-    FooterComp,
+    AppHeader,
+    AppFooter,
     NotificationComponent,
   },
   computed: {
-    lang() {
-      return this.$store.state.lang;
+    isAdminArea() {
+      return this.$route.path.startsWith("/admin");
     },
+  },
+  created() {
+    this.$store.dispatch("fetchPublicNavigation");
   },
   mounted() {
     this.$store.dispatch("getBanners");
@@ -71,22 +63,19 @@ export default {
     this.$store.dispatch("fetchSubCategoryOne");
     this.$store.dispatch("fetchSubCategoryTwo");
     this.$store.dispatch("getUser");
-    //  $('html').css('overflow', 'hidden');
   },
 };
 </script>
+
 <style lang="scss">
 .container {
   background-color: white;
 }
-/* Hide scrollbar for Chrome, Safari and Opera */
 .container-fluid::-webkit-scrollbar {
   display: none;
 }
-
-/* Hide scrollbar for IE, Edge and Firefox */
 .container-fluid {
-  -ms-overflow-style: none; /* IE and Edge */
+  -ms-overflow-style: none;
   scrollbar-width: none;
-} /* Firefox */
+}
 </style>

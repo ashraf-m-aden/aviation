@@ -38,5 +38,31 @@
     "airport": "Aéroport de Djibouti",
     "airDjibouti": "Air Djibouti",
     "laNation": "La Nation"
+  },"home": {
+    "eyebrow": "Bienvenue",
+    "title": "Autorité de l'Aviation Civile de Djibouti",
+    "lead": "Assurer la sécurité, la sûreté et le développement durable de l'aviation civile à Djibouti.",
+    "cta1": "Consulter l'AIP",
+    "cta2": "Demande d'autorisation de vol",
+    "quickTitle": "Accès rapide",
+    "qaAip": "AIP Djibouti",
+    "qaAipSub": "Information aéronautique",
+    "qaPermit": "Autorisation de vol",
+    "qaPermitSub": "Formulaire de demande en ligne",
+    "qaReport": "Compte rendu d'événement",
+    "qaReportSub": "Notification de sécurité",
+    "servicesLabel": "Nos missions",
+    "servicesTitle": "Services et compétences",
+    "s1t": "Sécurité aérienne",
+    "s1p": "Supervision et contrôle des opérations aériennes et de la navigabilité.",
+    "s2t": "Sûreté de l'aviation",
+    "s2p": "Mise en œuvre des normes de sûreté sur les plateformes aéroportuaires.",
+    "s3t": "Licences du personnel",
+    "s3p": "Délivrance et validation des licences des professionnels de l'aviation.",
+    "s4t": "Navigation aérienne",
+    "s4p": "Réglementation et surveillance des services de la navigation aérienne.",
+    "newsLabel": "Actualités",
+    "newsTitle": "Dernières publications",
+    "newsEmpty": "Aucune actualité disponible pour le moment."
   }
 }
