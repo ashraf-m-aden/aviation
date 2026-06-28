@@ -33,7 +33,10 @@ export default {
 
   async addSubCategoryToCategory(sub) {
     const newSub = await db.collection("subcategories").add(sub);
-    await db.collection("subcategories").doc(newSub.id).update("_id", newSub.id);
+    await db
+      .collection("subcategories")
+      .doc(newSub.id)
+      .update("_id", newSub.id);
   },
   async removeSubCategoryOne(id) {
     await db.collection("subcategories").doc(id).update("enabled", false);
@@ -69,12 +72,18 @@ export default {
     for (let index = 0; index < arrayOfFieldTwoNames.length; index++) {
       newSubTwo.name = arrayOfFieldTwoNames[index];
       const newSub = await db.collection("subcategorytwos").add(newSubTwo);
-      await db.collection("subcategorytwos").doc(newSub.id).update("_id", newSub.id);
+      await db
+        .collection("subcategorytwos")
+        .doc(newSub.id)
+        .update("_id", newSub.id);
     }
   },
   async addNewSubCategoryTwoField(sub) {
     const newSub = await db.collection("subcategorytwos").add(sub);
-    await db.collection("subcategorytwos").doc(newSub.id).update("_id", newSub.id);
+    await db
+      .collection("subcategorytwos")
+      .doc(newSub.id)
+      .update("_id", newSub.id);
   },
   async removeSubCategoryTwo(id) {
     await db.collection("subcategorytwos").doc(id).update("enabled", false);

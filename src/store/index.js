@@ -2,6 +2,7 @@ import documents from "./documents";
 import category from "./categoryMenu";
 import media from "./media";
 import user from "./user";
+import navigation from "./navigation";
 import notif from "./notif";
 import { createStore } from "vuex";
 
@@ -32,6 +33,7 @@ const store = createStore({
     media,
     user,
     notif,
+    navigation,
   },
 });
 export default store;

@@ -4,7 +4,12 @@
       <div class="gn-head__ic">≡</div>
       <div>
         <h2>Gestion de la navigation</h2>
-        <p>Configure les menus du site public — en français, anglais et arabe.</p>
+        <p>
+          Configure les menus du site public — en français, anglais et arabe.
+        </p>
+        <!-- <button class="addbtn" @click="seedNav">
+          Importer l'ancienne navigation
+        </button> -->
       </div>
     </header>
 
@@ -18,49 +23,111 @@
           class="pitem"
           :class="{ off: item.enabled === false }"
         >
-          {{ localized(item.label) }}<span v-if="item.type === 'dropdown'"> ▾</span>
+          {{ localized(item.label)
+          }}<span v-if="item.type === 'dropdown'"> ▾</span>
         </span>
-        <span v-if="!items.length" class="preview__empty">Aucune entrée pour le moment.</span>
+        <span v-if="!items.length" class="preview__empty"
+          >Aucune entrée pour le moment.</span
+        >
       </div>
     </div>
 
     <!-- Barre d'ajout -->
     <div class="addbar">
-      <button class="addbtn" @click="openCreate('link')">+ Ajouter un lien</button>
-      <button class="addbtn" @click="openCreate('dropdown')">+ Ajouter un menu déroulant</button>
+      <button class="addbtn" @click="openCreate('link')">
+        + Ajouter un lien
+      </button>
+      <button class="addbtn" @click="openCreate('dropdown')">
+        + Ajouter un menu déroulant
+      </button>
     </div>
 
     <!-- Liste des entrées -->
-    <div v-for="(item, i) in items" :key="item._id" class="navcard" :class="{ drop: item.type === 'dropdown', off: item.enabled === false }">
+    <div
+      v-for="(item, i) in items"
+      :key="item._id"
+      class="navcard"
+      :class="{ drop: item.type === 'dropdown', off: item.enabled === false }"
+    >
       <div class="navcard__head">
         <div class="navcard__info">
           <b>{{ localized(item.label) }}</b>
-          <span>{{ typeText(item) }} <code v-if="item.type === 'link'">/{{ item.slug }}</code></span>
+          <span
+            >{{ typeText(item) }}
+            <code v-if="item.type === 'link'">/{{ item.slug }}</code></span
+          >
         </div>
         <div class="navcard__actions">
-          <button class="ico" :disabled="i === 0" @click="move(i, -1)" title="Monter">▲</button>
-          <button class="ico" :disabled="i === items.length - 1" @click="move(i, 1)" title="Descendre">▼</button>
-          <span class="tg" :class="{ on: item.enabled !== false }" @click="toggle(item)" title="Visibilité"></span>
-          <button class="ico" @click="openEdit(item)" title="Modifier">✎</button>
-          <button class="ico del" @click="remove(item)" title="Supprimer">🗑</button>
+          <button
+            class="ico"
+            :disabled="i === 0"
+            @click="move(i, -1)"
+            title="Monter"
+          >
+            ▲
+          </button>
+          <button
+            class="ico"
+            :disabled="i === items.length - 1"
+            @click="move(i, 1)"
+            title="Descendre"
+          >
+            ▼
+          </button>
+          <span
+            class="tg"
+            :class="{ on: item.enabled !== false }"
+            @click="toggle(item)"
+            title="Visibilité"
+          ></span>
+          <button class="ico" @click="openEdit(item)" title="Modifier">
+            ✎
+          </button>
+          <button class="ico del" @click="remove(item)" title="Supprimer">
+            🗑
+          </button>
         </div>
       </div>
 
       <!-- Sous-éléments d'un déroulant -->
       <div v-if="item.type === 'dropdown'" class="children">
-        <div v-for="(child, j) in item.children || []" :key="child._id" class="child">
+        <div
+          v-for="(child, j) in item.children || []"
+          :key="child._id"
+          class="child"
+        >
           <span class="child__k">{{ kindShort(child.kind) }}</span>
           <b>{{ localized(child.label) }}</b>
           <code>/{{ child.slug }}</code>
           <div class="child__actions">
-            <button class="ico sm" :disabled="j === 0" @click="moveChild(item, j, -1)">▲</button>
-            <button class="ico sm" :disabled="j === (item.children || []).length - 1" @click="moveChild(item, j, 1)">▼</button>
-            <span class="tg sm" :class="{ on: child.enabled !== false }" @click="toggleChild(item, j)"></span>
-            <button class="ico sm" @click="openEditChild(item, child)">✎</button>
+            <button
+              class="ico sm"
+              :disabled="j === 0"
+              @click="moveChild(item, j, -1)"
+            >
+              ▲
+            </button>
+            <button
+              class="ico sm"
+              :disabled="j === (item.children || []).length - 1"
+              @click="moveChild(item, j, 1)"
+            >
+              ▼
+            </button>
+            <span
+              class="tg sm"
+              :class="{ on: child.enabled !== false }"
+              @click="toggleChild(item, j)"
+            ></span>
+            <button class="ico sm" @click="openEditChild(item, child)">
+              ✎
+            </button>
             <button class="ico sm del" @click="removeChild(item, j)">🗑</button>
           </div>
         </div>
-        <button class="addchild" @click="openCreateChild(item)">+ Ajouter un sous-élément</button>
+        <button class="addchild" @click="openCreateChild(item)">
+          + Ajouter un sous-élément
+        </button>
       </div>
     </div>
 
@@ -78,15 +145,23 @@
 
 <script>
 import NavItemModal from "./NavItemModal.vue";
+import { navigationSeed } from "@/utils/navigationSeed";
 
-const localId = () => `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+const localId = () =>
+  `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
 
 export default {
   name: "GestionNavigation",
   components: { NavItemModal },
   data() {
     return {
-      modal: { open: false, item: null, isChild: false, parentSlug: "", parent: null },
+      modal: {
+        open: false,
+        item: null,
+        isChild: false,
+        parentSlug: "",
+        parent: null,
+      },
     };
   },
   computed: {
@@ -104,30 +179,83 @@ export default {
       return map[this.locale] || map.fr || "";
     },
     typeText(item) {
-      if (item.type === "dropdown") return `Menu déroulant — ${(item.children || []).length} élément(s)`;
-      return { documents: "Lien · documents", content: "Lien · page", external: "Lien externe", component: "Lien · composant" }[item.kind] || "Lien";
+      if (item.type === "dropdown")
+        return `Menu déroulant — ${(item.children || []).length} élément(s)`;
+      return (
+        {
+          documents: "Lien · documents",
+          content: "Lien · page",
+          external: "Lien externe",
+          component: "Lien · composant",
+        }[item.kind] || "Lien"
+      );
     },
     kindShort(kind) {
-      return { documents: "docs", content: "page", external: "ext", component: "vue" }[kind] || "link";
+      return (
+        {
+          documents: "docs",
+          content: "page",
+          external: "ext",
+          component: "vue",
+        }[kind] || "link"
+      );
     },
 
     /* ----- ouverture de la modale ----- */
     openCreate(type) {
-      this.modal = { open: true, item: type === "dropdown" ? { type: "dropdown", label: { fr: "", en: "", ar: "" } } : null, isChild: false, parentSlug: "", parent: null };
+      this.modal = {
+        open: true,
+        item:
+          type === "dropdown"
+            ? { type: "dropdown", label: { fr: "", en: "", ar: "" } }
+            : null,
+        isChild: false,
+        parentSlug: "",
+        parent: null,
+      };
     },
     openEdit(item) {
-      this.modal = { open: true, item, isChild: false, parentSlug: "", parent: null };
+      this.modal = {
+        open: true,
+        item,
+        isChild: false,
+        parentSlug: "",
+        parent: null,
+      };
     },
     openCreateChild(parent) {
-      this.modal = { open: true, item: null, isChild: true, parentSlug: parent.slug || "", parent };
+      this.modal = {
+        open: true,
+        item: null,
+        isChild: true,
+        parentSlug: parent.slug || "",
+        parent,
+      };
     },
     openEditChild(parent, child) {
-      this.modal = { open: true, item: child, isChild: true, parentSlug: parent.slug || "", parent };
+      this.modal = {
+        open: true,
+        item: child,
+        isChild: true,
+        parentSlug: parent.slug || "",
+        parent,
+      };
     },
     closeModal() {
-      this.modal = { open: false, item: null, isChild: false, parentSlug: "", parent: null };
+      this.modal = {
+        open: false,
+        item: null,
+        isChild: false,
+        parentSlug: "",
+        parent: null,
+      };
     },
-
+    async seedNav() {
+      for (const item of navigationSeed) {
+        await this.$store.dispatch("createNavItem", item);
+      }
+      alert("Navigation importée ✔");
+    },
     /* ----- enregistrement ----- */
     onSave(form) {
       if (this.modal.isChild) {
@@ -151,12 +279,18 @@ export default {
         form.order = children.length;
         children.push(form);
       }
-      this.$store.dispatch("updateNavItem", { id: parent._id, data: { children } });
+      this.$store.dispatch("updateNavItem", {
+        id: parent._id,
+        data: { children },
+      });
     },
 
     /* ----- actions rapides ----- */
     toggle(item) {
-      this.$store.dispatch("toggleNavItem", { id: item._id, value: item.enabled === false });
+      this.$store.dispatch("toggleNavItem", {
+        id: item._id,
+        value: item.enabled === false,
+      });
     },
     remove(item) {
       if (confirm(`Supprimer « ${this.localized(item.label)} » ?`)) {
@@ -173,7 +307,10 @@ export default {
 
     /* ----- actions sur les sous-éléments ----- */
     persistChildren(parent, children) {
-      this.$store.dispatch("updateNavItem", { id: parent._id, data: { children } });
+      this.$store.dispatch("updateNavItem", {
+        id: parent._id,
+        data: { children },
+      });
     },
     toggleChild(parent, j) {
       const children = [...(parent.children || [])];
@@ -197,7 +334,10 @@ export default {
   },
   created() {
     this.$store.dispatch("fetchNavigation");
-    if (!this.$store.getters.getCategory || !this.$store.getters.getCategory.length) {
+    if (
+      !this.$store.getters.getCategory ||
+      !this.$store.getters.getCategory.length
+    ) {
       this.$store.dispatch("fetchCategory");
     }
   },

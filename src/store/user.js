@@ -1,7 +1,7 @@
 import UserService from "../services/auth.service";
 import auth from "../services/auth.service";
 import { auth as authF } from "../firebaseConfig";
-import router from "@/router";
+
 export const state = () => ({
   id: null,
   token: null,
@@ -27,8 +27,8 @@ export const mutations = {
     state.token = token;
   },
   SET_USER(state, user) {
-    state.user = user;
-    localStorage.setItem("email", user.email);
+    state.user = user || {};
+    if (user && user.email) localStorage.setItem("email", user.email);
   },
   SET_STAFF(state, staff) {
     state.staff = staff;
@@ -39,57 +39,66 @@ export const actions = {
     commit("SET_USER", user);
     commit("SET_ID", user.uid);
   },
-  async getUser({ commit, dispatch }) {
-    return authF.onAuthStateChanged(async (user) => {
-      if (user) {
-        if (router.currentRoute.value.fullPath == "/login") {
-          router.back();
-        }
-        const response = await auth.getUser(user.uid);
-        if (response.data() == undefined) {
-          await auth.logout();
-          commit("SET_USER", []);
+
+  // Résout une promesse une fois l'état d'authentification connu.
+  // Ne fait AUCUNE navigation (c'est le rôle des gardes de route) :
+  // l'ancien router.back() faisait sortir du site au rafraîchissement.
+  getUser({ commit }) {
+    return new Promise((resolve) => {
+      const unsubscribe = authF.onAuthStateChanged(async (user) => {
+        if (typeof unsubscribe === "function") unsubscribe();
+
+        if (!user) {
+          commit("SET_USER", {});
           commit("SET_ID", null);
-          localStorage.clear();
-            return;            // ← à ajouter
+          return resolve(null);
         }
-        dispatch("successNotif", "Bienvenue, " + response.data().name);
-        commit("SET_USER", response.data());
-      } else {
-        // No user is signed in.
-        commit("SET_USER", {});
-        localStorage.clear();
-      }
+
+        try {
+          const response = await auth.getUser(user.uid);
+          const data = response.data();
+          if (!data) {
+            // compte supprimé / introuvable
+            await auth.logout();
+            commit("SET_USER", {});
+            commit("SET_ID", null);
+            localStorage.clear();
+            return resolve(null);
+          }
+          commit("SET_USER", data);
+          commit("SET_ID", user.uid);
+          return resolve(data);
+        } catch (e) {
+          commit("SET_USER", {});
+          commit("SET_ID", null);
+          return resolve(null);
+        }
+      });
     });
   },
+
   getStaffs({ commit }) {
     return auth.getAllUsers().then(async (querySnapshot) => {
-      let documents = querySnapshot.docs.map((doc) => doc.data()); // on fait ca pack qu'on recupere plein de doc dans querysnapshot
-
-      await documents.sort((a, b) => {
-        if (a.name > b.name) {
-          return 1;
-        }
-        if (a.name < b.name) {
-          return -1;
-        }
+      let documents = querySnapshot.docs.map((doc) => doc.data());
+      documents.sort((a, b) => {
+        if ((a.name || "") > (b.name || "")) return 1;
+        if ((a.name || "") < (b.name || "")) return -1;
         return 0;
       });
-      const staff = documents;
-      commit("SET_STAFF", staff);
+      commit("SET_STAFF", documents);
     });
   },
+
   async logout({ commit, dispatch }) {
     await auth.logout();
-    commit("SET_USER", []);
+    commit("SET_USER", {});
     commit("SET_ID", null);
     localStorage.clear();
     dispatch("warningNotif", "Utilisateur déconnecté");
-      return;            // ← à ajouter
   },
 
   patchUser({ commit }, payload) {
-    return UserService.modifyUser(payload).then((response) => {
+    return UserService.modifyStaff(payload).then((response) => {
       commit("SET_USER", response.data);
     });
   },

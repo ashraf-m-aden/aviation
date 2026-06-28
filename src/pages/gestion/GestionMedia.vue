@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import BannerPage from "./BannerPage.vue";
-import NewsPage from "./NewsPage.vue";
+import BannerPage from "../../gestion/BannerPage.vue";
+import NewsPage from "../../gestion/NewsPage.vue";
 
 export default {
   name: "GestionMedia",
@@ -77,7 +77,12 @@ $line: #dde6ec;
   padding: 9px 18px;
   border-radius: 7px;
   cursor: pointer;
-  &:hover { color: $navy; }
-  &.is-active { background: $navy; color: #fff; }
+  &:hover {
+    color: $navy;
+  }
+  &.is-active {
+    background: $navy;
+    color: #fff;
+  }
 }
 </style>

@@ -64,10 +64,14 @@ export const actions = {
 
   // --- AJOUTÉ : gestion des catégories ---
   createCategory({ dispatch }, category) {
-    return CategoryS.addCategory(category).then(() => dispatch("fetchCategory"));
+    return CategoryS.addCategory(category).then(() =>
+      dispatch("fetchCategory"),
+    );
   },
   updateCategory({ dispatch }, { id, data }) {
-    return CategoryS.updateCategory(id, data).then(() => dispatch("fetchCategory"));
+    return CategoryS.updateCategory(id, data).then(() =>
+      dispatch("fetchCategory"),
+    );
   },
   removeCategory({ dispatch }, id) {
     return CategoryS.removeCategory(id).then(() => dispatch("fetchCategory"));

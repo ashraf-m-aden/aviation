@@ -8,8 +8,14 @@
           <h1 class="hero__title">{{ $t("home.title") }}</h1>
           <p class="hero__lead">{{ $t("home.lead") }}</p>
           <div class="hero__cta">
-            <router-link to="/aip" class="btn btn--primary">{{ $t("home.cta1") }}</router-link>
-            <router-link to="/eservice/Demande d'autorisation de vol" class="btn btn--ghost">{{ $t("home.cta2") }}</router-link>
+            <router-link to="/aip" class="btn btn--primary">{{
+              $t("home.cta1")
+            }}</router-link>
+            <router-link
+              to="/eservice/Demande d'autorisation de vol"
+              class="btn btn--ghost"
+              >{{ $t("home.cta2") }}</router-link
+            >
           </div>
         </div>
 
@@ -19,11 +25,11 @@
             <span class="qrow__b">{{ $t("home.qaAip") }}</span>
             <span class="qrow__s">{{ $t("home.qaAipSub") }}</span>
           </router-link>
-          <router-link to="/eservice/Demande d'autorisation de vol" class="qrow">
+          <router-link to="/eservice/demande_autorisation_vol" class="qrow">
             <span class="qrow__b">{{ $t("home.qaPermit") }}</span>
             <span class="qrow__s">{{ $t("home.qaPermitSub") }}</span>
           </router-link>
-          <router-link to="/eservice/Formulaire de compte rendu" class="qrow">
+          <router-link to="/eservice/formulaire_compte_rendu" class="qrow">
             <span class="qrow__b">{{ $t("home.qaReport") }}</span>
             <span class="qrow__s">{{ $t("home.qaReportSub") }}</span>
           </router-link>
@@ -35,14 +41,32 @@
     <section class="section">
       <div class="wrap">
         <div class="wingline">
-          <svg width="52" height="14" viewBox="0 0 52 14"><g fill="#1B9DD9"><path d="M0 6h20l-4 2H0z" opacity=".5"/><path d="M6 1h20l-4 2H6z"/><path d="M3 11h20l-4 2H3z" opacity=".35"/></g></svg>
+          <svg width="52" height="14" viewBox="0 0 52 14">
+            <g fill="#1B9DD9">
+              <path d="M0 6h20l-4 2H0z" opacity=".5" />
+              <path d="M6 1h20l-4 2H6z" />
+              <path d="M3 11h20l-4 2H3z" opacity=".35" />
+            </g>
+          </svg>
           <span class="wingline__lbl">{{ $t("home.servicesLabel") }}</span>
         </div>
         <h2 class="shead">{{ $t("home.servicesTitle") }}</h2>
         <div class="grid4">
           <div class="card" v-for="n in 4" :key="n">
             <div class="card__ic">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                />
+                <path d="M14 2v6h6" />
+              </svg>
             </div>
             <h3>{{ $t("home.s" + n + "t") }}</h3>
             <p>{{ $t("home.s" + n + "p") }}</p>
@@ -57,7 +81,13 @@
         <div class="shead-row">
           <div>
             <div class="wingline">
-              <svg width="52" height="14" viewBox="0 0 52 14"><g fill="#1B9DD9"><path d="M0 6h20l-4 2H0z" opacity=".5"/><path d="M6 1h20l-4 2H6z"/><path d="M3 11h20l-4 2H3z" opacity=".35"/></g></svg>
+              <svg width="52" height="14" viewBox="0 0 52 14">
+                <g fill="#1B9DD9">
+                  <path d="M0 6h20l-4 2H0z" opacity=".5" />
+                  <path d="M6 1h20l-4 2H6z" />
+                  <path d="M3 11h20l-4 2H3z" opacity=".35" />
+                </g>
+              </svg>
               <span class="wingline__lbl">{{ $t("home.newsLabel") }}</span>
             </div>
             <h2 class="shead">{{ $t("home.newsTitle") }}</h2>
@@ -74,7 +104,12 @@
             class="ncard"
           >
             <div class="ncard__ph">
-              <img v-if="imageSrc(article)" :src="imageSrc(article)" alt="" @error="onImgError($event, article)" />
+              <img
+                v-if="imageSrc(article)"
+                :src="imageSrc(article)"
+                alt=""
+                @error="onImgError($event, article)"
+              />
             </div>
             <div class="ncard__bd">
               <div class="ncard__date">{{ article.createdAt }}</div>
@@ -111,7 +146,9 @@ export default {
       }
     },
     excerpt(html) {
-      const text = String(html || "").replace(/<[^>]*>/g, "").trim();
+      const text = String(html || "")
+        .replace(/<[^>]*>/g, "")
+        .trim();
       return text.length > 120 ? text.slice(0, 120) + "…" : text;
     },
   },
@@ -142,7 +179,12 @@ $serif: "Spectral", Georgia, serif;
 
 /* HERO */
 .hero {
-  background: radial-gradient(120% 130% at 80% -10%, #15406e 0%, $navy 55%, #07223e 100%);
+  background: radial-gradient(
+    120% 130% at 80% -10%,
+    #15406e 0%,
+    $navy 55%,
+    #07223e 100%
+  );
   color: #eaf3fa;
   position: relative;
   overflow: hidden;
@@ -150,7 +192,11 @@ $serif: "Spectral", Georgia, serif;
     content: "";
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(135deg, rgba(27, 157, 217, 0.06) 0 1px, transparent 1px 26px);
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(27, 157, 217, 0.06) 0 1px,
+      transparent 1px 26px
+    );
     pointer-events: none;
   }
   &__wrap {
@@ -227,13 +273,17 @@ $serif: "Spectral", Georgia, serif;
   &--primary {
     background: $sky;
     color: #fff;
-    &:hover { background: #1689bf; }
+    &:hover {
+      background: #1689bf;
+    }
   }
   &--ghost {
     background: rgba(255, 255, 255, 0.06);
     color: #eaf3fa;
     border-color: rgba(255, 255, 255, 0.22);
-    &:hover { background: rgba(255, 255, 255, 0.12); }
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
   }
 }
 .qrow {
@@ -243,10 +293,21 @@ $serif: "Spectral", Georgia, serif;
   border-radius: 10px;
   text-decoration: none;
   transition: background 0.15s;
-  & + .qrow { border-top: 1px solid rgba(255, 255, 255, 0.08); }
-  &:hover { background: rgba(255, 255, 255, 0.07); }
-  &__b { color: #fff; font-size: 14px; font-weight: 600; }
-  &__s { font-size: 12px; color: #9fbdd2; }
+  & + .qrow {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  &:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+  &__b {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  &__s {
+    font-size: 12px;
+    color: #9fbdd2;
+  }
 }
 
 /* SECTIONS */
@@ -295,7 +356,10 @@ $serif: "Spectral", Georgia, serif;
   border-radius: 12px;
   padding: 22px;
   transition: 0.18s;
-  &:hover { transform: translateY(-3px); border-color: #c4d6e2; }
+  &:hover {
+    transform: translateY(-3px);
+    border-color: #c4d6e2;
+  }
   &__ic {
     width: 46px;
     height: 46px;
@@ -306,8 +370,17 @@ $serif: "Spectral", Georgia, serif;
     place-items: center;
     margin-bottom: 16px;
   }
-  h3 { font-size: 15px; font-weight: 700; color: $navy; margin-bottom: 5px; }
-  p { font-size: 12.5px; color: $muted; line-height: 1.5; }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: $navy;
+    margin-bottom: 5px;
+  }
+  p {
+    font-size: 12.5px;
+    color: $muted;
+    line-height: 1.5;
+  }
 }
 
 /* NEWS */
@@ -325,23 +398,62 @@ $serif: "Spectral", Georgia, serif;
   transition: 0.18s;
   display: flex;
   flex-direction: column;
-  &:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(10, 43, 78, 0.1); }
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(10, 43, 78, 0.1);
+  }
   &__ph {
     height: 170px;
     background: linear-gradient(120deg, $navy, $sky);
-    img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
   }
-  &__bd { padding: 16px 17px; }
-  &__date { font-size: 11.5px; color: $sky; font-weight: 600; margin-bottom: 7px; }
-  &__title { font-family: $serif; font-size: 17px; font-weight: 600; color: $navy; line-height: 1.3; margin-bottom: 8px; }
-  &__excerpt { font-size: 13px; color: $muted; line-height: 1.55; }
+  &__bd {
+    padding: 16px 17px;
+  }
+  &__date {
+    font-size: 11.5px;
+    color: $sky;
+    font-weight: 600;
+    margin-bottom: 7px;
+  }
+  &__title {
+    font-family: $serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: $navy;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  &__excerpt {
+    font-size: 13px;
+    color: $muted;
+    line-height: 1.55;
+  }
 }
-.empty { color: $muted; font-size: 14px; }
+.empty {
+  color: $muted;
+  font-size: 14px;
+}
 
 @media (max-width: 920px) {
-  .hero__wrap { grid-template-columns: 1fr; gap: 28px; padding: 44px 24px; }
-  .hero__title { font-size: 30px; }
-  .grid4 { grid-template-columns: repeat(2, 1fr); }
-  .news { grid-template-columns: 1fr; }
+  .hero__wrap {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 44px 24px;
+  }
+  .hero__title {
+    font-size: 30px;
+  }
+  .grid4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .news {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

@@ -1,50 +1,71 @@
 <template>
-  <div class="row justify-content-center mt-5">
-    <div class="col-sm-12 col-md-5 card p-5 border-info mt-5 mb-5">
-      <h4 class="mr-auto ml-auto mb-5">Connection</h4>
-      <div class="form-group">
-        <div class="form-group">
-          <label class="form-check-label small font-italic font-weight-bold">Votre addresse email</label>
-          <input id="email" v-model="email" type="text" class="form-control" placeholder="email" />
-        </div>
-        <div class="form-group">
-          <label class="form-check-label small font-italic font-weight-bold">Votre mot de passe</label>
-          <input id="password" v-model="password" type="password" class="form-control" placeholder="mot de passe" />
-        </div>
-        <div class="form-group d-flex">
-          <button v-if="!loading" class="btn btn-group btn-outline-success" @click="submit()">
-            Connection
-          </button>
-          <button class="btn btn-group btn-outline-success" v-if="loading">
-            Loading...
-          </button>
-        </div>
-        <div class="form-group d-flex">
-          <router-link to="/reset-password">
-            <h6>Réinitialiser mon mot de passe</h6>
-          </router-link>
-        </div>
+  <section class="login">
+    <div class="login__card">
+      <div class="login__brand">
+        <img src="@/assets/casa.png" alt="AAC" />
+        <svg
+          class="login__wings"
+          width="80"
+          height="20"
+          viewBox="0 0 80 20"
+          aria-hidden="true"
+        >
+          <g fill="#1B9DD9">
+            <path d="M0 9h30l-6 3H0z" opacity=".4" />
+            <path d="M9 2h30l-6 3H9z" />
+            <path d="M5 16h30l-6 3H5z" opacity=".3" />
+          </g>
+        </svg>
       </div>
-      <span class="text-danger bg-white rounded-pill text-center" v-if="error">{{ errorMessage }}</span>
+
+      <h1 class="login__title">Espace agent</h1>
+      <p class="login__sub">Connectez-vous pour accéder à l'administration.</p>
+
+      <div class="fld">
+        <label for="email">Adresse e-mail</label>
+        <input
+          id="email"
+          v-model="email"
+          type="text"
+          class="inp"
+          placeholder="agent@aac.dj"
+          @keyup.enter="submit"
+        />
+      </div>
+
+      <div class="fld">
+        <label for="password">Mot de passe</label>
+        <input
+          id="password"
+          v-model="password"
+          type="password"
+          class="inp"
+          placeholder="••••••••"
+          @keyup.enter="submit"
+        />
+      </div>
+
+      <button class="login__btn" :disabled="loading" @click="submit">
+        {{ loading ? "Connexion…" : "Se connecter" }}
+      </button>
+
+      <p v-if="error" class="login__error">{{ errorMessage }}</p>
+
+      <router-link to="/reset-password" class="login__reset">
+        Réinitialiser mon mot de passe
+      </router-link>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
 import authService from "../services/auth.service";
 export default {
   metaInfo() {
-    // if no subcomponents specify a metaInfo.title, this title will be used
     return {
       meta: [
-        {
-          name: "robots",
-          content: "noindex",
-        },
-        {
-          name: "googlebot",
-          content: "noindex",
-        },
+        { name: "robots", content: "noindex" },
+        { name: "googlebot", content: "noindex" },
       ],
     };
   },
@@ -59,25 +80,135 @@ export default {
   },
   methods: {
     async submit() {
+      if (!this.email || !this.password) return;
       this.loading = true;
       this.error = false;
-      var email = this.email;
-      var password = this.password;
       try {
-        const data = await authService.signIn(email, password);
-
-        //  this.$store.dispatch("login", data.user);
+        const data = await authService.signIn(this.email, this.password);
         localStorage.setItem("id", data.user.uid);
-        this.$router.push({
-          path: "/admin/navigation",
-        });
+        this.$router.push({ path: "/admin" });
       } catch (error) {
         this.loading = false;
         this.error = true;
-        this.errorMessage = error;
-        this.$store.dispatch("warningNotif", error);
+        this.errorMessage = error.message || "Identifiants invalides.";
+        this.$store.dispatch("warningNotif", this.errorMessage);
       }
     },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+$navy: #0a2b4e;
+$navy-700: #103a66;
+$sky: #1b9dd9;
+$muted: #5b6b78;
+$red: #e0322b;
+$line: #dde6ec;
+
+.login {
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+  padding: 48px 20px;
+  background: radial-gradient(120% 120% at 80% -10%, #eef6fb 0%, #f4f7f9 60%);
+}
+.login__card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 1px solid $line;
+  border-top: 4px solid $navy;
+  border-radius: 16px;
+  padding: 36px 34px;
+  box-shadow: 0 18px 44px rgba(10, 43, 78, 0.1);
+}
+.login__brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+  }
+}
+.login__title {
+  font-family: "Spectral", Georgia, serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: $navy;
+  margin-bottom: 6px;
+}
+.login__sub {
+  font-size: 13.5px;
+  color: $muted;
+  margin-bottom: 26px;
+}
+.fld {
+  margin-bottom: 16px;
+  label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: $navy;
+    margin-bottom: 7px;
+  }
+}
+.inp {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid $line;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  &:focus {
+    border-color: $sky;
+  }
+}
+.login__btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 13px;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #fff;
+  background: $navy;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover:not(:disabled) {
+    background: $navy-700;
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+.login__error {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: rgba(224, 50, 43, 0.08);
+  color: $red;
+  border-radius: 9px;
+  font-size: 13px;
+  text-align: center;
+}
+.login__reset {
+  display: block;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: $sky;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+</style>

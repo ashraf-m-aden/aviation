@@ -26,22 +26,32 @@
     <!-- Champ nom pour un document -->
     <div v-else class="du-fields">
       <label>Nom du document</label>
-      <input class="du-input" type="text" v-model="document.name" placeholder="Ex. Loi n°123 portant…" />
+      <input
+        class="du-input"
+        type="text"
+        v-model="document.name"
+        placeholder="Ex. Loi n°123 portant…"
+      />
     </div>
 
     <!-- Lien Drive commun à tous les cas -->
     <div class="du-fields">
-      <label>{{ isBanner || isNews ? "Lien Google Drive de l'image" : "Lien Google Drive du fichier" }}</label>
+      <label>{{
+        isBanner || isNews
+          ? "Lien Google Drive de l'image"
+          : "Lien Google Drive du fichier"
+      }}</label>
       <input
         class="du-input"
         type="text"
         v-model="driveLink"
         placeholder="Colle ici le lien de partage Drive"
-        @change="normalize"
+        @input="normalize"
       />
       <p class="du-hint">
         Le fichier doit être partagé en « Tout utilisateur disposant du lien ».
-        On enregistre uniquement l'identifiant : <code>{{ driveId || "—" }}</code>
+        On enregistre uniquement l'identifiant :
+        <code>{{ driveId || "—" }}</code>
       </p>
     </div>
 

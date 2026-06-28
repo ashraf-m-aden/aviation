@@ -14,6 +14,21 @@
 export const customComponents = {
   // RapportAnnuel: () => import("@/views/custom/RapportAnnuel.vue"),
   // Statistiques:  () => import("@/views/custom/Statistiques.vue"),
+  Contact: () => import("@/views/custom/ContactPage.vue"),
+  DemandeAutorisation: () => import("@/pages/eService/DemandeAutorisation.vue"),
+  FormulaireCompteRendu: () =>
+    import("@/pages/eService/FormulaireCompteRendu.vue"),
+  AIP: () => import("@/pages/aip/PublicationsInformationAéronautique.vue"),
+  Articles: () => import("@/views/custom/ArticlesPage.vue"),
+
+  AuditInspection: () => import("@/pages/inspection/AuditInspection.vue"),
+  // --- Pages de texte « À propos de nous » (composants redessinés) ---
+  Presentation: () => import("@/views/custom/PresentationPage.vue"),
+  MotDuDirecteur: () => import("@/views/custom/MotDuDirecteur.vue"),
+  Organisation: () => import("@/views/custom/OrganisationPage.vue"),
+  PolitiqueFormation: () => import("@/views/custom/PolitiqueDeFormation.vue"),
+  PolitiqueSupervision: () =>
+    import("@/views/custom/PolitiqueDeSupervision.vue"),
 };
 
 /** Renvoie le loader d'un composant custom, ou null si la clé est inconnue. */

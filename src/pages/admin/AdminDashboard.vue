@@ -1,7 +1,9 @@
 <template>
   <div class="dashboard">
     <h2 class="dashboard__title">Tableau de bord</h2>
-    <p class="dashboard__sub">Vue d'ensemble et accès rapides à la gestion du site.</p>
+    <p class="dashboard__sub">
+      Vue d'ensemble et accès rapides à la gestion du site.
+    </p>
 
     <!-- Compteurs -->
     <div class="stats">
@@ -50,6 +52,12 @@ export default {
           icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
         },
         {
+          to: "/admin/categories",
+          title: "Catégories",
+          desc: "Rubriques de classement des documents",
+          icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.6 2.3a1 1 0 0 0-.7-.3H4a2 2 0 0 0-2 2v7.9a1 1 0 0 0 .3.7l8.4 8.4a2 2 0 0 0 2.8 0l7.1-7.1a2 2 0 0 0 0-2.8z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor"/></svg>',
+        },
+        {
           to: "/admin/documents",
           title: "Documents publics",
           desc: "Textes et publications en ligne",
@@ -80,9 +88,12 @@ export default {
     counts() {
       const s = this.$store.state;
       return {
-        documents: (s.documents && s.documents.documents ? s.documents.documents.length : 0),
-        news: (s.media && s.media.allNews ? s.media.allNews.length : 0),
-        banners: (s.media && s.media.banner ? s.media.banner.length : 0),
+        documents:
+          s.documents && s.documents.documents
+            ? s.documents.documents.length
+            : 0,
+        news: s.media && s.media.allNews ? s.media.allNews.length : 0,
+        banners: s.media && s.media.banner ? s.media.banner.length : 0,
         nav: (this.$store.getters.getNavigation || []).length,
       };
     },
@@ -106,9 +117,21 @@ $line: #dde6ec;
 
 .dashboard {
   max-width: 1000px;
-  &__title { font-size: 24px; color: $navy; font-family: "Spectral", Georgia, serif; }
-  &__sub { color: $muted; font-size: 14px; margin-bottom: 24px; }
-  &__h3 { font-size: 15px; color: $navy; margin: 28px 0 14px; }
+  &__title {
+    font-size: 24px;
+    color: $navy;
+    font-family: "Spectral", Georgia, serif;
+  }
+  &__sub {
+    color: $muted;
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  &__h3 {
+    font-size: 15px;
+    color: $navy;
+    margin: 28px 0 14px;
+  }
 }
 .stats {
   display: grid;
@@ -120,8 +143,18 @@ $line: #dde6ec;
   border: 1px solid $line;
   border-radius: 12px;
   padding: 20px 22px;
-  &__n { font-size: 30px; font-weight: 700; color: $sky; line-height: 1; font-family: "Spectral", Georgia, serif; }
-  &__l { font-size: 13px; color: $muted; margin-top: 8px; }
+  &__n {
+    font-size: 30px;
+    font-weight: 700;
+    color: $sky;
+    line-height: 1;
+    font-family: "Spectral", Georgia, serif;
+  }
+  &__l {
+    font-size: 13px;
+    color: $muted;
+    margin-top: 8px;
+  }
 }
 .cards {
   display: grid;
@@ -138,7 +171,11 @@ $line: #dde6ec;
   padding: 18px 20px;
   text-decoration: none;
   transition: 0.16s;
-  &:hover { transform: translateY(-2px); border-color: #c4d6e2; box-shadow: 0 8px 20px rgba(10, 43, 78, 0.06); }
+  &:hover {
+    transform: translateY(-2px);
+    border-color: #c4d6e2;
+    box-shadow: 0 8px 20px rgba(10, 43, 78, 0.06);
+  }
   &__ic {
     width: 48px;
     height: 48px;
@@ -149,12 +186,23 @@ $line: #dde6ec;
     place-items: center;
     flex: none;
   }
-  b { display: block; color: $navy; font-size: 15px; }
-  span { font-size: 12.5px; color: $muted; }
+  b {
+    display: block;
+    color: $navy;
+    font-size: 15px;
+  }
+  span {
+    font-size: 12.5px;
+    color: $muted;
+  }
 }
 
 @media (max-width: 860px) {
-  .stats { grid-template-columns: repeat(2, 1fr); }
-  .cards { grid-template-columns: 1fr; }
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cards {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

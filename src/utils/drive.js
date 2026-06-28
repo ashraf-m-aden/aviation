@@ -32,16 +32,17 @@ export function extractDriveId(input) {
  */
 export function driveImageUrl(idOrUrl, width = 1600) {
   const id = extractDriveId(idOrUrl);
-  return id ? `https://lh3.googleusercontent.com/d/${id}=w${width}` : "";
+  // endpoint "thumbnail" : le plus fiable pour afficher une image Drive publique
+  return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w${width}` : "";
 }
 
 /**
- * URL d'affichage d'image de repli (endpoint thumbnail) — à utiliser en @error
- * sur la balise <img> si la première ne charge pas.
+ * URL d'affichage d'image de repli (ancien endpoint googleusercontent) — à
+ * utiliser en @error sur la balise <img> si la première ne charge pas.
  */
 export function driveThumbUrl(idOrUrl, width = 1600) {
   const id = extractDriveId(idOrUrl);
-  return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w${width}` : "";
+  return id ? `https://lh3.googleusercontent.com/d/${id}=w${width}` : "";
 }
 
 /** Lien « Consulter » d'un document (ouvre la visionneuse Drive). */
