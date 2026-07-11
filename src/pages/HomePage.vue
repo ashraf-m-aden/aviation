@@ -1,38 +1,83 @@
 <template>
   <div class="home">
-    <!-- HERO -->
+    <!-- HERO : texte à gauche, carrousel à droite -->
     <section class="hero">
       <div class="hero__wrap">
-        <div class="hero__main">
+        <!-- Texte -->
+        <div class="hero__text">
           <span class="hero__eyebrow">{{ $t("home.eyebrow") }}</span>
           <h1 class="hero__title">{{ $t("home.title") }}</h1>
-          <p class="hero__lead">{{ $t("home.lead") }}</p>
-          <div class="hero__cta">
-            <router-link to="/aip" class="btn btn--primary">{{
-              $t("home.cta1")
-            }}</router-link>
-            <router-link
-              to="/eservice/Demande d'autorisation de vol"
-              class="btn btn--ghost"
-              >{{ $t("home.cta2") }}</router-link
+          <p class="hero__lead">
+            L'Autorité de l'Aviation Civile (AAC), créée conformément à la Loi
+            n°108/AN/10/6<sup>ème</sup>L du 10 janvier 2011, est un
+            établissement public administratif, rattaché au Ministère de
+            l'Équipement et des Transports en République de Djibouti. Elle est
+            chargée de la mise en œuvre de la politique aéronautique nationale,
+            notamment de la règlementation et de la supervision de l'aviation
+            civile, en matière de sécurité, de sûreté, de la protection de
+            l'environnement et d'économie. Son objectif est de veiller au
+            développement sûr, ordonné et efficient de l'aviation civile en
+            République de Djibouti.
+          </p>
+          <router-link to="/a_propos/presentation" class="btn btn--primary">
+            En savoir plus
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
             >
-          </div>
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </router-link>
         </div>
 
-        <div class="hero__card">
-          <div class="hero__label">{{ $t("home.quickTitle") }}</div>
-          <router-link to="/aip" class="qrow">
-            <span class="qrow__b">{{ $t("home.qaAip") }}</span>
-            <span class="qrow__s">{{ $t("home.qaAipSub") }}</span>
-          </router-link>
-          <router-link to="/eservice/demande_autorisation_vol" class="qrow">
-            <span class="qrow__b">{{ $t("home.qaPermit") }}</span>
-            <span class="qrow__s">{{ $t("home.qaPermitSub") }}</span>
-          </router-link>
-          <router-link to="/eservice/formulaire_compte_rendu" class="qrow">
-            <span class="qrow__b">{{ $t("home.qaReport") }}</span>
-            <span class="qrow__s">{{ $t("home.qaReportSub") }}</span>
-          </router-link>
+        <!-- Carrousel -->
+        <div class="carousel" @mouseenter="stopAuto" @mouseleave="startAuto">
+          <div
+            class="carousel__track"
+            :style="{ transform: `translateX(-${current * 100}%)` }"
+          >
+            <div class="slide" v-for="(s, i) in slides" :key="i">
+              <img :src="s.img" :alt="s.title || ''" />
+              <div class="slide__cap" v-if="s.title">
+                <span>{{ s.title }}</span>
+                <small v-if="s.sub">{{ s.sub }}</small>
+              </div>
+            </div>
+          </div>
+
+          <button
+            v-if="slides.length > 1"
+            class="cnav cnav--prev"
+            @click="prev"
+            aria-label="Précédent"
+          >
+            ‹
+          </button>
+          <button
+            v-if="slides.length > 1"
+            class="cnav cnav--next"
+            @click="next"
+            aria-label="Suivant"
+          >
+            ›
+          </button>
+
+          <div class="dots" v-if="slides.length > 1">
+            <button
+              v-for="(s, i) in slides"
+              :key="i"
+              class="dot"
+              :class="{ on: i === current }"
+              @click="goTo(i)"
+              :aria-label="`Image ${i + 1}`"
+            ></button>
+          </div>
         </div>
       </div>
     </section>
@@ -100,7 +145,7 @@
           <router-link
             v-for="article in news"
             :key="article._id"
-            :to="'/Article/' + article._id"
+            :to="{ path: '/articles', query: { article: article._id } }"
             class="ncard"
           >
             <div class="ncard__ph">
@@ -125,13 +170,31 @@
 
 <script>
 import { driveImageUrl, driveThumbUrl } from "@/utils/drive";
+import heroImg from "@/assets/article.jpeg";
 
 export default {
   name: "HomePage",
+  data() {
+    return {
+      current: 0,
+      timer: null,
+      fallbackSlides: [{ img: heroImg, title: "", sub: "" }],
+    };
+  },
   computed: {
     news() {
-      // les actualités mises en avant (déjà triées et datées par le store)
       return (this.$store.getters.getNews || []).filter(Boolean);
+    },
+    slides() {
+      const banners = this.$store.state.media.banner || [];
+      if (banners.length) {
+        return banners.map((b) => ({
+          img: b.driveId ? driveImageUrl(b.driveId, 1400) : b.url || heroImg,
+          title: b.title || "",
+          sub: b.description || "",
+        }));
+      }
+      return this.fallbackSlides;
     },
   },
   methods: {
@@ -151,9 +214,38 @@ export default {
         .trim();
       return text.length > 120 ? text.slice(0, 120) + "…" : text;
     },
+    next() {
+      this.current = (this.current + 1) % this.slides.length;
+    },
+    prev() {
+      this.current =
+        (this.current - 1 + this.slides.length) % this.slides.length;
+    },
+    goTo(i) {
+      this.current = i;
+      this.startAuto();
+    },
+    startAuto() {
+      this.stopAuto();
+      if (this.slides.length > 1) this.timer = setInterval(this.next, 5000);
+    },
+    stopAuto() {
+      if (this.timer) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+    },
   },
   created() {
     if (!this.news.length) this.$store.dispatch("getNews");
+    if (!(this.$store.state.media.banner || []).length)
+      this.$store.dispatch("getBanners");
+  },
+  mounted() {
+    this.startAuto();
+  },
+  beforeUnmount() {
+    this.stopAuto();
   },
 };
 </script>
@@ -179,13 +271,8 @@ $serif: "Spectral", Georgia, serif;
 
 /* HERO */
 .hero {
-  background: radial-gradient(
-    120% 130% at 80% -10%,
-    #15406e 0%,
-    $navy 55%,
-    #07223e 100%
-  );
-  color: #eaf3fa;
+  background: linear-gradient(165deg, #f6f9fc 0%, #e9f0f8 60%, #e2ebf5 100%);
+  color: #2a3a47;
   position: relative;
   overflow: hidden;
   &::after {
@@ -194,19 +281,19 @@ $serif: "Spectral", Georgia, serif;
     inset: 0;
     background: repeating-linear-gradient(
       135deg,
-      rgba(27, 157, 217, 0.06) 0 1px,
+      rgba(10, 43, 78, 0.035) 0 1px,
       transparent 1px 26px
     );
     pointer-events: none;
   }
   &__wrap {
     position: relative;
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 64px 24px;
+    max-width: 100%;
+    margin: 0 0;
+    padding: 0 5px;
     display: grid;
-    grid-template-columns: 1.25fr 0.9fr;
-    gap: 40px;
+    grid-template-columns: 1fr 1fr;
+    gap: 44px;
     align-items: center;
   }
   &__eyebrow {
@@ -231,38 +318,21 @@ $serif: "Spectral", Georgia, serif;
     font-size: 40px;
     line-height: 1.12;
     font-weight: 800;
-    color: #fff;
+    color: $navy;
     margin-bottom: 18px;
   }
   &__lead {
     font-size: 16px;
-    color: #bcd4e6;
-    max-width: 46ch;
+    color: #4a5b68;
+    line-height: 1.7;
+    max-width: 100%;
     margin-bottom: 28px;
-  }
-  &__cta {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  &__card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 14px;
-    padding: 8px;
-  }
-  &__label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #9fbdd2;
-    padding: 12px 16px 8px;
   }
 }
 .btn {
   display: inline-flex;
   align-items: center;
+  gap: 8px;
   font-weight: 600;
   font-size: 14px;
   padding: 12px 22px;
@@ -277,36 +347,102 @@ $serif: "Spectral", Georgia, serif;
       background: #1689bf;
     }
   }
-  &--ghost {
-    background: rgba(255, 255, 255, 0.06);
-    color: #eaf3fa;
-    border-color: rgba(255, 255, 255, 0.22);
-    &:hover {
-      background: rgba(255, 255, 255, 0.12);
+}
+
+/* CARROUSEL */
+.carousel {
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(10, 43, 78, 0.18);
+  border: 1px solid rgba(10, 43, 78, 0.08);
+  height: 100%;
+  &__track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+.slide {
+  position: relative;
+  flex: 0 0 100%;
+  height: 100%;
+  background: #e9eef3;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  &__cap {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: 40px 22px 22px;
+    background: linear-gradient(180deg, transparent, rgba(6, 20, 35, 0.82));
+    color: #fff;
+    span {
+      display: block;
+      font-family: $serif;
+      font-size: 19px;
+      font-weight: 700;
+    }
+    small {
+      display: block;
+      font-size: 13px;
+      color: #cfe1ee;
+      margin-top: 4px;
     }
   }
 }
-.qrow {
-  display: flex;
-  flex-direction: column;
-  padding: 13px 16px;
-  border-radius: 10px;
-  text-decoration: none;
+.cnav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  color: $navy;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
   transition: background 0.15s;
-  & + .qrow {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-  }
   &:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: #fff;
   }
-  &__b {
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
+  &--prev {
+    inset-inline-start: 12px;
   }
-  &__s {
-    font-size: 12px;
-    color: #9fbdd2;
+  &--next {
+    inset-inline-end: 12px;
+  }
+}
+.dots {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  z-index: 2;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 0;
+  transition: 0.15s;
+  &.on {
+    background: #fff;
+    width: 22px;
+    border-radius: 5px;
   }
 }
 
@@ -440,19 +576,31 @@ $serif: "Spectral", Georgia, serif;
   font-size: 14px;
 }
 
+/* RESPONSIVE */
 @media (max-width: 920px) {
   .hero__wrap {
     grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 44px 24px;
+    gap: 30px;
+    padding: 10px 24px;
   }
   .hero__title {
     font-size: 30px;
+  }
+  .carousel {
+    height: 260px;
   }
   .grid4 {
     grid-template-columns: repeat(2, 1fr);
   }
   .news {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 520px) {
+  .carousel {
+    height: 210px;
+  }
+  .grid4 {
     grid-template-columns: 1fr;
   }
 }

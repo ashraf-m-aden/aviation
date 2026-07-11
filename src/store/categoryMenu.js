@@ -43,6 +43,16 @@ export const mutations = {
   },
 };
 export const actions = {
+  updateSubOne({ dispatch }, { id, data }) {
+    return CategoryS.updateSubCategoryOne(id, data).then(() =>
+      dispatch("fetchSubCategoryOne"),
+    );
+  },
+  updateSubTwo({ dispatch }, { id, data }) {
+    return CategoryS.updateSubCategoryTwo(id, data).then(() =>
+      dispatch("fetchSubCategoryTwo"),
+    );
+  },
   fetchCategory({ commit }) {
     return CategoryS.getCategories().then(async (querySnapshot) => {
       const categoryMenu = querySnapshot.docs.map((doc) => doc.data());

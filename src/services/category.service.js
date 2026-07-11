@@ -107,6 +107,12 @@ export default {
       await db.collection("subcategorytwos").doc(id).update("isPublic", data);
     }
   },
+  updateSubCategoryOne(id, data) {
+    return db.collection("subcategories").doc(id).update(data);
+  },
+  updateSubCategoryTwo(id, data) {
+    return db.collection("subcategorytwos").doc(id).update(data);
+  },
   async toggleInternItem(data, id) {
     try {
       await db.collection("subcategories").doc(id).update("isIntern", data);

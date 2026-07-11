@@ -20,7 +20,7 @@
               :class="{ on: s._id === oneId }"
               @click="selectOne(s._id)"
             >
-              {{ s.name }}
+              {{ catName(s) }}
             </button>
           </li>
         </ul>
@@ -30,17 +30,17 @@
       <div class="content">
         <!-- Fil d'Ariane -->
         <nav class="crumbs">
-          <span v-if="category">{{ category.name }}</span>
+          <span v-if="category">{{ catName(category) }}</span>
           <template v-if="one">
             <span class="sep">›</span>
             <button v-if="twoId" class="crumb-link" @click="backToOne">
-              {{ one.name }}
+              {{ catName(one) }}
             </button>
-            <span v-else>{{ one.name }}</span>
+            <span v-else>{{ catName(one) }}</span>
           </template>
           <template v-if="two">
             <span class="sep">›</span>
-            <span>{{ two.name }}</span>
+            <span>{{ catName(two) }}</span>
           </template>
         </nav>
 
@@ -58,10 +58,13 @@
                 @click="openFolder(f._id)"
               >
                 <span class="folder__ic"
-                  ><font-awesome-icon :icon="['fas', 'folder']"
-                /></span>
+                  ><svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2z"
+                    /></svg
+                ></span>
                 <span class="folder__txt">
-                  <span class="folder__name">{{ f.name }}</span>
+                  <span class="folder__name">{{ catName(f) }}</span>
                   <span class="folder__count"
                     >{{ docsCount(f._id) }} document{{
                       docsCount(f._id) > 1 ? "s" : ""
@@ -83,10 +86,17 @@
             </h2>
 
             <div class="search" v-if="documents.length">
-              <font-awesome-icon
-                :icon="['fas', 'magnifying-glass']"
+              <svg
                 class="search__ic"
-              />
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
               <input
                 class="search__input"
                 type="text"
@@ -117,7 +127,11 @@
                     class="doc__ic"
                     :class="'doc__ic--' + fileMeta(doc).cls"
                   >
-                    <font-awesome-icon :icon="fileMeta(doc).icon" />
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path
+                        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm0 1.5L18.5 8H14V3.5Z"
+                      />
+                    </svg>
                   </span>
                   <div class="doc__info">
                     <span class="doc__name">{{ doc.name }}</span>
@@ -178,6 +192,7 @@
 
 <script>
 import { driveFileUrl } from "@/utils/drive";
+import { localizedName } from "@/utils/i18n-name";
 
 export default {
   name: "DocumentListPage",
@@ -267,12 +282,12 @@ export default {
       return arr;
     },
     parentLabel() {
-      if (this.two) return this.one ? this.one.name : "Documents";
-      return this.category ? this.category.name : "Documents";
+      if (this.two) return this.one ? this.catName(this.one) : "Documents";
+      return this.category ? this.catName(this.category) : "Documents";
     },
     heroTitle() {
-      if (this.two) return this.two.name;
-      if (this.one) return this.one.name;
+      if (this.two) return this.catName(this.two);
+      if (this.one) return this.catName(this.one);
       return this.localized(this.title);
     },
   },
@@ -289,6 +304,10 @@ export default {
       if (!map) return "";
       if (typeof map === "string") return map;
       return map[this.locale] || map.fr || "";
+    },
+    // nom localisé d'une catégorie / sous-catégorie (repli fr)
+    catName(item) {
+      return localizedName(item, this.locale);
     },
     // détermine oneId / twoId à partir de la cible (qui peut être niveau 1 ou 2)
     setup() {
@@ -339,18 +358,14 @@ export default {
     },
     fileMeta(doc) {
       const e = this.ext(doc);
-      if (e === "pdf") return { icon: ["fas", "file-pdf"], cls: "pdf" };
-      if (["doc", "docx"].includes(e))
-        return { icon: ["fas", "file-word"], cls: "word" };
-      if (["xls", "xlsx", "csv"].includes(e))
-        return { icon: ["fas", "file-excel"], cls: "excel" };
-      if (["ppt", "pptx"].includes(e))
-        return { icon: ["fas", "file-powerpoint"], cls: "ppt" };
+      if (e === "pdf") return { cls: "pdf" };
+      if (["doc", "docx"].includes(e)) return { cls: "word" };
+      if (["xls", "xlsx", "csv"].includes(e)) return { cls: "excel" };
+      if (["ppt", "pptx"].includes(e)) return { cls: "ppt" };
       if (["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(e))
-        return { icon: ["fas", "file-image"], cls: "img" };
-      if (["zip", "rar", "7z"].includes(e))
-        return { icon: ["fas", "file-zipper"], cls: "zip" };
-      return { icon: ["fas", "file-lines"], cls: "generic" };
+        return { cls: "img" };
+      if (["zip", "rar", "7z"].includes(e)) return { cls: "zip" };
+      return { cls: "generic" };
     },
     fileLink(doc) {
       if (doc.driveId) return driveFileUrl(doc.driveId);
@@ -560,7 +575,10 @@ $red: #e0322b;
     color: $sky;
     display: grid;
     place-items: center;
-    font-size: 18px;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   }
   &__txt {
     display: flex;
@@ -658,9 +676,12 @@ $red: #e0322b;
     border-radius: 9px;
     display: grid;
     place-items: center;
-    font-size: 16px;
     background: #eef3f6;
     color: $muted;
+    svg {
+      width: 18px;
+      height: 18px;
+    }
     &--pdf {
       background: rgba(224, 50, 43, 0.1);
       color: $red;

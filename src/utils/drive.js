@@ -16,14 +16,27 @@
 export function extractDriveId(input) {
   if (!input) return "";
   const value = String(input).trim();
-  // déjà un ID brut (pas d'URL)
-  if (!value.includes("/") && !value.includes("?")) return value;
-  const patterns = [/\/file\/d\/([^/?]+)/, /\/d\/([^/?]+)/, /[?&]id=([^&]+)/];
+
+  // ID brut collé seul (ni URL, ni nom de fichier avec extension)
+  if (!value.includes("/") && !value.includes("?") && !value.includes(".")) {
+    return /^[\w-]{10,}$/.test(value) ? value : "";
+  }
+
+  // À partir d'ici c'est une URL : on n'extrait un ID QUE sur un domaine Google
+  // (Drive / Docs / googleusercontent). Sinon ce n'est pas un lien Drive.
+  if (!/google\.com|googleusercontent\.com/i.test(value)) return "";
+
+  const patterns = [
+    /\/file\/d\/([^/?=]+)/,
+    /\/document\/d\/([^/?=]+)/,
+    /\/d\/([^/?=]+)/,
+    /[?&]id=([^&]+)/,
+  ];
   for (const re of patterns) {
     const m = value.match(re);
     if (m && m[1]) return m[1];
   }
-  return value;
+  return "";
 }
 
 /**

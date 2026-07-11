@@ -1,22 +1,29 @@
 <template>
   <header class="app-header">
-    <!-- Barre utilitaire -->
-    <div class="utilbar">
-      <div class="utilbar__inner">
-        <span class="utilbar__tagline">{{ $t("brand.country") }}</span>
-        <div class="utilbar__right">
+    <!-- Barre supérieure : burger (mobile) + logo + langue + espace agent -->
+    <div class="topbar">
+      <div class="topbar__inner">
+        <!-- langue + espace agent (passe tout en haut sur mobile) -->
+        <div class="topbar__util">
           <LanguageSwitcher />
-          <router-link :to="isLoggedIn ? '/admin' : '/login'" class="utilbar__login">
+          <router-link
+            :to="isLoggedIn ? '/admin' : '/login'"
+            class="topbar__login"
+          >
             <font-awesome-icon :icon="['fas', 'user-secret']" />
-            <span>{{ $t("common.staffArea") }}</span>
+            <span class="topbar__login-txt">{{ $t("common.staffArea") }}</span>
           </router-link>
         </div>
-      </div>
-    </div>
 
-    <!-- Logo + intitulé -->
-    <div class="masthead">
-      <div class="masthead__inner">
+        <button
+          class="burger"
+          :aria-expanded="mobileOpen"
+          aria-label="Menu"
+          @click.stop="mobileOpen = !mobileOpen"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
         <router-link to="/" class="brand">
           <img src="@/assets/casa.png" alt="AAC" class="brand__logo" />
           <span class="brand__txt">
@@ -24,15 +31,6 @@
             <span class="brand__country">{{ $t("brand.country") }}</span>
           </span>
         </router-link>
-
-        <button
-          class="burger"
-          :aria-expanded="mobileOpen"
-          aria-label="Menu"
-          @click="mobileOpen = !mobileOpen"
-        >
-          <span></span><span></span><span></span>
-        </button>
       </div>
     </div>
 
@@ -66,8 +64,13 @@
                   target="_blank"
                   rel="noopener"
                   class="dropdown__link"
-                >{{ localized(child.label) }}</a>
-                <router-link v-else :to="resolveTo(child)" class="dropdown__link">
+                  >{{ localized(child.label) }}</a
+                >
+                <router-link
+                  v-else
+                  :to="resolveTo(child)"
+                  class="dropdown__link"
+                >
                   {{ localized(child.label) }}
                 </router-link>
               </li>
@@ -82,7 +85,8 @@
               target="_blank"
               rel="noopener"
               class="nav-link"
-            >{{ localized(item.label) }}</a>
+              >{{ localized(item.label) }}</a
+            >
             <router-link v-else :to="resolveTo(item)" class="nav-link">
               {{ localized(item.label) }}
             </router-link>
@@ -171,21 +175,22 @@ $sky: #1b9dd9;
   font-family: "Inter", system-ui, sans-serif;
 }
 
-/* Barre utilitaire */
-.utilbar {
-  background: $navy;
-  color: #bcd4e6;
+/* Barre supérieure (logo + langue + agent) */
+.topbar {
+  background: #fff;
+  border-bottom: 1px solid #dde6ec;
   &__inner {
     max-width: 1180px;
     margin: 0 auto;
-    padding: 0 24px;
-    height: 38px;
+    padding: 10px 24px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    font-size: 12.5px;
+    gap: 14px;
   }
-  &__right {
+  &__util {
+    order: 3;
+    margin-inline-start: auto;
     display: flex;
     align-items: center;
     gap: 16px;
@@ -194,36 +199,24 @@ $sky: #1b9dd9;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: #bcd4e6;
+    color: #5b6b78;
     font-weight: 600;
+    font-size: 12.5px;
     text-decoration: none;
     &:hover {
-      color: #fff;
+      color: $navy;
     }
   }
 }
-
-/* Masthead */
-.masthead {
-  background: #fff;
-  border-bottom: 1px solid #dde6ec;
-  &__inner {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
 .brand {
+  order: 2;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   text-decoration: none;
   &__logo {
-    width: 54px;
-    height: 54px;
+    width: 44px;
+    height: 44px;
     object-fit: contain;
   }
   &__txt {
@@ -232,20 +225,39 @@ $sky: #1b9dd9;
   }
   &__name {
     font-family: "Spectral", Georgia, serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: $navy;
     line-height: 1.15;
   }
   &__country {
-    font-size: 12px;
+    font-size: 11.5px;
     color: #5b6b78;
+  }
+}
+
+/* Burger (à gauche, visible en mobile) */
+.burger {
+  order: 1;
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  span {
+    width: 24px;
+    height: 2px;
+    background: $navy;
+    border-radius: 2px;
   }
 }
 
 /* Navigation principale */
 .mainnav {
   background: $navy;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   &__inner {
     max-width: 1180px;
     margin: 0 auto;
@@ -318,27 +330,32 @@ $sky: #1b9dd9;
   }
 }
 
-/* Burger (mobile) */
-.burger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 6px;
-  span {
-    width: 24px;
-    height: 2px;
-    background: $navy;
-    border-radius: 2px;
-  }
-}
-
 @media (max-width: 920px) {
   .burger {
     display: flex;
+    order: 2;
   }
+  .brand {
+    order: 3;
+  }
+  .brand__logo {
+    width: 38px;
+    height: 38px;
+  }
+  .brand__name {
+    font-size: 15px;
+  }
+
+  /* 1re ligne : uniquement langue + espace agent */
+  .topbar__util {
+    order: 1;
+    flex-basis: 100%;
+    margin-inline-start: 0;
+    justify-content: flex-end;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eef1f4;
+  }
+
   .mainnav__inner {
     flex-direction: column;
     gap: 0;
