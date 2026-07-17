@@ -1,5 +1,9 @@
 <template>
   <div class="banners">
+    <!-- Image d'en-tête (nouveau) -->
+    <HeaderImageSettings />
+
+    <hr class="banners__sep" />
     <!-- Ajout -->
     <DriveUpload :isBanner="true" />
 

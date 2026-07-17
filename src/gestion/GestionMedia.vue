@@ -15,19 +15,21 @@
     </div>
 
     <div class="gm-panel">
-      <BannerPage v-if="tab === 'banners'" />
+      <HeaderImagePage v-if="tab === 'header'" />
+      <BannerPage v-else-if="tab === 'banners'" />
       <NewsPage v-else />
     </div>
   </div>
 </template>
 
 <script>
-import BannerPage from "../../gestion/BannerPage.vue";
-import NewsPage from "../../gestion/NewsPage.vue";
+import HeaderImagePage from "./HeaderImagePage.vue";
+import BannerPage from "./BannerPage.vue";
+import NewsPage from "./NewsPage.vue";
 
 export default {
   name: "GestionMedia",
-  components: { BannerPage, NewsPage },
+  components: { BannerPage, NewsPage, HeaderImagePage },
   metaInfo() {
     return { meta: [{ name: "robots", content: "noindex" }] };
   },
@@ -37,6 +39,7 @@ export default {
       tabs: [
         { key: "banners", label: "Bannières" },
         { key: "news", label: "Actualités" },
+        { key: "header", label: "Image d'en-tête" },
       ],
     };
   },

@@ -16,11 +16,11 @@
 
         <div class="info-row">
           <span class="info-row__ic"
-            ><font-awesome-icon :icon="['fas', 'location-dot']"
+            ><font-awesome-icon :icon="['fas', 'home']"
           /></span>
           <div>
-            <b>Aéroport international de Djibouti (Ambouli)</b>
-            <span>Autorité de l'Aviation Civile</span>
+            <b>Siège social</b>
+            <span>Aéroport international de Djibouti (Ambouli)</span>
           </div>
         </div>
 

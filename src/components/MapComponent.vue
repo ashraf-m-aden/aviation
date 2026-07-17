@@ -65,7 +65,7 @@ export default {
   },
   computed: {
     iconUrl() {
-      return `https://icons-for-free.com/iconfiles/png/512/map+marker+icon-1320166582858325800.png`;
+      return `../../../favicon.ico`;
     },
     iconSize() {
       return [this.iconWidth, this.iconHeight];

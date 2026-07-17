@@ -215,8 +215,8 @@ $sky: #1b9dd9;
   gap: 12px;
   text-decoration: none;
   &__logo {
-    width: 44px;
-    height: 44px;
+    width: clamp(40px, 5vw, 300px);
+    height: auto;
     object-fit: contain;
   }
   &__txt {
@@ -339,8 +339,9 @@ $sky: #1b9dd9;
     order: 3;
   }
   .brand__logo {
-    width: 38px;
-    height: 38px;
+    width: clamp(40px, 5vw, 300px);
+    height: auto;
+    object-fit: contain;
   }
   .brand__name {
     font-size: 15px;

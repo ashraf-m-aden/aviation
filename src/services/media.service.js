@@ -20,7 +20,8 @@ export default {
   saveNewBanner(banners) {
     const batch = db.batch();
     banners.forEach((b, i) => {
-      if (b && b._id) batch.update(db.collection("banners").doc(b._id), { order: i });
+      if (b && b._id)
+        batch.update(db.collection("banners").doc(b._id), { order: i });
     });
     return batch.commit();
   },
@@ -44,8 +45,18 @@ export default {
   saveNewNews(news) {
     const batch = db.batch();
     news.forEach((n, i) => {
-      if (n && n._id) batch.update(db.collection("news").doc(n._id), { order: i });
+      if (n && n._id)
+        batch.update(db.collection("news").doc(n._id), { order: i });
     });
     return batch.commit();
+  },
+  getHeaderImage() {
+    return db.collection("settings").doc("headerImage").get();
+  },
+  setHeaderImage(data) {
+    return db
+      .collection("settings")
+      .doc("headerImage")
+      .set(data, { merge: true });
   },
 };

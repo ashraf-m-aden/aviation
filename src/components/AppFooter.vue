@@ -2,7 +2,6 @@
   <footer class="foot">
     <div class="wrap">
       <div class="fgrid">
-
         <!-- Colonne 1: Identité de la marque -->
         <div>
           <div class="brand">
@@ -18,7 +17,8 @@
         <div>
           <h6>{{ $t("footer.headOffice") }}</h6>
           <p class="office-details">
-            <strong>{{ $t("footer.authority") }}</strong><br />
+            <strong>{{ $t("footer.authority") }}</strong
+            ><br />
             {{ $t("footer.address") }}
           </p>
         </div>
@@ -41,7 +41,9 @@
             </li>
             <li>
               <font-awesome-icon :icon="['fas', 'envelope']" class="ic-width" />
-              <a href="mailto:civilaviation@intnet.dj">civilaviation@intnet.dj</a>
+              <a href="mailto:civilaviation@intnet.dj"
+                >civilaviation@intnet.dj</a
+              >
             </li>
           </ul>
         </div>
@@ -50,22 +52,65 @@
         <div>
           <h6>{{ $t("footer.quickLinks") }}</h6>
           <ul class="links-list">
-            <li><a href="https://www.presidence.dj/" target="_blank" rel="noopener">{{ $t("links.presidency") }}</a></li>
-            <li><a href="https://primature.gouv.dj/" target="_blank" rel="noopener">{{ $t("links.primature") }}</a></li>
-            <li><a href="http://www.met.dj/" target="_blank" rel="noopener">{{ $t("links.ministry") }}</a></li>
-            <li><a href="#">{{ $t("links.airport") }}</a></li>
-            <li><a href="https://www.air-djibouti.com/" target="_blank" rel="noopener">{{ $t("links.airDjibouti") }}</a></li>
-            <li><a href="https://www.lanation.dj/" target="_blank" rel="noopener">{{ $t("links.laNation") }}</a></li>
+            <li>
+              <a
+                href="https://www.presidence.dj/"
+                target="_blank"
+                rel="noopener"
+                >{{ $t("links.presidency") }}</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://primature.gouv.dj/"
+                target="_blank"
+                rel="noopener"
+                >{{ $t("links.primature") }}</a
+              >
+            </li>
+            <li>
+              <a href="http://www.met.dj/" target="_blank" rel="noopener">{{
+                $t("links.ministry")
+              }}</a>
+            </li>
+            <li>
+              <a href="#">{{ $t("links.airport") }}</a>
+            </li>
+            <li>
+              <a
+                href="https://www.air-djibouti.com/"
+                target="_blank"
+                rel="noopener"
+                >{{ $t("links.airDjibouti") }}</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.lanation.dj/"
+                target="_blank"
+                rel="noopener"
+                >{{ $t("links.laNation") }}</a
+              >
+            </li>
           </ul>
 
           <div class="auth-action" v-show="!isLoggedIn">
             <router-link to="/login" class="btn-agent">
-              <font-awesome-icon :icon="['fas', 'user']" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 640 512"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+              >
+                <path
+                  d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32v-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2h61.4C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9c19.7-26.6 31.3-59.5 31.3-95.1c0-26.2-6.3-51-17.4-72.9C384.1 40.5 407.6 32 433 32c62.9 0 113.9 51.7 113.9 115.5c0 63.9-51 115.5-113.9 115.5z"
+                />
+              </svg>
               {{ $t("common.login") }}
             </router-link>
           </div>
         </div>
-
       </div>
 
       <!-- Barre de bas de page (Copyright & Mentions) -->
@@ -98,7 +143,7 @@ export default {
 <style lang="scss" scoped>
 // Variables locales basées sur le design mémorisé
 $navy-dark: #06203b;
-$sky: #1B9DD9;
+$sky: #1b9dd9;
 $text-muted: #9fbdd2;
 $text-light: #7fa6c2;
 $serif: "Spectral", Georgia, serif;
@@ -134,7 +179,7 @@ $sans: "Inter", system-ui, sans-serif;
   margin-bottom: 14px;
 
   .logo {
-    width: 54px;
+    width: clamp(40px, 5vw, 300px);
     height: auto;
     object-fit: contain;
   }

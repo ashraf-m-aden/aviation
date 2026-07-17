@@ -12,17 +12,10 @@ import PageResolver from "@/views/PageResolver.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import ResetPassword from "@/pages/ResetPassword.vue";
 import GestionCategory from "@/gestion/GestionCategory.vue";
-import GestionMedia from "@/pages/gestion/GestionMedia.vue";
+import GestionMedia from "@/gestion/GestionMedia.vue";
 import SousCategoryOne from "@/pages/SousCategoryOne.vue";
 import SousCategoryTwo from "@/pages/SousCategoryTwo.vue";
-import SousCategoryTwoStraight from "@/pages/SousCategoryTwoStraight.vue";
-import ArticlesPage from "@/pages/ArticlesPage.vue";
-import SubMenu from "@/pages/SubMenu.vue";
-import AIP from "../pages/aip/PublicationsInformationAéronautique.vue";
-import DA from "../pages/eService/DemandeAutorisation.vue";
-import FCR from "../pages/eService/FormulaireCompteRendu.vue";
 import AuditInspection from "@/pages/inspection/AuditInspection.vue";
-import ContentPage from "@/views/ContentPage.vue";
 
 const adminGuard = async (to, from, next) => {
   console.log("adminGuard", store.state.user.user);

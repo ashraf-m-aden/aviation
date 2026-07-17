@@ -5,6 +5,7 @@ export const state = () => ({
   banner: [],
   news: [], // les news mises en avant (dashboard / accueil)
   allNews: [], // toutes les news
+  headerImage: null, // { driveId, url }
 });
 
 export const getters = {
@@ -17,12 +18,16 @@ export const getters = {
   getAllNews(state) {
     return state.allNews;
   },
+  getHeaderImage(state) {
+    return state.headerImage;
+  },
 };
 
 export const mutations = {
   SET_BANNER(state, banner) {
     state.banner = banner;
   },
+
   SET_NEWS(state, news) {
     state.allNews = news;
     // BUG corrigé : on bornait en dur à 7, ce qui poussait des `undefined`
@@ -35,6 +40,9 @@ export const mutations = {
       [arr[index - 1], arr[index]] = [arr[index], arr[index - 1]];
       state.banner = arr;
     }
+  },
+  SET_HEADER_IMAGE(state, data) {
+    state.headerImage = data;
   },
   DOWN_BANNER(state, index) {
     if (index < state.banner.length - 1) {
@@ -67,13 +75,26 @@ export const actions = {
       await commit("SET_BANNER", response);
     });
   },
+  getHeaderImage({ commit }) {
+    return mediaService.getHeaderImage().then((doc) => {
+      commit("SET_HEADER_IMAGE", doc.exists ? doc.data() : null);
+    });
+  },
+  updateHeaderImage({ commit }, data) {
+    return mediaService
+      .setHeaderImage(data)
+      .then(() => commit("SET_HEADER_IMAGE", data));
+  },
   getNews({ commit }) {
     return mediaService.getNews().then(async (querySnapshot) => {
       const response = querySnapshot.docs.map((doc) => doc.data());
       response.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
       response.forEach((el) => {
         if (el.createdAt) {
-          const d = typeof el.createdAt === "string" ? el.createdAt : el.createdAt.toDate();
+          const d =
+            typeof el.createdAt === "string"
+              ? el.createdAt
+              : el.createdAt.toDate();
           el.createdAt = moment(String(d)).format("DD/MM/YYYY");
         }
       });

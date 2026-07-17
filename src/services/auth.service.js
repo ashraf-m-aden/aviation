@@ -1,26 +1,62 @@
 import { auth, db, config } from "../firebaseConfig";
 import firebase from "firebase/compat/app";
+import {
+  signInWithEmailAndPassword,
+  getMultiFactorResolver,
+  TotpMultiFactorGenerator,
+  signOut,
+} from "firebase/auth";
+import { modularAuth } from "../firebase-modular";
 
 class Auth {
   /**
-   * Connexion.
-   * On authentifie d'ABORD, puis on lit le profil de l'utilisateur connecté
-   * pour vérifier qu'il est actif. Avantages :
-   *  - plus de crash quand l'e-mail n'existe pas (l'ancien code faisait
-   *    documents[0].enabled sur un tableau vide) ;
-   *  - la collection `users` n'a plus besoin d'être lisible par des
-   *    visiteurs non connectés (on peut la verrouiller dans les règles).
+   * Connexion admin — bascule sur le SDK modulaire pour supporter le TOTP.
+   * Si un second facteur est requis, on ne lève pas une erreur "fatale" :
+   * on attache le resolver à l'erreur pour que le composant appelant
+   * (LoginPage) puisse afficher le prompt TOTP.
    */
   async signIn(email, password) {
-    const credential = await auth.signInWithEmailAndPassword(email, password);
-    const snap = await db.collection("users").doc(credential.user.uid).get();
+    try {
+      const credential = await signInWithEmailAndPassword(
+        modularAuth,
+        email,
+        password,
+      );
+      return await this._afterSignIn(credential.user);
+    } catch (error) {
+      if (error.code === "auth/multi-factor-auth-required") {
+        const resolver = getMultiFactorResolver(modularAuth, error);
+        const mfaError = new Error("Un second facteur est requis.");
+        mfaError.code = "auth/multi-factor-auth-required";
+        mfaError.resolver = resolver;
+        throw mfaError;
+      }
+      throw error;
+    }
+  }
 
+  /**
+   * Deuxième étape de connexion : valide le code TOTP saisi
+   * et termine la connexion initiée par signIn().
+   */
+  async confirmTotpSignIn(resolver, code) {
+    const assertion = TotpMultiFactorGenerator.assertionForSignIn(
+      resolver.hints[0].uid,
+      code,
+    );
+    const userCredential = await resolver.resolveSignIn(assertion);
+    return await this._afterSignIn(userCredential.user);
+  }
+
+  // Vérifie que le compte est actif, comme avant — mais exécuté après
+  // résolution complète de l'auth (avec ou sans MFA).
+  async _afterSignIn(user) {
+    const snap = await db.collection("users").doc(user.uid).get();
     if (!snap.exists || snap.data().enabled === false) {
-      // compte supprimé/désactivé : on referme la session ouverte
-      await auth.signOut();
+      await signOut(modularAuth);
       throw new Error("Ce compte est désactivé ou introuvable.");
     }
-    return credential;
+    return { user };
   }
 
   async getUser(id) {
@@ -32,10 +68,11 @@ class Auth {
   }
 
   async logout() {
-    await auth.signOut();
+    await signOut(modularAuth);
   }
 
   async postStaff(staff) {
+    // inchangé — création de compte reste sur le compat (app secondaire "postApp")
     const user = await db
       .collection("users")
       .where("email", "==", staff.email)
@@ -52,14 +89,14 @@ class Auth {
       await postAppAuth
         .createUserWithEmailAndPassword(staff.email, staff.password)
         .then(async (authResult) => {
-          const user = {
+          const newUser = {
             id: authResult.user.uid,
             email: authResult.user.email,
             name: staff.name,
             isAdmin: staff.isAdmin,
             enabled: true,
           };
-          await db.collection("users").doc(user.id).set(user);
+          await db.collection("users").doc(newUser.id).set(newUser);
           await postAppAuth.signOut();
           await postApp.delete();
         });

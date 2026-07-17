@@ -3,13 +3,7 @@
     <div class="login__card">
       <div class="login__brand">
         <img src="@/assets/casa.png" alt="AAC" />
-        <svg
-          class="login__wings"
-          width="80"
-          height="20"
-          viewBox="0 0 80 20"
-          aria-hidden="true"
-        >
+        <svg class="login__wings" width="80" height="20" viewBox="0 0 80 20" aria-hidden="true">
           <g fill="#1B9DD9">
             <path d="M0 9h30l-6 3H0z" opacity=".4" />
             <path d="M9 2h30l-6 3H9z" />
@@ -19,41 +13,74 @@
       </div>
 
       <h1 class="login__title">Espace agent</h1>
-      <p class="login__sub">Connectez-vous pour accéder à l'administration.</p>
 
-      <div class="fld">
-        <label for="email">Adresse e-mail</label>
-        <input
-          id="email"
-          v-model="email"
-          type="text"
-          class="inp"
-          placeholder="agent@aac.dj"
-          @keyup.enter="submit"
-        />
-      </div>
+      <!-- Étape 1 : email/mot de passe -->
+      <template v-if="!mfaResolver">
+        <p class="login__sub">Connectez-vous pour accéder à l'administration.</p>
 
-      <div class="fld">
-        <label for="password">Mot de passe</label>
-        <input
-          id="password"
-          v-model="password"
-          type="password"
-          class="inp"
-          placeholder="••••••••"
-          @keyup.enter="submit"
-        />
-      </div>
+        <div class="fld">
+          <label for="email">Adresse e-mail</label>
+          <input
+            id="email"
+            v-model="email"
+            type="text"
+            class="inp"
+            placeholder="agent@aac.dj"
+            @keyup.enter="submit"
+          />
+        </div>
 
-      <button class="login__btn" :disabled="loading" @click="submit">
-        {{ loading ? "Connexion…" : "Se connecter" }}
-      </button>
+        <div class="fld">
+          <label for="password">Mot de passe</label>
+          <input
+            id="password"
+            v-model="password"
+            type="password"
+            class="inp"
+            placeholder="••••••••"
+            @keyup.enter="submit"
+          />
+        </div>
+
+        <button class="login__btn" :disabled="loading" @click="submit">
+          {{ loading ? "Connexion…" : "Se connecter" }}
+        </button>
+
+        <router-link to="/reset-password" class="login__reset">
+          Réinitialiser mon mot de passe
+        </router-link>
+      </template>
+
+      <!-- Étape 2 : code TOTP -->
+      <template v-else>
+        <p class="login__sub">
+          Saisis le code à 6 chiffres généré par ton application d'authentification.
+        </p>
+
+        <div class="fld">
+          <label for="totp">Code d'authentification</label>
+          <input
+            id="totp"
+            v-model="totpCode"
+            type="text"
+            class="inp"
+            placeholder="123456"
+            maxlength="6"
+            inputmode="numeric"
+            @keyup.enter="submit"
+          />
+        </div>
+
+        <button class="login__btn" :disabled="loading || totpCode.length !== 6" @click="submit">
+          {{ loading ? "Vérification…" : "Valider" }}
+        </button>
+
+        <button class="login__reset" style="background:none;border:none;cursor:pointer;width:100%;margin-top:14px;" @click="cancelMfa">
+          Annuler
+        </button>
+      </template>
 
       <p v-if="error" class="login__error">{{ errorMessage }}</p>
-
-      <router-link to="/reset-password" class="login__reset">
-        Réinitialiser mon mot de passe
-      </router-link>
     </div>
   </section>
 </template>
@@ -73,6 +100,8 @@ export default {
     return {
       email: "",
       password: "",
+      totpCode: "",
+      mfaResolver: null,
       errorMessage: "",
       error: false,
       loading: false,
@@ -80,6 +109,8 @@ export default {
   },
   methods: {
     async submit() {
+      if (this.mfaResolver) return this.confirmTotp();
+
       if (!this.email || !this.password) return;
       this.loading = true;
       this.error = false;
@@ -89,14 +120,43 @@ export default {
         this.$router.push({ path: "/admin" });
       } catch (error) {
         this.loading = false;
+        if (error.code === "auth/multi-factor-auth-required") {
+          this.mfaResolver = error.resolver;
+          this.error = false;
+          this.errorMessage = "";
+          return;
+        }
         this.error = true;
         this.errorMessage = error.message || "Identifiants invalides.";
         this.$store.dispatch("warningNotif", this.errorMessage);
       }
     },
+    async confirmTotp() {
+      this.loading = true;
+      this.error = false;
+      try {
+        const data = await authService.confirmTotpSignIn(
+          this.mfaResolver,
+          this.totpCode,
+        );
+        localStorage.setItem("id", data.user.uid);
+        this.$router.push({ path: "/admin" });
+      } catch (error) {
+        this.loading = false;
+        this.error = true;
+        this.errorMessage = "Code invalide, réessaie.";
+      }
+    },
+    cancelMfa() {
+      this.mfaResolver = null;
+      this.totpCode = "";
+      this.error = false;
+      this.errorMessage = "";
+    },
   },
 };
 </script>
+<!-- style inchangé -->
 
 <style lang="scss" scoped>
 $navy: #0a2b4e;
