@@ -25,6 +25,8 @@
     "firebase": "^12.16.0",
     "jquery": "^3.6.3",
     "moment": "^2.29.4",
+    "otplib": "^13.4.1",
+    "qrcode": "^1.5.4",
     "roboto-fontface": "*",
     "vue": "^3.2.13",
     "vue-3-meta": "^2.4.0",

@@ -3,7 +3,11 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { config } from "./firebaseConfig"; // même config que ton app compat
+import { getFunctions, httpsCallable } from "firebase/functions";
 
+const functions = getFunctions(getApp(), "us-central1"); // région explicite
+const getTotpUriCallable = httpsCallable(functions, "getTotpUri");
+const verifyTotpCallable = httpsCallable(functions, "verifyTotp");
 // Réutilise l'app compat déjà initialisée (firebase.initializeApp(config) dans firebaseConfig.js)
 // plutôt que d'en recréer une seconde — évite les conflits de double init.
 const app = getApps().length ? getApp() : initializeApp(config);
