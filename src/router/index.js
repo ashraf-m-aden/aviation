@@ -53,6 +53,11 @@ const routes = [
         name: "AdminCategories",
         component: GestionCategory,
       },
+      {
+  path: "profile",
+  name: "Profile",
+  component: () => import("@/gestion/ProfilePage.vue"),
+},
     ],
   },
 

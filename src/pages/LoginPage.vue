@@ -3,13 +3,7 @@
     <div class="login__card">
       <div class="login__brand">
         <img src="@/assets/casa.png" alt="AAC" />
-        <svg
-          class="login__wings"
-          width="80"
-          height="20"
-          viewBox="0 0 80 20"
-          aria-hidden="true"
-        >
+        <svg class="login__wings" width="80" height="20" viewBox="0 0 80 20" aria-hidden="true">
           <g fill="#1B9DD9">
             <path d="M0 9h30l-6 3H0z" opacity=".4" />
             <path d="M9 2h30l-6 3H9z" />
@@ -22,9 +16,7 @@
 
       <!-- Étape 1 : email/mot de passe -->
       <template v-if="!awaitingTotp">
-        <p class="login__sub">
-          Connectez-vous pour accéder à l'administration.
-        </p>
+        <p class="login__sub">Connectez-vous pour accéder à l'administration.</p>
 
         <div class="fld">
           <label for="email">Adresse e-mail</label>
@@ -66,20 +58,6 @@
           d'authentification.
         </p>
 
-        <!-- QR affiché uniquement si l'utilisateur clique sur "pas encore configuré" -->
-        <div v-if="showQr" class="qr-box">
-          <div v-if="qrLoading" class="qr-box__state">
-            Chargement du QR code…
-          </div>
-          <div v-else-if="qrError" class="qr-box__error">{{ qrError }}</div>
-          <template v-else>
-            <img :src="qrDataUrl" alt="QR code TOTP" class="qr-box__img" />
-            <p class="qr-box__manual">
-              Ou saisis manuellement : <code>{{ secretKey }}</code>
-            </p>
-          </template>
-        </div>
-
         <div class="fld">
           <label for="totp">Code d'authentification</label>
           <input
@@ -95,20 +73,8 @@
           />
         </div>
 
-        <button
-          class="login__btn"
-          :disabled="loading || totpCode.length !== 6"
-          @click="submit"
-        >
+        <button class="login__btn" :disabled="loading || totpCode.length !== 6" @click="submit">
           {{ loading ? "Vérification…" : "Valider" }}
-        </button>
-
-        <button class="login__link" @click="toggleQr">
-          {{
-            showQr
-              ? "Masquer le QR code"
-              : "Je n'ai pas encore configuré mon authenticator"
-          }}
         </button>
 
         <button class="login__cancel" @click="cancel">Annuler</button>
@@ -121,12 +87,11 @@
 
 <script>
 import authService from "../services/auth.service";
-import QRCode from "qrcode";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { getApp } from "firebase/app";
 
-const functions = getFunctions();
+const functions = getFunctions(getApp(), "us-central1");
 const verifyTotpCallable = httpsCallable(functions, "verifyTotp");
-const getTotpUriCallable = httpsCallable(functions, "getTotpUri");
 
 export default {
   metaInfo() {
@@ -146,11 +111,6 @@ export default {
       errorMessage: "",
       error: false,
       loading: false,
-      showQr: false,
-      qrLoading: false,
-      qrError: "",
-      qrDataUrl: "",
-      secretKey: "",
     };
   },
   methods: {
@@ -159,22 +119,43 @@ export default {
       await this.signInFirstStep();
     },
 
+    // async signInFirstStep() {
+    //   if (!this.email || !this.password) return;
+    //   this.loading = true;
+    //   this.error = false;
+    //   try {
+    //     const data = await authService.signIn(this.email, this.password);
+    //     localStorage.setItem("id", data.user.uid);
+    //     this.loading = false;
+    //     this.awaitingTotp = true;
+    //   } catch (error) {
+    //     this.loading = false;
+    //     this.error = true;
+    //     this.errorMessage = error.message || "Identifiants invalides.";
+    //     this.$store.dispatch("warningNotif", this.errorMessage);
+    //   }
+    // },
     async signInFirstStep() {
-      if (!this.email || !this.password) return;
-      this.loading = true;
-      this.error = false;
-      try {
-        const data = await authService.signIn(this.email, this.password);
-        localStorage.setItem("id", data.user.uid);
-        this.loading = false;
-        this.awaitingTotp = true;
-      } catch (error) {
-        this.loading = false;
-        this.error = true;
-        this.errorMessage = error.message || "Identifiants invalides.";
-        this.$store.dispatch("warningNotif", this.errorMessage);
-      }
-    },
+  if (!this.email || !this.password) return;
+  this.loading = true;
+  this.error = false;
+  try {
+    const data = await authService.signIn(this.email, this.password);
+    localStorage.setItem("id", data.user.uid);
+    this.loading = false;
+
+    if (data.mfaEnabled) {
+      this.awaitingTotp = true;
+    } else {
+      this.$router.push({ path: "/admin" });
+    }
+  } catch (error) {
+    this.loading = false;
+    this.error = true;
+    this.errorMessage = error.message || "Identifiants invalides.";
+    this.$store.dispatch("warningNotif", this.errorMessage);
+  }
+},
 
     async confirmTotp() {
       this.loading = true;
@@ -194,37 +175,12 @@ export default {
       }
     },
 
-    // Affiche/masque le QR — chargé à la demande seulement,
-    // pour ne pas exposer le secret à chaque connexion inutilement.
-    async toggleQr() {
-      this.showQr = !this.showQr;
-      if (this.showQr && !this.qrDataUrl) {
-        this.qrLoading = true;
-        this.qrError = "";
-        try {
-          const result = await getTotpUriCallable();
-          const { uri, secret } = result.data;
-          this.secretKey = secret;
-          this.qrDataUrl = await QRCode.toDataURL(uri, {
-            width: 220,
-            margin: 1,
-          });
-        } catch (e) {
-          this.qrError = "Impossible de charger le QR code.";
-        } finally {
-          this.qrLoading = false;
-        }
-      }
-    },
-
     async cancel() {
       await authService.logout();
       this.awaitingTotp = false;
       this.email = "";
       this.password = "";
       this.totpCode = "";
-      this.showQr = false;
-      this.qrDataUrl = "";
       this.error = false;
     },
   },
@@ -344,25 +300,10 @@ $line: #dde6ec;
     text-decoration: underline;
   }
 }
-.login__link {
-  display: block;
-  width: 100%;
-  margin-top: 16px;
-  background: none;
-  border: none;
-  color: $sky;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: center;
-  &:hover {
-    text-decoration: underline;
-  }
-}
 .login__cancel {
   display: block;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 14px;
   background: none;
   border: none;
   color: $muted;
@@ -372,38 +313,6 @@ $line: #dde6ec;
   &:hover {
     color: $navy;
     text-decoration: underline;
-  }
-}
-.qr-box {
-  background: #f9fbfc;
-  border: 1px solid $line;
-  border-radius: 10px;
-  padding: 16px;
-  margin-bottom: 18px;
-  text-align: center;
-  &__state {
-    color: $muted;
-    font-size: 13px;
-  }
-  &__error {
-    color: $red;
-    font-size: 13px;
-  }
-  &__img {
-    border-radius: 6px;
-  }
-  &__manual {
-    margin-top: 10px;
-    font-size: 11.5px;
-    color: $muted;
-    word-break: break-all;
-    code {
-      background: #fff;
-      border: 1px solid $line;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 600;
-    }
   }
 }
 </style>

@@ -50,14 +50,22 @@ class Auth {
 
   // Vérifie que le compte est actif, comme avant — mais exécuté après
   // résolution complète de l'auth (avec ou sans MFA).
+  // async _afterSignIn(user) {
+  //   const snap = await db.collection("users").doc(user.uid).get();
+  //   if (!snap.exists || snap.data().enabled === false) {
+  //     await signOut(modularAuth);
+  //     throw new Error("Ce compte est désactivé ou introuvable.");
+  //   }
+  //   return { user };
+  // }
   async _afterSignIn(user) {
-    const snap = await db.collection("users").doc(user.uid).get();
-    if (!snap.exists || snap.data().enabled === false) {
-      await signOut(modularAuth);
-      throw new Error("Ce compte est désactivé ou introuvable.");
-    }
-    return { user };
+  const snap = await db.collection("users").doc(user.uid).get();
+  if (!snap.exists || snap.data().enabled === false) {
+    await signOut(modularAuth);
+    throw new Error("Ce compte est désactivé ou introuvable.");
   }
+  return { user, mfaEnabled: snap.data().mfaEnabled === true };
+}
 
   async getUser(id) {
     return await db.collection("users").doc(id).get();
