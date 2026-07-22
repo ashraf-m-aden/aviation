@@ -65,5 +65,36 @@
     "newsLabel": "News",
     "newsTitle": "Latest Publications",
     "newsEmpty": "No news available at the moment."
+  },
+  
+  "pages": {
+    "about": {
+      "eyebrow": "About us"
+    },
+    "organisation": {
+      "title": "Organisation"
+    },
+    "presentation": {
+      "title": "Presentation"
+    },
+    "directorWord": {
+      "title": "Director's word"
+    },
+    "trainingPolicy": {
+      "title": "Training policy"
+    },
+    "supervisionPolicy": {
+      "title": "Supervision policy"
+    },
+    "articles": {
+      "eyebrow": "Civil Aviation Authority of Djibouti",
+      "title": "News"
+    },
+    "contact": {
+      "eyebrow": "Civil Aviation Authority of Djibouti",
+      "title": "Contact us",
+      "intro": "For any request, information, or appointment, here is our contact information."
+    }
   }
+
 }

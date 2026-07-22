@@ -9,7 +9,7 @@
 
       <nav class="aside__nav">
         <router-link
-          v-for="link in links"
+          v-for="link in visibleLinks"
           :key="link.to"
           :to="link.to"
           class="aside__link"
@@ -64,10 +64,15 @@ const ICONS = {
   lock: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
   media:
     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>',
-staff: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-profil: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  staff:
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  profil:
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+};
 
-  };
+// Chemins réservés aux administrateurs — masqués de la sidebar pour les agents,
+// en plus de la protection au niveau des routes (adminGuard).
+const ADMIN_ONLY_PATHS = ["/admin/navigation", "/admin/categories", "/admin/staff"];
 
 export default {
   name: "AdminLayout",
@@ -97,6 +102,14 @@ export default {
     };
   },
   computed: {
+    isAdmin() {
+      return this.$store.getters.getUser?.isAdmin === true;
+    },
+    visibleLinks() {
+      return this.links.filter(
+        (l) => this.isAdmin || !ADMIN_ONLY_PATHS.includes(l.to),
+      );
+    },
     currentTitle() {
       const found = this.links.find((l) => this.isActive(l.to, l.exact));
       return found ? found.label : "Administration";
@@ -106,8 +119,6 @@ export default {
     isActive(path, exact) {
       const cur = this.$route.path;
       if (exact) return cur === path;
-      // actif si exactement la page, ou un vrai sous-chemin (évite que
-      // /admin/documents-intern active aussi /admin/documents)
       return cur === path || cur.startsWith(path + "/");
     },
     logout() {

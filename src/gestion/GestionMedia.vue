@@ -4,7 +4,7 @@
 
     <div class="gm-tabs">
       <button
-        v-for="t in tabs"
+        v-for="t in visibleTabs"
         :key="t.key"
         class="gm-tab"
         :class="{ 'is-active': tab === t.key }"
@@ -14,10 +14,14 @@
       </button>
     </div>
 
-    <div class="gm-panel">
-      <HeaderImagePage v-if="tab === 'header'" />
-      <BannerPage v-else-if="tab === 'banners'" />
-      <NewsPage v-else />
+    <p v-if="!visibleTabs.length" class="gm-empty">
+      Aucun accès média ne t'a été attribué. Contacte un administrateur.
+    </p>
+
+    <div class="gm-panel" v-else>
+      <HeaderImagePage v-if="tab === 'header' && isAdmin" />
+      <BannerPage v-else-if="tab === 'banners' && canAccess('banners')" />
+      <NewsPage v-else-if="tab === 'news' && canAccess('news')" />
     </div>
   </div>
 </template>
@@ -35,13 +39,48 @@ export default {
   },
   data() {
     return {
-      tab: "banners",
+      tab: "",
       tabs: [
         { key: "banners", label: "Bannières" },
         { key: "news", label: "Actualités" },
-        { key: "header", label: "Image d'en-tête" },
+        { key: "header", label: "Image d'en-tête", adminOnly: true },
       ],
     };
+  },
+  computed: {
+    currentUser() {
+      return this.$store.getters.getUser || {};
+    },
+    isAdmin() {
+      return this.currentUser.isAdmin === true;
+    },
+    mediaAccess() {
+      return this.currentUser.mediaAccess || [];
+    },
+    visibleTabs() {
+      return this.tabs.filter((t) => {
+        if (t.adminOnly) return this.isAdmin;
+        return this.isAdmin || this.mediaAccess.includes(t.key);
+      });
+    },
+  },
+  methods: {
+    canAccess(key) {
+      return this.isAdmin || this.mediaAccess.includes(key);
+    },
+  },
+  watch: {
+    // Si l'onglet actif devient inaccessible (rôle/attribution changés en
+    // cours de session), on bascule sur le premier onglet encore visible.
+    visibleTabs: {
+      immediate: true,
+      handler(tabs) {
+        const stillVisible = tabs.some((t) => t.key === this.tab);
+        if (!stillVisible) {
+          this.tab = tabs.length ? tabs[0].key : "";
+        }
+      },
+    },
   },
 };
 </script>
@@ -87,5 +126,9 @@ $line: #dde6ec;
     background: $navy;
     color: #fff;
   }
+}
+.gm-empty {
+  color: $muted;
+  font-size: 14px;
 }
 </style>

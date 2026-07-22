@@ -1,14 +1,12 @@
 <template>
   <div class="page">
     <header class="page-hero">
-      <div class="page-hero__bg"></div>
+      <div class="page-hero__bg" :style="heroBgStyle"></div>
       <div class="page-hero__overlay"></div>
       <div class="page-hero__inner">
-        <span class="page-hero__eyebrow"
-          >Autorité de l'Aviation Civile de Djibouti</span
-        >
+        <span class="page-hero__eyebrow">{{ parentLabel }}</span>
         <h1 class="page-hero__title">
-          {{ selected ? selected.title : "Actualités" }}
+          {{ selected ? selected.title : heroTitle }}
         </h1>
       </div>
     </header>
@@ -123,6 +121,7 @@
 
 <script>
 import { driveImageUrl, driveThumbUrl } from "@/utils/drive";
+import fallbackHero from "@/assets/article.jpeg";
 
 export default {
   name: "ArticlesPage",
@@ -130,6 +129,24 @@ export default {
     return { page: 1, perPage: 6 };
   },
   computed: {
+    heroTitle() {
+      return this.$t("pages.articles.title");
+    },
+    parentLabel() {
+      return this.$t("pages.articles.eyebrow");
+    },
+    headerImage() {
+      return this.$store.getters.getHeaderImage;
+    },
+    heroBgUrl() {
+      const h = this.headerImage;
+      if (h?.driveId) return driveImageUrl(h.driveId, 1200);
+      if (h?.url) return h.url;
+      return fallbackHero;
+    },
+    heroBgStyle() {
+      return { backgroundImage: `url(${this.heroBgUrl})` };
+    },
     articles() {
       const list = this.$store.state.media.allNews || [];
       return [...list].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
@@ -206,6 +223,9 @@ export default {
   },
   created() {
     if (!this.articles.length) this.$store.dispatch("getNews");
+    if (!this.$store.state.media.headerImage) {
+      this.$store.dispatch("getHeaderImage");
+    }
   },
 };
 </script>
@@ -231,7 +251,8 @@ $ink: #2a3a47;
   &__bg {
     position: absolute;
     inset: 0;
-    background: url("../../assets/article.jpeg") center / cover no-repeat;
+    background-size: cover;
+    background-position: center;
   }
   &__overlay {
     position: absolute;

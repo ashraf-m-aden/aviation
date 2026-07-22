@@ -88,6 +88,8 @@
             <div class="search" v-if="documents.length">
               <svg
                 class="search__ic"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -193,7 +195,7 @@
 <script>
 import { driveFileUrl } from "@/utils/drive";
 import { localizedName } from "@/utils/i18n-name";
-import { driveImageUrl, driveThumbUrl } from "@/utils/drive";
+import { driveImageUrl } from "@/utils/drive";
 import fallbackHero from "@/assets/article.jpeg";
 export default {
   name: "DocumentListPage",
@@ -522,7 +524,14 @@ $red: #e0322b;
     }
   }
 }
-
+.search__ic {
+  position: absolute;
+  inset-inline-start: 15px;
+  width: 18px;
+  height: 18px;
+  flex: none; // empêche l'étirement si le parent est en flex/grid
+  color: $muted;
+}
 .crumbs {
   display: flex;
   align-items: center;

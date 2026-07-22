@@ -79,6 +79,85 @@
               <span>Administrateur (accès complet)</span>
             </label>
 
+            <!-- Périmètre documents — uniquement pour les agents (non-admin) -->
+            <div class="scope" v-if="!form.isAdmin">
+              <label class="scope__title">
+                Accès aux catégories / sous-catégories (documents)
+              </label>
+              <p class="scope__hint">
+                Coche les catégories, sous-catégories niveau 1 ou niveau 2
+                auxquelles cet agent peut ajouter des documents.
+              </p>
+              <div class="scope__tree">
+                <p v-if="!categories.length" class="scope__empty">
+                  Aucune catégorie chargée.
+                </p>
+                <div v-for="cat in categories" :key="cat._id" class="scope__cat">
+                  <label class="scope__row">
+                    <input
+                      type="checkbox"
+                      :checked="isChecked(cat._id)"
+                      @change="toggleScope(cat._id)"
+                    />
+                    <span class="scope__catname">{{ cat.name }}</span>
+                  </label>
+                  <div
+                    class="scope__sub1"
+                    v-for="s1 in subOnesOf(cat._id)"
+                    :key="s1._id"
+                  >
+                    <label class="scope__row">
+                      <input
+                        type="checkbox"
+                        :checked="isChecked(s1._id)"
+                        @change="toggleScope(s1._id)"
+                      />
+                      <span>{{ s1.name }}</span>
+                    </label>
+                    <div
+                      class="scope__sub2"
+                      v-for="s2 in subTwosOf(s1._id)"
+                      :key="s2._id"
+                    >
+                      <label class="scope__row">
+                        <input
+                          type="checkbox"
+                          :checked="isChecked(s2._id)"
+                          @change="toggleScope(s2._id)"
+                        />
+                        <span>{{ s2.name }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accès médias — uniquement pour les agents (non-admin) -->
+            <div class="scope" v-if="!form.isAdmin">
+              <label class="scope__title">Accès médias</label>
+              <p class="scope__hint">
+                Coche les sections que cet agent peut gérer. L'image d'en-tête
+                du site reste réservée aux administrateurs.
+              </p>
+              <label class="scope__row scope__row--block">
+                <input
+                  type="checkbox"
+                  :checked="isMediaChecked('banners')"
+                  @change="toggleMediaScope('banners')"
+                />
+                <span>Bannières (carrousel de la page d'accueil)</span>
+              </label>
+              <label class="scope__row scope__row--block">
+                <input
+                  type="checkbox"
+                  :checked="isMediaChecked('news')"
+                  @change="toggleMediaScope('news')"
+                />
+                <span>Actualités</span>
+              </label>
+            </div>
+
             <div v-if="modal.edit" class="reset">
               <button class="btn-reset" @click="sendReset" :disabled="busy">
                 Envoyer un lien de réinitialisation du mot de passe
@@ -105,7 +184,15 @@
 import authS from "@/services/auth.service";
 
 function emptyForm() {
-  return { id: null, name: "", email: "", password: "", isAdmin: false };
+  return {
+    id: null,
+    name: "",
+    email: "",
+    password: "",
+    isAdmin: false,
+    accessScope: [],
+    mediaAccess: [],
+  };
 }
 
 export default {
@@ -124,6 +211,9 @@ export default {
     staffs() {
       return this.$store.state.user.staff || [];
     },
+    categories() {
+      return this.$store.state.category.category || [];
+    },
     canSave() {
       if (!this.form.name.trim()) return false;
       if (this.modal.edit) return true;
@@ -131,6 +221,32 @@ export default {
     },
   },
   methods: {
+    subOnesOf(catId) {
+      return (this.$store.state.category.subCategoryOne || []).filter(
+        (s) => s.idParent === catId,
+      );
+    },
+    subTwosOf(subOneId) {
+      return (this.$store.state.category.subCategoryTwo || []).filter(
+        (s) => s.idParent === subOneId,
+      );
+    },
+    isChecked(id) {
+      return this.form.accessScope.includes(id);
+    },
+    toggleScope(id) {
+      const i = this.form.accessScope.indexOf(id);
+      if (i === -1) this.form.accessScope.push(id);
+      else this.form.accessScope.splice(i, 1);
+    },
+    isMediaChecked(key) {
+      return this.form.mediaAccess.includes(key);
+    },
+    toggleMediaScope(key) {
+      const i = this.form.mediaAccess.indexOf(key);
+      if (i === -1) this.form.mediaAccess.push(key);
+      else this.form.mediaAccess.splice(i, 1);
+    },
     openAdd() {
       this.form = emptyForm();
       this.modal = { open: true, edit: false };
@@ -142,6 +258,8 @@ export default {
         email: staff.email || "",
         password: "",
         isAdmin: Boolean(staff.isAdmin),
+        accessScope: staff.accessScope || [],
+        mediaAccess: staff.mediaAccess || [],
       };
       this.modal = { open: true, edit: true };
     },
@@ -156,6 +274,8 @@ export default {
             id: this.form.id,
             name: this.form.name,
             isAdmin: this.form.isAdmin,
+            accessScope: this.form.isAdmin ? [] : this.form.accessScope,
+            mediaAccess: this.form.isAdmin ? [] : this.form.mediaAccess,
           });
           this.$store.dispatch("successNotif", "Agent mis à jour.");
         } else {
@@ -164,6 +284,8 @@ export default {
             email: this.form.email,
             password: this.form.password,
             isAdmin: this.form.isAdmin,
+            accessScope: this.form.isAdmin ? [] : this.form.accessScope,
+            mediaAccess: this.form.isAdmin ? [] : this.form.mediaAccess,
           });
           this.$store.dispatch("successNotif", "Agent créé.");
         }
@@ -211,6 +333,15 @@ export default {
   },
   mounted() {
     this.$store.dispatch("getStaffs");
+    if (!this.$store.state.category.category?.length) {
+      this.$store.dispatch("fetchCategory");
+    }
+    if (!this.$store.state.category.subCategoryOne?.length) {
+      this.$store.dispatch("fetchSubCategoryOne");
+    }
+    if (!this.$store.state.category.subCategoryTwo?.length) {
+      this.$store.dispatch("fetchSubCategoryTwo");
+    }
   },
 };
 </script>
@@ -352,6 +483,8 @@ $line: #dde6ec;
   border-radius: 16px;
   width: 100%;
   max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
   &__head {
     display: flex;
@@ -430,6 +563,68 @@ $line: #dde6ec;
   input {
     width: 16px;
     height: 16px;
+  }
+}
+.scope {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid $line;
+  &__title {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: $navy;
+    margin-bottom: 4px;
+  }
+  &__hint {
+    font-size: 11.5px;
+    color: $muted;
+    margin-bottom: 10px;
+  }
+  &__empty {
+    font-size: 12.5px;
+    color: $muted;
+    padding: 6px 0;
+  }
+  &__tree {
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid $line;
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  &__cat {
+    margin-bottom: 8px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &__catname {
+    font-weight: 700;
+  }
+  &__sub1 {
+    margin-inline-start: 20px;
+    margin-top: 4px;
+  }
+  &__sub2 {
+    margin-inline-start: 20px;
+    margin-top: 2px;
+  }
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #2a3a47;
+    cursor: pointer;
+    padding: 3px 0;
+    input {
+      width: 15px;
+      height: 15px;
+    }
+    &--block {
+      padding: 6px 0;
+    }
   }
 }
 .reset {

@@ -50,22 +50,14 @@ class Auth {
 
   // Vérifie que le compte est actif, comme avant — mais exécuté après
   // résolution complète de l'auth (avec ou sans MFA).
-  // async _afterSignIn(user) {
-  //   const snap = await db.collection("users").doc(user.uid).get();
-  //   if (!snap.exists || snap.data().enabled === false) {
-  //     await signOut(modularAuth);
-  //     throw new Error("Ce compte est désactivé ou introuvable.");
-  //   }
-  //   return { user };
-  // }
   async _afterSignIn(user) {
-  const snap = await db.collection("users").doc(user.uid).get();
-  if (!snap.exists || snap.data().enabled === false) {
-    await signOut(modularAuth);
-    throw new Error("Ce compte est désactivé ou introuvable.");
+    const snap = await db.collection("users").doc(user.uid).get();
+    if (!snap.exists || snap.data().enabled === false) {
+      await signOut(modularAuth);
+      throw new Error("Ce compte est désactivé ou introuvable.");
+    }
+    return { user };
   }
-  return { user, mfaEnabled: snap.data().mfaEnabled === true };
-}
 
   async getUser(id) {
     return await db.collection("users").doc(id).get();
@@ -80,7 +72,6 @@ class Auth {
   }
 
   async postStaff(staff) {
-    // inchangé — création de compte reste sur le compat (app secondaire "postApp")
     const user = await db
       .collection("users")
       .where("email", "==", staff.email)
@@ -102,6 +93,8 @@ class Auth {
             email: authResult.user.email,
             name: staff.name,
             isAdmin: staff.isAdmin,
+            accessScope: staff.accessScope || [],
+            mediaAccess: staff.mediaAccess || [],
             enabled: true,
           };
           await db.collection("users").doc(newUser.id).set(newUser);

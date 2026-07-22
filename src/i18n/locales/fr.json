@@ -4,6 +4,36 @@
     "country": "République de Djibouti",
     "full": "Autorité de l'Aviation Civile de Djibouti"
   },
+  "pages": {
+    "about": {
+      "eyebrow": "À propos de nous"
+    },
+    "organisation": {
+      "title": "Organisation"
+    },
+    "presentation": {
+      "title": "Présentation"
+    },
+    "directorWord": {
+      "title": "Mot du directeur"
+    },
+    "trainingPolicy": {
+      "title": "Politique de formation"
+    },
+    "supervisionPolicy": {
+      "title": "Politique de supervision"
+    },
+    "articles": {
+      "eyebrow": "Autorité de l'Aviation Civile de Djibouti",
+      "title": "Actualités"
+    },
+    "contact": {
+      "eyebrow": "Autorité de l'Aviation Civile de Djibouti",
+      "title": "Nous contacter",
+      "intro": "Pour toute demande, information ou prise de rendez-vous, voici nos coordonnées."
+    }
+  },
+
   "nav": {
     "home": "Accueil",
     "about": "À propos",

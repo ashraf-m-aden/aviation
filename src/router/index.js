@@ -17,13 +17,38 @@ import SousCategoryOne from "@/pages/SousCategoryOne.vue";
 import SousCategoryTwo from "@/pages/SousCategoryTwo.vue";
 import AuditInspection from "@/pages/inspection/AuditInspection.vue";
 
-const adminGuard = async (to, from, next) => {
-  console.log("adminGuard", store.state.user.user);
-  if (!store.state.user.user.isAdmin) {
+// Vérifie simplement qu'un utilisateur est connecté (agent OU admin)
+const authGuard = async (to, from, next) => {
+  let user = store.state.user.user;
+  if (!user || !user.id) {
     await store.dispatch("getUser");
-    store.state.user.user.isAdmin ? next() : next("/login");
-  } else next();
+    user = store.state.user.user;
+  }
+  if (user && user.id) {
+    next();
+  } else {
+    next("/login");
+  }
 };
+
+// Vérifie que l'utilisateur connecté est bien administrateur.
+// Un agent connecté (non-admin) est renvoyé vers le tableau de bord
+// plutôt que vers /login, puisqu'il a bien un compte valide.
+const adminGuard = async (to, from, next) => {
+  let user = store.state.user.user;
+  if (!user || !user.id) {
+    await store.dispatch("getUser");
+    user = store.state.user.user;
+  }
+  if (user && user.isAdmin) {
+    next();
+  } else if (user && user.id) {
+    next("/admin");
+  } else {
+    next("/login");
+  }
+};
+
 const routes = [
   // remplace l'ancienne route "/" :
   { path: "/", name: "Home", component: HomePage },
@@ -32,13 +57,14 @@ const routes = [
   {
     path: "/admin",
     component: AdminLayout,
-    beforeEnter: adminGuard,
+    beforeEnter: authGuard,
     children: [
       { path: "", name: "AdminDashboard", component: AdminDashboard },
       {
         path: "navigation",
         name: "AdminNavigation",
         component: GestionNavigation,
+        beforeEnter: adminGuard,
       },
       { path: "documents", name: "AdminDocuments", component: Docs },
       {
@@ -47,17 +73,23 @@ const routes = [
         component: DocumentsIntern,
       },
       { path: "media", name: "AdminMedia", component: GestionMedia },
-      { path: "staff", name: "AdminStaff", component: StaffDetails },
+      {
+        path: "staff",
+        name: "AdminStaff",
+        component: StaffDetails,
+        beforeEnter: adminGuard,
+      },
       {
         path: "categories",
         name: "AdminCategories",
         component: GestionCategory,
+        beforeEnter: adminGuard,
       },
       {
-  path: "profile",
-  name: "Profile",
-  component: () => import("@/gestion/ProfilePage.vue"),
-},
+        path: "profile",
+        name: "Profile",
+        component: () => import("@/gestion/ProfilePage.vue"),
+      },
     ],
   },
 
@@ -103,16 +135,8 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
   scrollBehavior() {
-    // if (savedPosition) {
-    //   return savedPosition;
-    // } else {
     return { top: 0 };
   },
 });
-// router.beforeEach((to, next)=>{
-//   const user = store.state.user.user;
-//   if (user.id && to.path == "/login") {
-//     next('/');
-//   }
-// })
+
 export default router;

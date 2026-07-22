@@ -24,7 +24,7 @@
       <aside class="panel">
         <div class="panel__head">
           <span class="dm-label">Sous-catégories — niveau 1</span>
-          <button class="iconbtn">
+          <button class="iconbtn" v-if="isAdmin">
             <font-awesome-icon v-if="!addSubOne" :icon="['fas', 'plus']" @click="addSubOne = true" />
             <font-awesome-icon v-else :icon="['fas', 'minus']" @click="addSubOne = false; newSubOne.name = ''" />
           </button>
@@ -39,7 +39,7 @@
               @click="getSubCategoryTwo(item)"
             >
               <span class="subrow__name">{{ item.name }}</span>
-              <div class="subrow__actions" v-if="isCurrentSubOne(item)">
+              <div class="subrow__actions" v-if="isCurrentSubOne(item) && isAdmin">
                 <button class="tgic" :class="{ off: !item.isPublic }" title="Public" @click.stop="togglePublicItem(!item.isPublic, item._id)">
                   <font-awesome-icon :icon="['fas', 'globe']" />
                 </button>
@@ -56,7 +56,7 @@
                 </button>
               </div>
             </div>
-            <div v-else class="subrow subrow--off">
+            <div v-else-if="isAdmin" class="subrow subrow--off">
               <span class="subrow__name">{{ item.name }}</span>
               <div class="subrow__actions">
                 <button class="tgic restore" title="Restaurer" @click="retrieveSubOne(item._id)">
@@ -69,7 +69,7 @@
             </div>
           </template>
 
-          <div class="addrow" v-if="addSubOne">
+          <div class="addrow" v-if="addSubOne && isAdmin">
             <input type="text" v-model="newSubOne.name" class="inp" placeholder="Nom de la sous-catégorie" />
             <button class="btn-add" @click="addNewSubOne(subCategoryOne[0].idParent)">Ajouter</button>
           </div>
@@ -80,7 +80,7 @@
       <section class="panel" v-if="isSubOne && uploadGate(subOne)">
         <div class="panel__head">
           <span class="dm-label">Documents</span>
-          <button v-if="subOneDoc.length == 0" class="btn-ghost" @click="addSubCategory2(subOne._id)">
+          <button v-if="subOneDoc.length == 0 && isAdmin" class="btn-ghost" @click="addSubCategory2(subOne._id)">
             Créer des sous-catégories
           </button>
         </div>
@@ -105,7 +105,7 @@
               <img src="@/assets/pdf.png" width="26" alt="" />
             </a>
             <span class="docrow__name">{{ doc.name }}</span>
-            <div class="docrow__actions">
+            <div class="docrow__actions" v-if="isAdmin">
               <button class="ico" :disabled="!doc.enabled" title="Suspendre" @click="disableDocument(subOne, 1, doc._id)">
                 <v-icon size="small">mdi-eye-off-outline</v-icon>
               </button>
@@ -138,14 +138,14 @@
         >
           {{ st.name }}
         </button>
-        <button class="tab2 tab2--add">
+        <button class="tab2 tab2--add" v-if="isAdmin">
           <font-awesome-icon v-if="!addSubTwo" :icon="['fas', 'plus']" @click="addSubTwo = true" />
           <font-awesome-icon v-else :icon="['fas', 'minus']" @click="addSubTwo = false; newSubTwo.name = ''" />
         </button>
       </div>
 
       <div class="subtwo" v-if="subTwo !== ''">
-        <div class="subtwo__toolbar" v-if="!loading && !addSubTwo">
+        <div class="subtwo__toolbar" v-if="!loading && !addSubTwo && isAdmin">
           <div class="subtwo__left">
             <button v-if="subTwo.enabled" class="tgic del" title="Supprimer" @click="removeSubTwo(subTwo._id)">
               <font-awesome-icon :icon="['fas', 'trash']" />
@@ -189,7 +189,7 @@
                 <img src="@/assets/pdf.png" width="26" alt="" />
               </a>
               <span class="docrow__name">{{ doc.name }}</span>
-              <div class="docrow__actions">
+              <div class="docrow__actions" v-if="isAdmin">
                 <button class="ico" :disabled="!doc.enabled" title="Suspendre" @click="disableDocument(subTwo, 2, doc._id)">
                   <v-icon size="small">mdi-eye-off-outline</v-icon>
                 </button>
@@ -209,7 +209,7 @@
         </div>
       </div>
 
-      <div class="addrow addrow--block" v-if="addSubTwo">
+      <div class="addrow addrow--block" v-if="addSubTwo && isAdmin">
         <input v-model="newSubTwo.name" type="text" class="inp" placeholder="Nom de la sous-catégorie" />
         <button class="btn-add" @click="addNewSubCategory2Field(subOne._id)">Ajouter</button>
       </div>
@@ -221,6 +221,7 @@
 import DriveUpload from "../components/DriveUpload.vue";
 import categoryService from "../services/category.service";
 import { driveFileUrl } from "../utils/drive";
+import { resolveAccessScope } from "@/utils/access-scope";
 
 export default {
   name: "DocumentsManager",
@@ -252,13 +253,31 @@ export default {
     };
   },
   computed: {
+    currentUser() {
+      return this.$store.getters.getUser || {};
+    },
+    isAdmin() {
+      return this.currentUser.isAdmin === true;
+    },
+    scoped() {
+      return resolveAccessScope(
+        this.currentUser.accessScope,
+        this.$store.state.category.category,
+        this.allsubCategoryOne,
+        this.allsubCategoryTwo,
+      );
+    },
     allDocuments() {
       return this.$store.state.documents.documents.filter((d) => Boolean(d.isIntern) === this.intern);
     },
     categories() {
       const excluded = ["A propos de nous", "e-Services"];
       if (this.intern) excluded.push("Publications");
-      return this.$store.state.category.category.filter((cat) => !excluded.includes(cat.name));
+      let cats = this.$store.state.category.category.filter((cat) => !excluded.includes(cat.name));
+      if (!this.isAdmin) {
+        cats = cats.filter((c) => this.scoped.catVisible.has(c._id));
+      }
+      return cats;
     },
     allsubCategoryOne() {
       return this.$store.state.category.subCategoryOne;
@@ -290,7 +309,9 @@ export default {
       this.subOne = "";
       this.subTwo = "";
       this.allsubCategoryOne.forEach((el) => {
-        if (el.idParent === item._id) this.subCategoryOne.push(el);
+        if (el.idParent !== item._id) return;
+        if (!this.isAdmin && !this.scoped.subOneVisible.has(el._id)) return;
+        this.subCategoryOne.push(el);
       });
     },
     getSubCategoryTwo(item) {
@@ -299,7 +320,9 @@ export default {
       this.subTwo = "";
       this.subCategoryTwo = [];
       this.allsubCategoryTwo.forEach((el) => {
-        if (el.idParent === item._id) this.subCategoryTwo.push(el);
+        if (el.idParent !== item._id) return;
+        if (!this.isAdmin && !this.scoped.subTwoAllowed.has(el._id)) return;
+        this.subCategoryTwo.push(el);
       });
       this.isSubOne = this.subCategoryTwo.length === 0;
       this.actual = false;
@@ -316,12 +339,16 @@ export default {
     getSubOneDoc(item) {
       this.subOne = item;
       this.subOneDoc = [];
+      // agent : accès à ses documents propres uniquement si la sous-cat 1
+      // est elle-même explicitement autorisée (pas juste "visible" pour naviguer)
+      if (!this.isAdmin && !this.scoped.subOneAllowed.has(item._id)) return;
       this.allDocuments.forEach((el) => {
         if (el.idParent === this.subOne._id) this.subOneDoc.push(el);
       });
     },
 
     async disableDocument(sub, number, id) {
+      if (!this.isAdmin) return;
       number === 1 ? (this.loading = true) : (this.loading2 = true);
       await this.$store.dispatch("disableOneDocument", id);
       await this.actualiser(sub, number);
@@ -329,6 +356,7 @@ export default {
       this.loading2 = false;
     },
     async enableDocument(sub, number, id) {
+      if (!this.isAdmin) return;
       number === 1 ? (this.loading = true) : (this.loading2 = true);
       await this.$store.dispatch("enableOneDocument", id);
       await this.actualiser(sub, number);
@@ -336,6 +364,7 @@ export default {
       this.loading2 = false;
     },
     async deleteDocument(sub, number, item) {
+      if (!this.isAdmin) return;
       number === 1 ? (this.loading = true) : (this.loading2 = true);
       await this.$store.dispatch("deleteOneDocument", item._id);
       await this.$store.dispatch("setDocuments");
@@ -365,6 +394,7 @@ export default {
       await this.$store.dispatch("fetchSubCategoryTwo");
     },
     async addNewSubOne(idParent) {
+      if (!this.isAdmin) return;
       this.loading = true;
       this.newSubOne.idParent = idParent;
       await categoryService.addSubCategoryToCategory(this.newSubOne);
@@ -375,6 +405,7 @@ export default {
       this.loading = false;
     },
     async removeSubOne(id) {
+      if (!this.isAdmin) return;
       this.loading = true;
       await categoryService.removeSubCategoryOne(id);
       await this.refreshCategories();
@@ -382,6 +413,7 @@ export default {
       this.loading = false;
     },
     async retrieveSubOne(id) {
+      if (!this.isAdmin) return;
       this.loading = true;
       await categoryService.retrieveSubCategoryOne(id);
       await this.refreshCategories();
@@ -389,6 +421,7 @@ export default {
       this.loading = false;
     },
     async eraseSubOne(id) {
+      if (!this.isAdmin) return;
       this.loading = true;
       await categoryService.eraseSubCategoryOne(id);
       await this.refreshCategories();
@@ -396,6 +429,7 @@ export default {
       this.loading = false;
     },
     async addSubCategory2(idParent) {
+      if (!this.isAdmin) return;
       this.loading = true;
       await categoryService.addSubCategoryTwo(idParent);
       await this.refreshCategories();
@@ -403,6 +437,7 @@ export default {
       this.loading = false;
     },
     async addNewSubCategory2Field(idParent) {
+      if (!this.isAdmin) return;
       this.loading = true;
       this.newSubTwo.idParent = idParent;
       await categoryService.addNewSubCategoryTwoField(this.newSubTwo);
@@ -412,6 +447,7 @@ export default {
       this.loading = false;
     },
     async removeSubTwo(id) {
+      if (!this.isAdmin) return;
       this.loading = true;
       await categoryService.removeSubCategoryTwo(id);
       await this.refreshCategories();
@@ -419,6 +455,7 @@ export default {
       this.loading = false;
     },
     async retrieveSubTwo(id) {
+      if (!this.isAdmin) return;
       this.loading = true;
       await categoryService.retrieveSubCategoryTwo(id);
       await this.refreshCategories();
@@ -426,6 +463,7 @@ export default {
       this.loading = false;
     },
     async eraseSubTwo(id) {
+      if (!this.isAdmin) return;
       this.loading = true;
       await categoryService.eraseSubCategoryTwo(id);
       await this.refreshCategories();
@@ -433,6 +471,7 @@ export default {
       this.loading = false;
     },
     async toggleInternItem(data, id) {
+      if (!this.isAdmin) return;
       this.loading = true;
       await categoryService.toggleInternItem(data, id);
       await this.refreshCategories();
@@ -441,6 +480,7 @@ export default {
       this.loading = false;
     },
     async togglePublicItem(data, id) {
+      if (!this.isAdmin) return;
       this.loading = true;
       await categoryService.togglePublicItem(data, id);
       await this.refreshCategories();

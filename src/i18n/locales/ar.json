@@ -65,5 +65,35 @@
     "newsLabel": "الأخبار",
     "newsTitle": "آخر المنشورات",
     "newsEmpty": "لا توجد أخبار متاحة حالياً."
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "من نحن"
+    },
+    "organisation": {
+      "title": "التنظيم"
+    },
+    "presentation": {
+      "title": "تقديم"
+    },
+    "directorWord": {
+      "title": "كلمة المدير"
+    },
+    "trainingPolicy": {
+      "title": "سياسة التدريب"
+    },
+    "supervisionPolicy": {
+      "title": "سياسة الإشراف"
+    },
+    "articles": {
+      "eyebrow": "الهيئة العامة للطيران المدني بجيبوتي",
+      "title": "الأخبار"
+    },
+    "contact": {
+      "eyebrow": "الهيئة العامة للطيران المدني بجيبوتي",
+      "title": "اتصل بنا",
+      "intro": "لأي طلب أو معلومة أو موعد، إليك بيانات الاتصال بنا."
+    }
   }
+
 }

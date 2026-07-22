@@ -1,71 +1,105 @@
 <template>
-  <section class="contact-page">
-    <div class="contact-page__head">
-      <span class="eyebrow">Autorité de l'Aviation Civile de Djibouti</span>
-      <h1>Nous contacter</h1>
-      <p>
-        Pour toute demande, information ou prise de rendez-vous, voici nos
-        coordonnées.
+  <div class="page">
+    <header class="page-hero">
+      <div class="page-hero__bg" :style="heroBgStyle"></div>
+      <div class="page-hero__overlay"></div>
+      <div class="page-hero__inner">
+        <span class="page-hero__eyebrow">{{ parentLabel }}</span>
+        <h1 class="page-hero__title">{{ heroTitle }}</h1>
+      </div>
+    </header>
+
+    <section class="contact-page">
+      <p class="contact-page__intro">
+        {{ $t("pages.contact.intro") }}
       </p>
-    </div>
 
-    <div class="contact-grid">
-      <!-- Coordonnées -->
-      <div class="info-card">
-        <h2 class="info-card__title">Siège social</h2>
+      <div class="contact-grid">
+        <!-- Coordonnées -->
+        <div class="info-card">
+          <h2 class="info-card__title">Siège social</h2>
 
-        <div class="info-row">
-          <span class="info-row__ic"
-            ><font-awesome-icon :icon="['fas', 'home']"
-          /></span>
-          <div>
-            <b>Siège social</b>
-            <span>Aéroport international de Djibouti (Ambouli)</span>
+          <div class="info-row">
+            <span class="info-row__ic"
+              ><font-awesome-icon :icon="['fas', 'home']"
+            /></span>
+            <div>
+              <b>Siège social</b>
+              <span>Aéroport international de Djibouti (Ambouli)</span>
+            </div>
           </div>
+
+          <a class="info-row" href="tel:+25321335100">
+            <span class="info-row__ic"
+              ><font-awesome-icon :icon="['fas', 'phone']"
+            /></span>
+            <div><b>Téléphone</b><span>+253 21 33 51 00</span></div>
+          </a>
+
+          <div class="info-row">
+            <span class="info-row__ic"
+              ><font-awesome-icon :icon="['fas', 'fax']"
+            /></span>
+            <div><b>Fax</b><span>+253 21 34 01 69</span></div>
+          </div>
+
+          <div class="info-row">
+            <span class="info-row__ic"
+              ><font-awesome-icon :icon="['fas', 'inbox']"
+            /></span>
+            <div><b>Boîte postale</b><span>2609</span></div>
+          </div>
+
+          <a class="info-row" href="mailto:civilaviaton@intnet.dj">
+            <span class="info-row__ic"
+              ><font-awesome-icon :icon="['fas', 'envelope']"
+            /></span>
+            <div><b>E-mail</b><span>civilaviaton@intnet.dj</span></div>
+          </a>
         </div>
 
-        <a class="info-row" href="tel:+25321335100">
-          <span class="info-row__ic"
-            ><font-awesome-icon :icon="['fas', 'phone']"
-          /></span>
-          <div><b>Téléphone</b><span>+253 21 33 51 00</span></div>
-        </a>
-
-        <div class="info-row">
-          <span class="info-row__ic"
-            ><font-awesome-icon :icon="['fas', 'fax']"
-          /></span>
-          <div><b>Fax</b><span>+253 21 34 01 69</span></div>
+        <!-- Carte -->
+        <div class="map-card">
+          <Map />
         </div>
-
-        <div class="info-row">
-          <span class="info-row__ic"
-            ><font-awesome-icon :icon="['fas', 'inbox']"
-          /></span>
-          <div><b>Boîte postale</b><span>2609</span></div>
-        </div>
-
-        <a class="info-row" href="mailto:civilaviaton@intnet.dj">
-          <span class="info-row__ic"
-            ><font-awesome-icon :icon="['fas', 'envelope']"
-          /></span>
-          <div><b>E-mail</b><span>civilaviaton@intnet.dj</span></div>
-        </a>
       </div>
-
-      <!-- Carte -->
-      <div class="map-card">
-        <Map />
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>
 
 <script>
 import Map from "@/components/MapComponent.vue";
+import { driveImageUrl } from "@/utils/drive";
+import fallbackHero from "@/assets/article.jpeg";
+
 export default {
   name: "ContactPage",
   components: { Map },
+  computed: {
+    heroTitle() {
+      return this.$t("pages.contact.title");
+    },
+    parentLabel() {
+      return this.$t("pages.contact.eyebrow");
+    },
+    headerImage() {
+      return this.$store.getters.getHeaderImage;
+    },
+    heroBgUrl() {
+      const h = this.headerImage;
+      if (h?.driveId) return driveImageUrl(h.driveId, 1200);
+      if (h?.url) return h.url;
+      return fallbackHero;
+    },
+    heroBgStyle() {
+      return { backgroundImage: `url(${this.heroBgUrl})` };
+    },
+  },
+  created() {
+    if (!this.$store.state.media.headerImage) {
+      this.$store.dispatch("getHeaderImage");
+    }
+  },
 };
 </script>
 
@@ -77,33 +111,62 @@ $sky-soft: #e8f5fc;
 $muted: #5b6b78;
 $line: #dde6ec;
 
-.contact-page {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 48px 24px 64px;
+.page {
+  background: #fff;
 }
-.contact-page__head {
-  margin-bottom: 28px;
-  .eyebrow {
-    display: inline-block;
+.page-hero {
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  align-items: flex-end;
+  background: $navy;
+  &__bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+  }
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 43, 78, 0.4) 0%,
+      rgba(10, 43, 78, 0.86) 100%
+    );
+  }
+  &__inner {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 26px 24px;
+  }
+  &__eyebrow {
+    color: #bcd4e6;
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: $sky;
-    margin-bottom: 8px;
   }
-  h1 {
+  &__title {
     font-family: "Spectral", Georgia, serif;
+    color: #fff;
     font-size: 32px;
     font-weight: 800;
-    color: $navy;
-    margin-bottom: 8px;
+    margin-top: 6px;
   }
-  p {
+}
+
+.contact-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 24px 64px;
+  &__intro {
     font-size: 14.5px;
     color: $muted;
     max-width: 560px;
+    margin-bottom: 24px;
   }
 }
 .contact-grid {
@@ -191,6 +254,14 @@ $line: #dde6ec;
   }
   .map-card {
     min-height: 340px;
+  }
+}
+@media (max-width: 560px) {
+  .page-hero {
+    min-height: 160px;
+  }
+  .page-hero__title {
+    font-size: 24px;
   }
 }
 </style>
