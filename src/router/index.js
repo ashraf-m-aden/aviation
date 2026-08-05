@@ -49,6 +49,24 @@ const adminGuard = async (to, from, next) => {
   }
 };
 
+// Tant que l'utilisateur (admin ou agent) n'a pas activé le TOTP, seul
+// /admin/profile est accessible — c'est là que l'activation se fait.
+const mfaGuard = async (to, from, next) => {
+  let user = store.state.user.user;
+  if (!user || !user.id) {
+    await store.dispatch("getUser");
+    user = store.state.user.user;
+  }
+  if (!user || !user.id) {
+    return next("/login");
+  }
+  if (user.mfaEnabled === true) {
+    next();
+  } else {
+    next("/admin/profile");
+  }
+};
+
 const routes = [
   // remplace l'ancienne route "/" :
   { path: "/", name: "Home", component: HomePage },
@@ -59,36 +77,54 @@ const routes = [
     component: AdminLayout,
     beforeEnter: authGuard,
     children: [
-      { path: "", name: "AdminDashboard", component: AdminDashboard },
+      {
+        path: "",
+        name: "AdminDashboard",
+        component: AdminDashboard,
+        beforeEnter: mfaGuard,
+      },
       {
         path: "navigation",
         name: "AdminNavigation",
         component: GestionNavigation,
-        beforeEnter: adminGuard,
+        beforeEnter: [mfaGuard, adminGuard],
       },
-      { path: "documents", name: "AdminDocuments", component: Docs },
+      {
+        path: "documents",
+        name: "AdminDocuments",
+        component: Docs,
+        beforeEnter: mfaGuard,
+      },
       {
         path: "documents-intern",
         name: "AdminDocIntern",
         component: DocumentsIntern,
+        beforeEnter: mfaGuard,
       },
-      { path: "media", name: "AdminMedia", component: GestionMedia },
+      {
+        path: "media",
+        name: "AdminMedia",
+        component: GestionMedia,
+        beforeEnter: mfaGuard,
+      },
       {
         path: "staff",
         name: "AdminStaff",
         component: StaffDetails,
-        beforeEnter: adminGuard,
+        beforeEnter: [mfaGuard, adminGuard],
       },
       {
         path: "categories",
         name: "AdminCategories",
         component: GestionCategory,
-        beforeEnter: adminGuard,
+        beforeEnter: [mfaGuard, adminGuard],
       },
       {
         path: "profile",
         name: "Profile",
         component: () => import("@/gestion/ProfilePage.vue"),
+        // pas de mfaGuard ici : c'est la seule page toujours accessible,
+        // c'est là que l'activation du MFA se fait.
       },
     ],
   },

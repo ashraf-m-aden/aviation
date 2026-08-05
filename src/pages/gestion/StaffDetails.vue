@@ -11,7 +11,7 @@
     <div class="staff__table" v-if="staffs.length">
       <div class="trow thead">
         <span>Nom</span><span>E-mail</span><span>Rôle</span
-        ><span class="ta-end">Actions</span>
+        ><span>MFA</span><span class="ta-end">Actions</span>
       </div>
       <div class="trow" v-for="s in staffs" :key="s.id">
         <span class="name">{{ s.name || "—" }}</span>
@@ -24,7 +24,22 @@
             {{ s.isAdmin ? "Administrateur" : "Agent" }}
           </span>
         </span>
+        <span>
+          <span
+            class="badge"
+            :class="s.mfaEnabled ? 'badge--mfa-on' : 'badge--mfa-off'"
+          >
+            {{ s.mfaEnabled ? "Activé" : "Désactivé" }}
+          </span>
+        </span>
         <span class="actions">
+          <button
+            class="ico"
+            @click="toggleMfa(s)"
+            :title="s.mfaEnabled ? 'Désactiver le MFA' : 'Activer le MFA'"
+          >
+            {{ s.mfaEnabled ? "🔓" : "🔒" }}
+          </button>
           <button class="ico" @click="openEdit(s)" title="Modifier">✎</button>
           <button class="ico del" @click="remove(s)" title="Désactiver">
             🗑
@@ -78,6 +93,29 @@
               <input type="checkbox" v-model="form.isAdmin" />
               <span>Administrateur (accès complet)</span>
             </label>
+
+            <!-- MFA — toujours visible, admin comme agent -->
+            <div class="scope">
+              <label class="scope__title">
+                Double authentification (TOTP)
+              </label>
+              <p class="scope__hint" v-if="modal.edit">
+                Décoche uniquement si l'agent a perdu l'accès à son
+                application d'authentification — il devra la reconfigurer
+                depuis son profil.
+              </p>
+              <p class="scope__hint" v-else>
+                Laisse décoché : l'agent activera lui-même le MFA depuis son
+                profil à sa première connexion.
+              </p>
+              <label class="scope__row scope__row--block">
+                <input type="checkbox" v-model="form.mfaEnabled" />
+                <span>
+                  MFA {{ form.mfaEnabled ? "activé" : "désactivé" }} pour ce
+                  compte
+                </span>
+              </label>
+            </div>
 
             <!-- Périmètre documents — uniquement pour les agents (non-admin) -->
             <div class="scope" v-if="!form.isAdmin">
@@ -192,6 +230,7 @@ function emptyForm() {
     isAdmin: false,
     accessScope: [],
     mediaAccess: [],
+    mfaEnabled: false,
   };
 }
 
@@ -260,6 +299,7 @@ export default {
         isAdmin: Boolean(staff.isAdmin),
         accessScope: staff.accessScope || [],
         mediaAccess: staff.mediaAccess || [],
+        mfaEnabled: Boolean(staff.mfaEnabled),
       };
       this.modal = { open: true, edit: true };
     },
@@ -276,6 +316,7 @@ export default {
             isAdmin: this.form.isAdmin,
             accessScope: this.form.isAdmin ? [] : this.form.accessScope,
             mediaAccess: this.form.isAdmin ? [] : this.form.mediaAccess,
+            mfaEnabled: this.form.mfaEnabled,
           });
           this.$store.dispatch("successNotif", "Agent mis à jour.");
         } else {
@@ -286,6 +327,7 @@ export default {
             isAdmin: this.form.isAdmin,
             accessScope: this.form.isAdmin ? [] : this.form.accessScope,
             mediaAccess: this.form.isAdmin ? [] : this.form.mediaAccess,
+            mfaEnabled: this.form.mfaEnabled,
           });
           this.$store.dispatch("successNotif", "Agent créé.");
         }
@@ -298,6 +340,27 @@ export default {
         );
       } finally {
         this.busy = false;
+      }
+    },
+    // Bascule rapide du MFA directement depuis la liste, sans ouvrir la modale —
+    // pratique pour débloquer un agent qui a perdu l'accès à son authenticator.
+    async toggleMfa(staff) {
+      const next = !staff.mfaEnabled;
+      const label = next ? "activer" : "désactiver";
+      if (!confirm(`Confirmer : ${label} le MFA pour « ${staff.name || staff.email} » ?`))
+        return;
+      try {
+        await authS.modifyStaff({ id: staff.id, mfaEnabled: next });
+        this.$store.dispatch(
+          "successNotif",
+          next ? "MFA activé pour cet agent." : "MFA désactivé pour cet agent.",
+        );
+        await this.$store.dispatch("getStaffs");
+      } catch (e) {
+        this.$store.dispatch(
+          "warningNotif",
+          e.message || "Une erreur est survenue.",
+        );
       }
     },
     async remove(staff) {
@@ -357,7 +420,7 @@ $muted: #5b6b78;
 $line: #dde6ec;
 
 .staff {
-  max-width: 960px;
+  max-width: 1040px;
   &__head {
     display: flex;
     align-items: flex-end;
@@ -402,7 +465,7 @@ $line: #dde6ec;
 }
 .trow {
   display: grid;
-  grid-template-columns: 1.2fr 1.6fr 1fr 0.8fr;
+  grid-template-columns: 1.1fr 1.5fr 0.9fr 0.8fr 0.9fr;
   gap: 12px;
   align-items: center;
   padding: 13px 18px;
@@ -448,6 +511,14 @@ $line: #dde6ec;
     background: #eef4ee;
     color: $green;
   }
+  &--mfa-on {
+    background: #eef4ee;
+    color: $green;
+  }
+  &--mfa-off {
+    background: rgba(224, 50, 43, 0.1);
+    color: $red;
+  }
 }
 .ico {
   width: 32px;
@@ -457,6 +528,7 @@ $line: #dde6ec;
   background: #fff;
   cursor: pointer;
   color: $muted;
+  font-size: 13px;
   &:hover {
     color: $navy;
     border-color: #b9cde0;

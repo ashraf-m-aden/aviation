@@ -7,6 +7,11 @@
         <b>AAC Admin</b>
       </div>
 
+      <div v-if="!mfaEnabled" class="aside__notice">
+        Active la double authentification dans « Mon profil » pour débloquer
+        le reste de l'administration.
+      </div>
+
       <nav class="aside__nav">
         <router-link
           v-for="link in visibleLinks"
@@ -102,10 +107,21 @@ export default {
     };
   },
   computed: {
+    currentUser() {
+      return this.$store.getters.getUser || {};
+    },
     isAdmin() {
-      return this.$store.getters.getUser?.isAdmin === true;
+      return this.currentUser.isAdmin === true;
+    },
+    mfaEnabled() {
+      return this.currentUser.mfaEnabled === true;
     },
     visibleLinks() {
+      // Tant que le MFA n'est pas activé, seul "Mon profil" est accessible,
+      // quel que soit le rôle — c'est là que l'activation se fait.
+      if (!this.mfaEnabled) {
+        return this.links.filter((l) => l.to === "/admin/profile");
+      }
       return this.links.filter(
         (l) => this.isAdmin || !ADMIN_ONLY_PATHS.includes(l.to),
       );
@@ -163,6 +179,16 @@ $line: #dde6ec;
     width: 36px;
     height: 36px;
     object-fit: contain;
+  }
+  &__notice {
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: #ffd9a8;
+    background: rgba(255, 175, 60, 0.12);
+    border: 1px solid rgba(255, 175, 60, 0.3);
+    border-radius: 9px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
   }
   &__nav {
     display: flex;
