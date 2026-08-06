@@ -2,60 +2,62 @@
   <div class="profile">
     <h2 class="profile__title">Mon profil</h2>
 
-<!-- Section TOTP dans ProfilePage.vue, remplace le bloc existant -->
-<section class="pcard">
-  <h3 class="pcard__h3">Authentification à deux facteurs</h3>
+    <!-- Section TOTP -->
+    <section class="pcard">
+      <h3 class="pcard__h3">Authentification à deux facteurs</h3>
 
-  <div v-if="mfaEnabled" class="pcard__status pcard__status--on">
-    <span>✅ Activée</span>
-    <button class="btn-link btn-link--danger" @click="disableMfa">Désactiver</button>
-  </div>
+      <div v-if="mfaEnabled" class="pcard__status pcard__status--on">
+        <span>✅ Activée</span>
+        <button class="btn-link btn-link--danger" @click="disableMfa">
+          Désactiver
+        </button>
+      </div>
 
-  <template v-else>
-    <p class="pcard__hint">
-      Un code à 6 chiffres généré par une application comme Google
-      Authenticator te sera demandé à chaque connexion, une fois activée.
-    </p>
-
-    <div v-if="!showQr" class="pcard__row">
-      <button class="btn-save" @click="loadQr">
-        Configurer l'authentification à deux facteurs
-      </button>
-    </div>
-
-    <div v-else class="qr-box">
-      <div v-if="qrLoading" class="qr-box__state">Chargement…</div>
-      <div v-else-if="qrError" class="qr-box__error">{{ qrError }}</div>
       <template v-else>
-        <img :src="qrDataUrl" alt="QR code TOTP" class="qr-box__img" />
-        <p class="qr-box__manual">
-          Ou saisis manuellement dans l'app : <code>{{ secretKey }}</code>
+        <p class="pcard__hint">
+          Un code à 6 chiffres généré par une application comme Google
+          Authenticator te sera demandé à chaque connexion, une fois activée.
         </p>
 
-        <div class="fld">
-          <label>Confirme avec un code généré par l'app</label>
-          <input
-            class="inp"
-            type="text"
-            v-model="confirmCode"
-            maxlength="6"
-            inputmode="numeric"
-            placeholder="123456"
-          />
+        <div v-if="!showQr" class="pcard__row">
+          <button class="btn-save" @click="loadQr">
+            Configurer l'authentification à deux facteurs
+          </button>
         </div>
-        <button
-          class="btn-save"
-          :disabled="confirmCode.length !== 6 || confirmLoading"
-          @click="confirmAndEnable"
-        >
-          {{ confirmLoading ? "Vérification…" : "Confirmer et activer" }}
-        </button>
-        <p v-if="confirmError" class="pcard__error">{{ confirmError }}</p>
+
+        <div v-else class="qr-box">
+          <div v-if="qrLoading" class="qr-box__state">Chargement…</div>
+          <div v-else-if="qrError" class="qr-box__error">{{ qrError }}</div>
+          <template v-else>
+            <img :src="qrDataUrl" alt="QR code TOTP" class="qr-box__img" />
+            <p class="qr-box__manual">
+              Ou saisis manuellement dans l'app : <code>{{ secretKey }}</code>
+            </p>
+
+            <div class="fld">
+              <label>Confirme avec un code généré par l'app</label>
+              <input
+                class="inp"
+                type="text"
+                v-model="confirmCode"
+                maxlength="6"
+                inputmode="numeric"
+                placeholder="123456"
+              />
+            </div>
+            <button
+              class="btn-save"
+              :disabled="confirmCode.length !== 6 || confirmLoading"
+              @click="confirmAndEnable"
+            >
+              {{ confirmLoading ? "Vérification…" : "Confirmer et activer" }}
+            </button>
+            <p v-if="confirmError" class="pcard__error">{{ confirmError }}</p>
+          </template>
+          <button class="btn-link" @click="showQr = false">Annuler</button>
+        </div>
       </template>
-      <button class="btn-link" @click="showQr = false">Annuler</button>
-    </div>
-  </template>
-</section>
+    </section>
 
     <!-- Section mot de passe -->
     <section class="pcard">
@@ -151,10 +153,15 @@ export default {
         }
         const uid = modularAuth.currentUser.uid;
         await db.collection("users").doc(uid).update({ mfaEnabled: true });
-        this.mfaEnabled = true;
-        this.showQr = false;
-        this.confirmCode = "";
-        this.$store.dispatch("successNotif", "Double authentification activée.");
+        this.$store.dispatch(
+          "successNotif",
+          "Double authentification activée. Rechargement…",
+        );
+        // Rechargement complet imposé : garantit que le state Vuex (user),
+        // les gardes de route (mfaGuard) et toute l'UI repartent d'un état
+        // propre et à jour, plutôt que de dépendre d'une mise à jour
+        // partielle du state en mémoire.
+        window.location.reload();
       } catch (e) {
         this.confirmError = "Erreur lors de la vérification.";
       } finally {
@@ -163,11 +170,22 @@ export default {
     },
 
     async disableMfa() {
-      if (!confirm("Désactiver la double authentification ?")) return;
+      if (
+        !confirm(
+          "Désactiver la double authentification ? Tu seras déconnecté et devras te reconnecter.",
+        )
+      )
+        return;
       const uid = modularAuth.currentUser.uid;
       await db.collection("users").doc(uid).update({ mfaEnabled: false });
-      this.mfaEnabled = false;
-      this.$store.dispatch("warningNotif", "Double authentification désactivée.");
+      this.$store.dispatch(
+        "warningNotif",
+        "Double authentification désactivée. Reconnecte-toi.",
+      );
+      // Déconnexion forcée : évite de laisser une session active dont le
+      // niveau de sécurité vient de changer sous les pieds de l'utilisateur.
+      await this.$store.dispatch("logout");
+      this.$router.push("/login");
     },
 
     async changePassword() {
@@ -211,9 +229,9 @@ export default {
       }
     },
   },
-created() {
-  this.mfaEnabled = this.$store.getters.getUser?.mfaEnabled === true;
-},
+  created() {
+    this.mfaEnabled = this.$store.getters.getUser?.mfaEnabled === true;
+  },
 };
 </script>
 
@@ -260,6 +278,14 @@ $line: #dde6ec;
     color: $green;
     font-size: 13px;
     margin-top: 12px;
+  }
+  &__status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    color: $navy;
+    font-weight: 600;
   }
 }
 .fld {
@@ -313,6 +339,11 @@ $line: #dde6ec;
   cursor: pointer;
   &:hover {
     text-decoration: underline;
+  }
+  &--danger {
+    display: inline;
+    margin-top: 0;
+    color: $red;
   }
 }
 .qr-box {

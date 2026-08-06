@@ -50,13 +50,15 @@ class Auth {
 
   // Vérifie que le compte est actif, comme avant — mais exécuté après
   // résolution complète de l'auth (avec ou sans MFA).
+  // IMPORTANT : renvoie aussi mfaEnabled, sans quoi LoginPage.vue ne peut
+  // jamais savoir s'il doit demander le code TOTP après le mot de passe.
   async _afterSignIn(user) {
     const snap = await db.collection("users").doc(user.uid).get();
     if (!snap.exists || snap.data().enabled === false) {
       await signOut(modularAuth);
       throw new Error("Ce compte est désactivé ou introuvable.");
     }
-    return { user };
+    return { user, mfaEnabled: snap.data().mfaEnabled === true };
   }
 
   async getUser(id) {
@@ -95,6 +97,7 @@ class Auth {
             isAdmin: staff.isAdmin,
             accessScope: staff.accessScope || [],
             mediaAccess: staff.mediaAccess || [],
+            mfaEnabled: Boolean(staff.mfaEnabled),
             enabled: true,
           };
           await db.collection("users").doc(newUser.id).set(newUser);
